@@ -1,5 +1,5 @@
 class ApiController < ApplicationController
-  
+
   skip_before_action :verify_authenticity_token
 
   def hello
@@ -8,12 +8,7 @@ class ApiController < ApplicationController
 
   def profile
     email = [params[:email]]
-    all = User.all
-    all.each do |u|
-      puts u.name
-    end
-    user = User.find_by(email: email)
-    puts user.name
+    user = User.find_by!(email: email)
     render :json => user.as_json(methods: :avgRating)
   end
 
@@ -28,27 +23,19 @@ class ApiController < ApplicationController
   # end
 
   def products
+    # TODO Filter based on location using Request.openNear
     requests = Request.all
-    
     render :json => requests.all
-  
   end
 
   def product
-    
     request = Request.where(user_id: [params[:user_id]])
-
     render :json => request.as_json
   end
-
 
   private
     def api_user_params
       params.fetch(:user, {})
     end
-  
-
-
-
 end
 
