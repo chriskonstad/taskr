@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161024071455) do
+ActiveRecord::Schema.define(version: 20161024160343) do
 
   create_table "requests", force: :cascade do |t|
     t.string   "title"
@@ -26,6 +26,19 @@ ActiveRecord::Schema.define(version: 20161024071455) do
   end
 
   add_index "requests", ["user_id"], name: "index_requests_on_user_id"
+
+  create_table "reviews", force: :cascade do |t|
+    t.integer  "reviewer_id"
+    t.integer  "reviewee_id"
+    t.integer  "request_id"
+    t.integer  "rating"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "reviews", ["request_id"], name: "index_reviews_on_request_id"
+  add_index "reviews", ["reviewee_id"], name: "index_reviews_on_reviewee_id"
+  add_index "reviews", ["reviewer_id"], name: "index_reviews_on_reviewer_id"
 
   create_table "transactions", force: :cascade do |t|
     t.integer  "payer_id"

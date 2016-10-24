@@ -5,4 +5,7 @@ class User < ActiveRecord::Base
 
   has_many :paid, :class_name => 'Transaction', :foreign_key => 'payer_id'
   has_many :earned, :class_name => 'Transaction', :foreign_key => 'payee_id'
+
+  has_many :rated, :class_name => 'Review', :foreign_key => 'reviewer_id'
+  has_many :rating, :class_name => 'Review', :foreign_key => 'reviewee_id'
 end

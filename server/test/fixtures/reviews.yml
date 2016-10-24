@@ -1,0 +1,7 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+fivestar:
+  reviewer_id: 1
+  reviewee_id: 2
+  request_id: 1
+  rating: 5
