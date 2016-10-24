@@ -9,7 +9,12 @@ class ApiController < ApplicationController
   def profile
     id = [params[:id]]
     user = User.find_by!(id: id)
-    render :json => user.as_json(methods: :avgRating)
+    render :json => user.as_json({:methods => [:avgRating,
+                                               :paid,
+                                               :earned,
+                                               :rated,
+                                               :rating,
+                                               :request]})
   end
 
   # def createprofile
