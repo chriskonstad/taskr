@@ -7,8 +7,12 @@ Rails.application.routes.draw do
 
   scope '/api' do
     scope '/v1' do
-      scope '/helloworld' do
+      scope '/test' do
         get '/' => 'api#hello'
+      end
+      scope '/profile' do
+        # Get user profile information by email lookup, allow dots in email param
+        get '/:email' => 'api#profile', :constraints => {:email => /[^\/]+/ }
       end
     end
   end

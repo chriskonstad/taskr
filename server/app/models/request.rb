@@ -1,5 +1,5 @@
 class Request < ActiveRecord::Base
-  has_one :user
+  belongs_to :user
   has_one :trans, :class_name => 'Transaction', :foreign_key => 'request_id'
 
   validates :title, :user, :amount, :lat, :long, :due, presence: true
