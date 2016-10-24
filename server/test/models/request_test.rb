@@ -25,17 +25,22 @@ class RequestTest < ActiveSupport::TestCase
   test "check near" do
     completed = requests(:samplecompleted)
     open = requests(:sampleopen)
+    past_due = requests(:openpastdue)
 
     # Ensure they take place at the sample place
     # and that one is open and one is closed
     assert_equal completed.long, open.long
     assert_equal completed.lat, open.lat
+    assert_equal past_due.long, open.long
+    assert_equal past_due.lat, open.lat
     assert_not_nil completed.trans
     assert_nil open.trans
+    assert_nil past_due.trans
 
     requests = Request.openNear(1.51, 1.51, 5.0)
 
     assert requests.include? open
     assert_not requests.include? completed
+    assert_not requests.include? past_due
   end
 end
