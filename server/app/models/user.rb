@@ -22,3 +22,4 @@ class User < ActiveRecord::Base
     return avg
   end
 end
+
