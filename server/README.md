@@ -1,4 +1,4 @@
-== README
+## README
 
 * Ruby version: 2.2.4
 
@@ -12,7 +12,7 @@
 
 * How to launch interactive console: `rails console`
 
-=== TODO
+### TODO
 - [ ] Register new user
 
 - [ ] Login as user
