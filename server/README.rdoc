@@ -12,7 +12,7 @@
 
 * How to launch interactive console: `rails console`
 
-= TODO
+=== TODO
 * [ ] Register new user
 
 * [ ] Login as user
