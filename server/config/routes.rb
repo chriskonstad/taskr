@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   scope '/api' do
     scope '/v1' do
       scope '/test' do
+        # Simple endpoint for testing the server
         get '/' => 'api#hello'
       end
       scope '/profile' do
@@ -16,6 +17,10 @@ Rails.application.routes.draw do
         # post '/:email' => 'api#createprofile', :constraints => {:email => /[^\/]+/ }
       end
       scope '/requests' do
+        scope '/nearby' do
+          # Get all open nearby requests, can specify where and what radius
+          get '/' => 'api#nearby' # params: long, lat, radius (miles)
+        end
         get '/' => 'api#products'
         get '/:user_id' => 'api#product'
       end

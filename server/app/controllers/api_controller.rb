@@ -22,8 +22,22 @@ class ApiController < ApplicationController
   #   end
   # end
 
+  def nearby
+    long = params[:long].to_f
+    lat = params[:lat].to_f
+    radius_miles = params[:radius].to_f
+
+    if(!params.has_key?(:long) ||
+        !params.has_key?(:lat) ||
+        !params.has_key?(:radius))
+      render nothing: true, status: 404
+    else
+      requests = Request.openNear(long, lat, radius_miles)
+      render :json => requests.as_json
+    end
+  end
+
   def products
-    # TODO Filter based on location using Request.openNear
     requests = Request.all
     render :json => requests.all
   end
