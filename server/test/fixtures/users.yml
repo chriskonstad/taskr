@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: Namey McNameface
+  email: namey@example.com
+  wallet: 62.09
+
+two:
+  name: Test User
+  email: test@user.com
+  wallet: 42.03
