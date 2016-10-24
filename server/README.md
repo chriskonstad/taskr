@@ -23,6 +23,8 @@
 
 - [x] Search requests nearby
 
+- [ ] Filter requests that are past due
+
 - [ ] Edit/cancel open request
 
 - [ ] Complete request
