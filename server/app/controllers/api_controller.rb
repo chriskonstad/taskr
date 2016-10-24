@@ -7,8 +7,8 @@ class ApiController < ApplicationController
   end
 
   def profile
-    email = [params[:email]]
-    user = User.find_by!(email: email)
+    id = [params[:id]]
+    user = User.find_by!(id: id)
     render :json => user.as_json(methods: :avgRating)
   end
 

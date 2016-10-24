@@ -12,8 +12,8 @@ Rails.application.routes.draw do
         get '/' => 'api#hello'
       end
       scope '/profile' do
-        # Get user profile information by email lookup, allow dots in email param
-        get '/:email' => 'api#profile', :constraints => {:email => /[^\/]+/ }
+        # Get user profile information by id lookup
+        get '/:id' => 'api#profile'
         # post '/:email' => 'api#createprofile', :constraints => {:email => /[^\/]+/ }
       end
       scope '/requests' do
