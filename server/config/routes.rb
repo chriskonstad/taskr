@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
+
   scope '/api' do
     scope '/v1' do
       scope '/test' do
@@ -14,7 +15,7 @@ Rails.application.routes.draw do
       scope '/profile' do
         # Get user profile information by id lookup
         get '/:id' => 'api#profile'
-        # post '/:email' => 'api#createprofile', :constraints => {:email => /[^\/]+/ }
+        post '/:id' => 'api#createprofile'
       end
       scope '/requests' do
         scope '/nearby' do

@@ -27,6 +27,18 @@ class ApiController < ApplicationController
   #   end
   # end
 
+
+  def createprofile
+    user = User.create(name: params[:name], email: params[:email], wallet: params[:wallet], created_at: Time.now,  updated_at: Time.now)
+
+    if user.save
+      # render :text => "creating the profile now"
+      render json: user
+    else
+      render nothing: true, status: :bad_request
+    end
+  end
+
   def nearby
     long = params[:long].to_f
     lat = params[:lat].to_f
@@ -54,7 +66,7 @@ class ApiController < ApplicationController
 
   private
     def api_user_params
-      params.fetch(:user, {})
+      params.permit(:email)
     end
 end
 
