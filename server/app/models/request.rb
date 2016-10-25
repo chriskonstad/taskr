@@ -19,11 +19,13 @@ class Request < ActiveRecord::Base
   end
 
   def Request.openNear(longitude, latitude, radius_miles)
-    # Find all non-completed requests within radius_miles of longitude/latitude
+    # Find all non-completed, not past-due requests within radius_miles of
+    # longitude/latitude
     return Request.includes(:trans)
       .where(:transactions => { :request_id => nil })
       .select { |r|
-      Request.distance(longitude, latitude, r.long, r.lat) <= radius_miles
+      Request.distance(longitude, latitude, r.long, r.lat) <= radius_miles &&
+        Time.now <= r.due
     }
   end
 end

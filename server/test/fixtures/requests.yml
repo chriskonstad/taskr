@@ -7,7 +7,7 @@ samplecompleted:
   amount: 1.5
   lat: 1.5
   long: 1.5
-  due: 2016-10-24 00:14:55
+  due: 2017-10-24 00:14:55
   description: Sample description
 
 sampleopen:
@@ -17,5 +17,15 @@ sampleopen:
   amount: 1.5
   lat: 1.5
   long: 1.5
-  due: 2016-10-24 00:14:55
+  due: 2017-10-24 00:14:55
+  description: MyText
+
+openpastdue:
+  id: 3
+  title: Sample Open (Past Due)
+  user_id: 1
+  amount: 1.5
+  lat: 1.5
+  long: 1.5
+  due: 2015-10-24 00:14:55
   description: MyText
