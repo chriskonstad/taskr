@@ -29,7 +29,7 @@ class ApiController < ApplicationController
 
 
   def createprofile
-    user = User.create(name: params[:name], email: params[:email], wallet: params[:wallet], created_at: Time.now,  updated_at: Time.now)
+    user = User.create(name: params[:name], email: params[:email], wallet: params[:wallet])
 
     if user.save
       # render :text => "creating the profile now"

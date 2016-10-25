@@ -15,7 +15,7 @@ Rails.application.routes.draw do
       scope '/profile' do
         # Get user profile information by id lookup
         get '/:id' => 'api#profile'
-        post '/:id' => 'api#createprofile'
+        post '/' => 'api#createprofile'
       end
       scope '/requests' do
         scope '/nearby' do
