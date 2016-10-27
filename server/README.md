@@ -25,7 +25,7 @@
 
 - [x] Filter requests that are past due
 
-- [ ] Edit open request
+- [x] Edit open request
 
 - [ ] Cancel open request
 
