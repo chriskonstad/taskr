@@ -56,3 +56,5 @@
   - [x] See reviews of user
 
   - [x] See posted/completed tasks
+  
+  - [ ] Add automated tests for more behavior (move code from controllers to pure logically helpers to make it more testable)
