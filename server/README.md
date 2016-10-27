@@ -27,9 +27,17 @@
 
 - [x] Edit open request
 
-- [ ] Cancel open request
+- [ ] Accept open request
 
   - [ ] Ensure status changes
+  
+- [ ] Reject accepted request
+
+  - [ ] Ensure status changes
+
+- [x] Cancel open request
+
+  - [x] Ensure status changes
 
 - [ ] Complete request
 
