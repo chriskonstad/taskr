@@ -23,7 +23,9 @@ Rails.application.routes.draw do
           get '/' => 'api#nearby' # params: long, lat, radius (miles)
         end
         get '/' => 'api#products'
-        get '/:user_id' => 'api#product'
+        post '/' => 'api#createrequest'
+        get '/:id' => 'api#showrequest'
+        get '/user/:user_id' => 'api#product'
       end
     end
   end

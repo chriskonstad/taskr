@@ -19,13 +19,15 @@
 
 - [ ] Logout
 
-- [ ] Create request
+- [x] Create request
 
 - [x] Search requests nearby
 
 - [x] Filter requests that are past due
 
-- [ ] Edit/cancel open request
+- [ ] Edit open request
+
+- [ ] Cancel open request
 
 - [ ] Complete request
 
@@ -33,8 +35,8 @@
 
 - [ ] Add review of user, one per task
 
-- [ ] User profile
+- [x] User profile
 
-  - [ ] See reviews of user
+  - [x] See reviews of user
 
-  - [ ] See posted/completed tasks
+  - [x] See posted/completed tasks
