@@ -25,6 +25,7 @@ Rails.application.routes.draw do
         get '/' => 'api#products'
         post '/' => 'api#createrequest'
         get '/:id' => 'api#showrequest'
+        post '/:id' => 'api#editrequest'
         get '/user/:user_id' => 'api#product'
       end
     end

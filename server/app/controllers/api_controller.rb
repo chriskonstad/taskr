@@ -65,6 +65,19 @@ class ApiController < ApplicationController
     end
   end
 
+  # Let the user edit a request, EXCLUDING some values (id, status)
+  def editrequest
+    id = params[:id]
+    json = params[:request]
+    req = Request.find_by(id: id)
+    if req
+      req.update(api_request_edit_params)
+      render nothing: true
+    else
+      render nothing: true, status: 404
+    end
+  end
+
   # Show ALL requests
   def products
     requests = Request.all
@@ -85,6 +98,15 @@ class ApiController < ApplicationController
     def api_request_creation_params
       params.require(:request).permit(:title,
                                       :user_id,
+                                      :amount,
+                                      :lat,
+                                      :long,
+                                      :due,
+                                      :description)
+    end
+
+    def api_request_edit_params
+      params.require(:request).permit(:title,
                                       :amount,
                                       :lat,
                                       :long,
