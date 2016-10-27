@@ -27,6 +27,15 @@ Rails.application.routes.draw do
       scope '/requests' do
         get '/nearby' => 'api#nearby' # params: long, lat, radius (miles)
         post '/' => 'api#createrequest'
+
+        # TODO Need to add actor FK -> User on Request
+        #post '/accept/:id' => 'api#acceptrequest'
+        #post '/reject/:id' => 'api#rejectrequest'
+
+        #post '/complete/:id' => 'api#completerequest'
+        #post '/pay/:id' => 'api#payrequest'
+        post '/cancel' => 'api#cancelrequest'
+
         get '/:id' => 'api#showrequest'
         post '/:id' => 'api#editrequest'
       end

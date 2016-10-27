@@ -5,7 +5,7 @@ class Request < ActiveRecord::Base
   validates :title, :user, :amount, :lat, :long, :due, presence: true
   validates :amount, :numericality => { :greater_than_or_equal_to => 0 }
 
-  enum status: {open: 0, accepted: 1, completed: 2, canceled: 3}
+  enum status: {open: 0, accepted: 1, completed: 2, canceled: 3, paid: 4}
 
   after_initialize :set_default_values
 

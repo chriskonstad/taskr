@@ -68,13 +68,34 @@ class ApiController < ApplicationController
   # Let the user edit a request, EXCLUDING some values (id, status)
   def editrequest
     id = params[:id]
+    user_id = params[:auth][:user_id]
+
     json = params[:request]
-    req = Request.find_by(id: id)
+    req = Request.find_by(id: id, user_id: user_id)
     if req
       req.update(api_request_edit_params)
       render nothing: true
     else
-      render nothing: true, status: 404
+      render nothing: true, status: 400
+    end
+  end
+
+  # Let user cancel a request
+  def cancelrequest
+    id = params[:params][:id]
+    user_id = params[:auth][:user_id]
+
+    req = Request.find_by(id: id, user_id: user_id)
+    if req
+      # Make sure user can only cancel open requests
+      if !req.open?
+        render nothing: true, status: 403
+      else
+        req.update(status: Request.statuses[:canceled])
+        render nothing: true
+      end
+    else
+      render nothing: true, status: 400
     end
   end
 
