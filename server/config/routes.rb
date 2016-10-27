@@ -10,34 +10,34 @@ Rails.application.routes.draw do
     scope '/v1' do
       scope '/test' do
         # Simple endpoint for testing the server
-        get '/' => 'api#hello'
+        get '/' => 'debug#hello'
       end
       # Debug scope for API calls not necessary for normal app function
       scope '/debug' do
         scope '/requests' do
-          get '/' => 'api#products'
-          get '/user/:user_id' => 'api#product'
+          get '/' => 'debug#products'
+          get '/user/:user_id' => 'debug#product'
         end
       end
       scope '/profile' do
         # Get user profile information by id lookup
-        get '/:id' => 'api#profile'
-        post '/' => 'api#createprofile'
+        get '/:id' => 'profile#show'
+        post '/' => 'profile#create'
       end
       scope '/requests' do
-        get '/nearby' => 'api#nearby' # params: long, lat, radius (miles)
-        post '/' => 'api#createrequest'
+        get '/nearby' => 'request#nearby' # params: long, lat, radius (miles)
+        post '/' => 'request#create'
 
         # TODO Need to add actor FK -> User on Request
-        #post '/accept/:id' => 'api#acceptrequest'
-        #post '/reject/:id' => 'api#rejectrequest'
+        #post '/accept/:id' => 'request#accept'
+        #post '/reject/:id' => 'request#reject'
 
-        #post '/complete/:id' => 'api#completerequest'
-        #post '/pay/:id' => 'api#payrequest'
-        post '/cancel' => 'api#cancelrequest'
+        #post '/complete/:id' => 'request#complete'
+        #post '/pay/:id' => 'request#pay'
+        post '/cancel' => 'request#cancel'
 
-        get '/:id' => 'api#showrequest'
-        post '/:id' => 'api#editrequest'
+        get '/:id' => 'request#show'
+        post '/:id' => 'request#edit'
       end
     end
   end

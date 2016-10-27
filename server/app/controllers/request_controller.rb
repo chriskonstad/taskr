@@ -1,38 +1,9 @@
-class ApiController < ApplicationController
+class RequestController < ApplicationController
 
   skip_before_action :verify_authenticity_token
 
-  # Hello world endpoint
-  def hello
-    render :text => "hello world"
-  end
-
-  # Get user profile information
-  def profile
-    id = [params[:id]]
-    user = User.find_by!(id: id)
-    render :json => user.as_json({:methods => [:avgRating,
-                                               :paid,
-                                               :earned,
-                                               :rated,
-                                               :rating,
-                                               :request]})
-  end
-
-  # Create a new user profile
-  def createprofile
-    user = User.create(name: params[:name], email: params[:email], wallet: params[:wallet])
-
-    if user.save
-      # render :text => "creating the profile now"
-      render json: user
-    else
-      render nothing: true, status: :bad_request
-    end
-  end
-
   # Show request as JSON given an ID
-  def showrequest
+  def show
     r = Request.where(id: params[:id]).first
     render :json => r.as_json
   end
@@ -55,9 +26,9 @@ class ApiController < ApplicationController
   end
 
   # Create a request with JSON parameters
-  def createrequest
+  def create
     json = params[:request]
-    req = Request.create(api_request_creation_params)
+    req = Request.create(creation_params)
     if req.id
       render :json => { "id" => req.id }.to_json
     else
@@ -66,14 +37,14 @@ class ApiController < ApplicationController
   end
 
   # Let the user edit a request, EXCLUDING some values (id, status)
-  def editrequest
+  def edit
     id = params[:id]
     user_id = params[:auth][:user_id]
 
     json = params[:request]
     req = Request.find_by(id: id, user_id: user_id)
     if req
-      req.update(api_request_edit_params)
+      req.update(edit_params)
       render nothing: true
     else
       render nothing: true, status: 400
@@ -81,7 +52,7 @@ class ApiController < ApplicationController
   end
 
   # Let user cancel a request
-  def cancelrequest
+  def cancel
     id = params[:params][:id]
     user_id = params[:auth][:user_id]
 
@@ -99,24 +70,8 @@ class ApiController < ApplicationController
     end
   end
 
-  # Show ALL requests
-  def products
-    requests = Request.all
-    render :json => requests.all
-  end
-
-  # Show all requests opened by user with ID user_id
-  def product
-    request = Request.where(user_id: [params[:user_id]])
-    render :json => request.as_json
-  end
-
   private
-    def api_user_params
-      params.permit(:email)
-    end
-
-    def api_request_creation_params
+    def creation_params
       params.require(:request).permit(:title,
                                       :user_id,
                                       :amount,
@@ -126,7 +81,7 @@ class ApiController < ApplicationController
                                       :description)
     end
 
-    def api_request_edit_params
+    def edit_params
       params.require(:request).permit(:title,
                                       :amount,
                                       :lat,
