@@ -37,4 +37,12 @@ class Request < ActiveRecord::Base
         Time.now <= r.due
     }
   end
+
+  def Request.doEdit(rid, uid, params)
+    req = Request.find_by(id: rid, user_id: uid)
+    if req
+      req.update(params)
+    end
+    !req.nil?
+  end
 end

@@ -51,4 +51,27 @@ class RequestTest < ActiveSupport::TestCase
     assert_equal testuser.id, accepted.actor.id
     assert accepted.accepted?
   end
+
+  test "doEdit" do
+    open = requests(:sampleopen)
+    owner = users(:namey)
+    otheruser = users(:testuser)
+
+    assert_equal owner.id, open.user.id
+    old_title = open.title
+    new_title = "This is a new title"
+    newer_title = "This is a newer title"
+    assert_not_equal old_title, new_title
+
+    # Check that editing as owning user works
+    assert Request.doEdit(open.id, owner.id, {'title' => new_title })
+    open.reload
+    assert_equal new_title, open.title
+
+    # Ensure editing as another user doesn't work
+    assert_not_equal open.title, newer_title
+    assert_not Request.doEdit(open.id, otheruser.id, {'title' => newer_title})
+    open.reload
+    assert_not_equal newer_title, open.title
+  end
 end
