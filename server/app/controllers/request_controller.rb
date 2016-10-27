@@ -26,7 +26,6 @@ class RequestController < ApplicationController
 
   # Create a request with JSON parameters
   def create
-    json = params[:request]
     req = Request.create(creation_params)
     if req.id
       render :json => { "id" => req.id }.to_json
@@ -52,16 +51,8 @@ class RequestController < ApplicationController
     id = params[:params][:id]
     user_id = params[:auth][:user_id]
 
-    req = Request.find_by(id: id)
-    if req
-      # Make sure user can only accept open requests
-      if !req.open?
-        render nothing: true, status: 403
-      else
-        req.update(status: Request.statuses[:accepted],
-                   actor_id: user_id)
-        render nothing: true
-      end
+    if Request.doAccept(id, user_id)
+      render nothing: true
     else
       render nothing: true, status: 400
     end
@@ -72,16 +63,8 @@ class RequestController < ApplicationController
     id = params[:params][:id]
     user_id = params[:auth][:user_id]
 
-    req = Request.find_by(id: id, actor_id: user_id)
-    if req
-      # Make sure user can only reject accepted requests
-      if !req.accepted?
-        render nothing: true, status: 403
-      else
-        req.update(status: Request.statuses[:open],
-                   actor_id: nil)
-        render nothing: true
-      end
+    if Request.doReject(id, user_id)
+      render nothing: true
     else
       render nothing: true, status: 400
     end
@@ -92,16 +75,8 @@ class RequestController < ApplicationController
     id = params[:params][:id]
     user_id = params[:auth][:user_id]
 
-    req = Request.find_by(id: id, actor_id: user_id)
-    if req
-      # Make sure user can only complete accepted requests
-      if !req.accepted?
-        render nothing: true, status: 403
-      else
-        req.update(status: Request.statuses[:completed])
-        # TODO Notify the original poster???
-        render nothing: true
-      end
+    if Request.doComplete(id, user_id)
+      render nothing: true
     else
       render nothing: true, status: 400
     end

@@ -74,4 +74,95 @@ class RequestTest < ActiveSupport::TestCase
     open.reload
     assert_not_equal newer_title, open.title
   end
+
+  test "doAccept" do
+    open = requests(:sampleopen)
+    otheruser = users(:testuser)
+
+    assert_not_equal otheruser.id, open.user.id
+    assert open.open?
+
+    # Ensure owner cannot accept
+    assert_not Request.doAccept(open.id, open.user.id)
+    open.reload
+    assert_not open.accepted?
+
+    # Ensure another user can accept
+    assert Request.doAccept(open.id, otheruser.id)
+    open.reload
+    assert open.accepted?
+
+    # Accepted (cannot accept an already accepted request)
+    assert open.accepted?
+    assert_not Request.doAccept(open.id, otheruser.id)
+
+    # TODO Completed
+    # TODO Paid
+  end
+
+  test "doReject" do
+    open = requests(:sampleopen)
+    otheruser = users(:testuser)
+
+    assert_not_equal otheruser.id, open.user.id
+    assert open.open?
+
+    # Ensure cannot reject open request
+    assert_not Request.doReject(open.id, otheruser.id)
+    open.reload
+    assert open.open?
+    assert_nil open.actor
+
+    # Accept it first
+    assert Request.doAccept(open.id, otheruser.id)
+    open.reload
+    assert open.accepted?
+
+    # Test Rejections
+    # Ensure that not anyone can reject
+    assert_not Request.doReject(open.id, open.user.id)
+    open.reload
+    assert open.accepted?
+
+    # Ensure actor can reject
+    assert Request.doReject(open.id, otheruser.id)
+    open.reload
+    assert open.open?
+    assert_nil open.actor
+
+    # TODO Completed
+    # TODO Paid
+  end
+
+  test "doComplete" do
+    open = requests(:sampleopen)
+    otheruser = users(:testuser)
+
+    assert_not_equal otheruser.id, open.user.id
+    assert open.open?
+
+    # Ensure cannot complete open request
+    assert_not Request.complete(open.id, otheruser.id)
+    open.reload
+    assert open.open?
+    assert_nil open.actor
+
+    # Accept it first
+    assert Request.doAccept(open.id, otheruser.id)
+    open.reload
+    assert open.accepted?
+
+    # Ensure only actor can complete it
+    assert_not Request.doComplete(open.id, open.user.id)
+    open.reload
+    assert open.accepted?
+
+    # Complete it
+    assert Request.doComplete(open.id, otheruser.id)
+    open.reload
+    assert open.completed?
+    assert_equal otheruser.id, open.actor.id
+
+    # TODO Paid
+  end
 end

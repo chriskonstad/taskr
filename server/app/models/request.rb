@@ -45,4 +45,34 @@ class Request < ActiveRecord::Base
     end
     !req.nil?
   end
+
+  def Request.doAccept(rid, aid)
+    req = Request.find_by(id: rid)
+    if req && req.open? && req.user.is != aid
+      req.update(status: Request.statuses[:accepted],
+                 actor_id: aid)
+      return true
+    end
+    false
+  end
+
+  def Request.doReject(rid, aid)
+    req = Request.find_by(id: rid, actor_id: aid)
+    if req && req.accepted?
+      req.update(status: Request.statuses[:open],
+                 actor_id: nil)
+      return true
+    end
+    false
+  end
+
+  def Request.doComplete(rid, aid)
+    req = Request.find_by(id: rid, actor_id: aid)
+    if req && req.accepted?
+      req.update(status: Request.statuses[:completed])
+      # TODO: Notify the original poster???
+      return true
+    end
+    false
+  end
 end
