@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:text = "Find User by ID"
+            android:textSize="20sp"
+            android:textColor="#000000"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <EditText android:id="@+id/profile_id_field"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/edit_profile_id" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/find_profile"
+            android:onClick="findUserById"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:textSize="15sp"
+            android:textColor="#000000"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/profile_id_result"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:text = "Find Nearby Requests"
+            android:textSize="20sp"
+            android:textColor="#000000"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/find_nearby_requests"
+            android:onClick="findNearbyRequests"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:textSize="15sp"
+            android:textColor="#000000"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/nearby_requests_result"
+            android:layout_weight="1" />
+    </LinearLayout>
+</LinearLayout>

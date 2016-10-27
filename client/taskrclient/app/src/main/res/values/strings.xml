@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Taskr</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="find_profile">Find User</string>
+    <string name="edit_profile_id">Enter a user id</string>
+    <string name="find_nearby_requests">Find nearby requests</string>
+</resources>
