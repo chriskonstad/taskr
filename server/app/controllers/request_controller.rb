@@ -19,7 +19,7 @@ class RequestController < ApplicationController
         !params.has_key?(:radius))
       render nothing: true, status: 400
     else
-      requests = Request.openNear(long, lat, radius_miles)
+      requests = Request.open_near(long, lat, radius_miles)
       render :json => requests.as_json
     end
   end
@@ -39,7 +39,7 @@ class RequestController < ApplicationController
     id = params[:id]
     user_id = params[:auth][:user_id]
 
-    if Request.doEdit(id, user_id, edit_params)
+    if Request.do_edit(id, user_id, edit_params)
       render nothing: true
     else
       render nothing: true, status: 400

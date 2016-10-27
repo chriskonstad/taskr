@@ -37,7 +37,7 @@ class RequestTest < ActiveSupport::TestCase
     assert_nil open.trans
     assert_nil past_due.trans
 
-    requests = Request.openNear(1.51, 1.51, 5.0)
+    requests = Request.open_near(1.51, 1.51, 5.0)
 
     assert requests.include? open
     assert_not requests.include? completed
@@ -52,7 +52,7 @@ class RequestTest < ActiveSupport::TestCase
     assert accepted.accepted?
   end
 
-  test "doEdit" do
+  test "do_edit" do
     open = requests(:sampleopen)
     owner = users(:namey)
     otheruser = users(:testuser)
@@ -64,13 +64,13 @@ class RequestTest < ActiveSupport::TestCase
     assert_not_equal old_title, new_title
 
     # Check that editing as owning user works
-    assert Request.doEdit(open.id, owner.id, {'title' => new_title })
+    assert Request.do_edit(open.id, owner.id, {'title' => new_title })
     open.reload
     assert_equal new_title, open.title
 
     # Ensure editing as another user doesn't work
     assert_not_equal open.title, newer_title
-    assert_not Request.doEdit(open.id, otheruser.id, {'title' => newer_title})
+    assert_not Request.do_edit(open.id, otheruser.id, {'title' => newer_title})
     open.reload
     assert_not_equal newer_title, open.title
   end
