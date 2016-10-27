@@ -12,6 +12,13 @@ Rails.application.routes.draw do
         # Simple endpoint for testing the server
         get '/' => 'api#hello'
       end
+      # Debug scope for API calls not necessary for normal app function
+      scope '/debug' do
+        scope '/requests' do
+          get '/' => 'api#products'
+          get '/user/:user_id' => 'api#product'
+        end
+      end
       scope '/profile' do
         # Get user profile information by id lookup
         get '/:id' => 'api#profile'
@@ -22,11 +29,9 @@ Rails.application.routes.draw do
           # Get all open nearby requests, can specify where and what radius
           get '/' => 'api#nearby' # params: long, lat, radius (miles)
         end
-        get '/' => 'api#products'
         post '/' => 'api#createrequest'
         get '/:id' => 'api#showrequest'
         post '/:id' => 'api#editrequest'
-        get '/user/:user_id' => 'api#product'
       end
     end
   end
