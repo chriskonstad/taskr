@@ -28,7 +28,6 @@ Rails.application.routes.draw do
         get '/nearby' => 'request#nearby' # params: long, lat, radius (miles)
         post '/' => 'request#create'
 
-        # TODO Need to add actor FK -> User on Request
         #post '/accept/:id' => 'request#accept'
         #post '/reject/:id' => 'request#reject'
 

@@ -11,7 +11,8 @@ class ProfileController < ApplicationController
                                                :earned,
                                                :rated,
                                                :rating,
-                                               :request]})
+                                               :request,
+                                               :actions]})
   end
 
   # Create a new user profile

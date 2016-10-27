@@ -43,4 +43,12 @@ class RequestTest < ActiveSupport::TestCase
     assert_not requests.include? completed
     assert_not requests.include? past_due
   end
+
+  test "check accepted" do
+    accepted = requests(:sampleaccepted)
+    testuser = users(:testuser)
+
+    assert_equal testuser.id, accepted.actor.id
+    assert accepted.accepted?
+  end
 end
