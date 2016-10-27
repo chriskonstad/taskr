@@ -10,20 +10,33 @@ Rails.application.routes.draw do
     scope '/v1' do
       scope '/test' do
         # Simple endpoint for testing the server
-        get '/' => 'api#hello'
+        get '/' => 'debug#hello'
+      end
+      # Debug scope for API calls not necessary for normal app function
+      scope '/debug' do
+        scope '/requests' do
+          get '/' => 'debug#products'
+          get '/user/:user_id' => 'debug#product'
+        end
       end
       scope '/profile' do
         # Get user profile information by id lookup
-        get '/:id' => 'api#profile'
-        post '/' => 'api#createprofile'
+        get '/:id' => 'profile#show'
+        post '/' => 'profile#create'
       end
       scope '/requests' do
-        scope '/nearby' do
-          # Get all open nearby requests, can specify where and what radius
-          get '/' => 'api#nearby' # params: long, lat, radius (miles)
-        end
-        get '/' => 'api#products'
-        get '/:user_id' => 'api#product'
+        get '/nearby' => 'request#nearby' # params: long, lat, radius (miles)
+        post '/' => 'request#create'
+
+        post '/accept' => 'request#accept'
+        post '/reject' => 'request#reject'
+
+        post '/complete' => 'request#complete'
+        post '/pay' => 'request#pay'
+        post '/cancel' => 'request#cancel'
+
+        get '/:id' => 'request#show'
+        post '/:id' => 'request#edit'
       end
     end
   end

@@ -19,22 +19,42 @@
 
 - [ ] Logout
 
-- [ ] Create request
+- [x] Create request
 
 - [x] Search requests nearby
 
 - [x] Filter requests that are past due
 
-- [ ] Edit/cancel open request
+- [x] Edit open request
 
-- [ ] Complete request
+- [x] Accept open request
+
+  - [x] Ensure status changes
+
+- [x] Reject accepted request
+
+  - [x] Ensure status changes
+
+- [x] Cancel open request
+
+  - [x] Ensure status changes
+
+- [x] Complete request
+
+  - [x] Ensure status changes
+
+  - [ ] Alert the original poster
 
 - [ ] Send payment
 
+  - [x] Ensure status changes
+
 - [ ] Add review of user, one per task
 
-- [ ] User profile
+- [x] User profile
 
-  - [ ] See reviews of user
+  - [x] See reviews of user
 
-  - [ ] See posted/completed tasks
+  - [x] See posted/completed tasks
+  
+- [ ] Add automated tests for more behavior (move code from controllers to pure logically helpers to make it more testable)

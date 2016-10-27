@@ -9,6 +9,7 @@ samplecompleted:
   long: 1.5
   due: 2017-10-24 00:14:55
   description: Sample description
+  status: <%= Request.statuses[:completed] %>
 
 sampleopen:
   id: 2
@@ -19,6 +20,7 @@ sampleopen:
   long: 1.5
   due: 2017-10-24 00:14:55
   description: MyText
+  status: <%= Request.statuses[:open] %>
 
 openpastdue:
   id: 3
@@ -29,3 +31,16 @@ openpastdue:
   long: 1.5
   due: 2015-10-24 00:14:55
   description: MyText
+  status: <%= Request.statuses[:open] %>
+
+sampleaccepted:
+  id: 4
+  title: Sample Accepted
+  user_id: 1
+  amount: 1.5
+  lat: 1.5
+  long: 1.5
+  due: 2017-10-24 00:14:55
+  description: MyText
+  status: <%= Request.statuses[:accepted] %>
+  actor_id: 2
