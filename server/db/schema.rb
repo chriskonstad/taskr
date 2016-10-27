@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161027041605) do
+ActiveRecord::Schema.define(version: 20161027051017) do
 
   create_table "requests", force: :cascade do |t|
     t.string   "title"
@@ -21,9 +21,9 @@ ActiveRecord::Schema.define(version: 20161027041605) do
     t.float    "long"
     t.datetime "due"
     t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.integer  "status"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.integer  "status",      default: 0, null: false
   end
 
   add_index "requests", ["user_id"], name: "index_requests_on_user_id"

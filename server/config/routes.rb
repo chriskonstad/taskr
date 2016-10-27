@@ -25,10 +25,7 @@ Rails.application.routes.draw do
         post '/' => 'api#createprofile'
       end
       scope '/requests' do
-        scope '/nearby' do
-          # Get all open nearby requests, can specify where and what radius
-          get '/' => 'api#nearby' # params: long, lat, radius (miles)
-        end
+        get '/nearby' => 'api#nearby' # params: long, lat, radius (miles)
         post '/' => 'api#createrequest'
         get '/:id' => 'api#showrequest'
         post '/:id' => 'api#editrequest'
