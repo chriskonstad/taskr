@@ -48,97 +48,59 @@ class RequestController < ApplicationController
 
   # Let user accept a request
   def accept
-    id = params[:params][:id]
-    user_id = params[:auth][:user_id]
-
-    if Request.doAccept(id, user_id)
-      render nothing: true
-    else
-      render nothing: true, status: 400
-    end
+    handle_action('accept')
   end
 
   # Let user reject a request
   def reject
-    id = params[:params][:id]
-    user_id = params[:auth][:user_id]
-
-    if Request.doReject(id, user_id)
-      render nothing: true
-    else
-      render nothing: true, status: 400
-    end
+    handle_action('reject')
   end
 
   # Let user complete a request
   def complete
+    handle_action('complete')
+  end
+
+  # Let user pay a request
+  def pay
+    handle_action('pay')
+  end
+
+  # Let user cancel a request
+  def cancel
+    handle_action('cancel')
+  end
+
+  private
+
+  def handle_action(event)
     id = params[:params][:id]
     user_id = params[:auth][:user_id]
 
-    if Request.doComplete(id, user_id)
+    if Request.handle_action(event, id, user_id)
       render nothing: true
     else
       render nothing: true, status: 400
     end
   end
 
-  # Let user pay a request
-  def pay
-    id = params[:params][:id]
-    user_id = params[:auth][:user_id]
-
-    req = Request.find_by(id: id, user_id: user_id)
-    if req
-      # Make sure user can only complete accepted requests
-      if !req.completed?
-        render nothing: true, status: 403
-      else
-        req.update(status: Request.statuses[:paid])
-        # TODO Create a Transaction to pay the actor
-        render nothing: true
-      end
-    else
-      render nothing: true, status: 400
-    end
+  def creation_params
+    params.require(:request).permit(:title,
+                                    :user_id,
+                                    :amount,
+                                    :lat,
+                                    :long,
+                                    :due,
+                                    :description)
   end
 
-  # Let user cancel a request
-  def cancel
-    id = params[:params][:id]
-    user_id = params[:auth][:user_id]
-
-    req = Request.find_by(id: id, user_id: user_id)
-    if req
-      # Make sure user can only cancel open requests
-      if !req.open?
-        render nothing: true, status: 403
-      else
-        req.update(status: Request.statuses[:canceled])
-        render nothing: true
-      end
-    else
-      render nothing: true, status: 400
-    end
+  def edit_params
+    params.require(:request).permit(:title,
+                                    :amount,
+                                    :lat,
+                                    :long,
+                                    :due,
+                                    :description)
   end
-
-  private
-    def creation_params
-      params.require(:request).permit(:title,
-                                      :user_id,
-                                      :amount,
-                                      :lat,
-                                      :long,
-                                      :due,
-                                      :description)
-    end
-
-    def edit_params
-      params.require(:request).permit(:title,
-                                      :amount,
-                                      :lat,
-                                      :long,
-                                      :due,
-                                      :description)
-    end
 end
 
