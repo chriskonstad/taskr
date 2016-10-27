@@ -27,25 +27,27 @@
 
 - [x] Edit open request
 
-- [ ] Accept open request
+- [x] Accept open request
 
-  - [ ] Ensure status changes
-  
-- [ ] Reject accepted request
+  - [x] Ensure status changes
 
-  - [ ] Ensure status changes
+- [x] Reject accepted request
+
+  - [x] Ensure status changes
 
 - [x] Cancel open request
 
   - [x] Ensure status changes
 
-- [ ] Complete request
+- [x] Complete request
 
-  - [ ] Ensure status changes
+  - [x] Ensure status changes
+
+  - [ ] Alert the original poster
 
 - [ ] Send payment
 
-  - [ ] Ensure status changes
+  - [x] Ensure status changes
 
 - [ ] Add review of user, one per task
 

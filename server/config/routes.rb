@@ -28,11 +28,11 @@ Rails.application.routes.draw do
         get '/nearby' => 'request#nearby' # params: long, lat, radius (miles)
         post '/' => 'request#create'
 
-        #post '/accept/:id' => 'request#accept'
-        #post '/reject/:id' => 'request#reject'
+        post '/accept' => 'request#accept'
+        post '/reject' => 'request#reject'
 
-        #post '/complete/:id' => 'request#complete'
-        #post '/pay/:id' => 'request#pay'
+        post '/complete' => 'request#complete'
+        post '/pay' => 'request#pay'
         post '/cancel' => 'request#cancel'
 
         get '/:id' => 'request#show'

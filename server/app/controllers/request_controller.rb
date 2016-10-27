@@ -10,7 +10,6 @@ class RequestController < ApplicationController
 
   # Show all nearby open requests
   def nearby
-    # TODO convert to JSON params?
     long = params[:long].to_f
     lat = params[:lat].to_f
     radius_miles = params[:radius].to_f
@@ -46,6 +45,86 @@ class RequestController < ApplicationController
     if req
       req.update(edit_params)
       render nothing: true
+    else
+      render nothing: true, status: 400
+    end
+  end
+
+  # Let user accept a request
+  def accept
+    id = params[:params][:id]
+    user_id = params[:auth][:user_id]
+
+    req = Request.find_by(id: id)
+    if req
+      # Make sure user can only accept open requests
+      if !req.open?
+        render nothing: true, status: 403
+      else
+        req.update(status: Request.statuses[:accepted],
+                   actor_id: user_id)
+        render nothing: true
+      end
+    else
+      render nothing: true, status: 400
+    end
+  end
+
+  # Let user reject a request
+  def reject
+    id = params[:params][:id]
+    user_id = params[:auth][:user_id]
+
+    req = Request.find_by(id: id, actor_id: user_id)
+    if req
+      # Make sure user can only reject accepted requests
+      if !req.accepted?
+        render nothing: true, status: 403
+      else
+        req.update(status: Request.statuses[:open],
+                   actor_id: nil)
+        render nothing: true
+      end
+    else
+      render nothing: true, status: 400
+    end
+  end
+
+  # Let user complete a request
+  def complete
+    id = params[:params][:id]
+    user_id = params[:auth][:user_id]
+
+    req = Request.find_by(id: id, actor_id: user_id)
+    if req
+      # Make sure user can only complete accepted requests
+      if !req.accepted?
+        render nothing: true, status: 403
+      else
+        req.update(status: Request.statuses[:completed])
+        # TODO Notify the original poster???
+        render nothing: true
+      end
+    else
+      render nothing: true, status: 400
+    end
+  end
+
+  # Let user pay a request
+  def pay
+    id = params[:params][:id]
+    user_id = params[:auth][:user_id]
+
+    req = Request.find_by(id: id, user_id: user_id)
+    if req
+      # Make sure user can only complete accepted requests
+      if !req.completed?
+        render nothing: true, status: 403
+      else
+        req.update(status: Request.statuses[:paid])
+        # TODO Create a Transaction to pay the actor
+        render nothing: true
+      end
     else
       render nothing: true, status: 400
     end
