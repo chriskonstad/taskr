@@ -5,6 +5,15 @@ class Request < ActiveRecord::Base
   validates :title, :user, :amount, :lat, :long, :due, presence: true
   validates :amount, :numericality => { :greater_than_or_equal_to => 0 }
 
+  enum status: {open: 0, accepted: 1, completed: 2, canceled: 3}
+
+  after_initialize :set_default_values
+
+  def set_default_values
+    # Default request to open
+    self.status ||= Request.statuses[:open]
+  end
+
   def Request.distance(longA, latA, longB, latB)
     deg2Rad = lambda { |d| d * (Math::PI/180.0) }
     earth_radius = 3961.0
@@ -19,10 +28,9 @@ class Request < ActiveRecord::Base
   end
 
   def Request.openNear(longitude, latitude, radius_miles)
-    # Find all non-completed, not past-due requests within radius_miles of
+    # Find all open, not past-due requests within radius_miles of
     # longitude/latitude
-    return Request.includes(:trans)
-      .where(:transactions => { :request_id => nil })
+    return Request.where(status: Request.statuses[:open])
       .select { |r|
       Request.distance(longitude, latitude, r.long, r.lat) <= radius_miles &&
         Time.now <= r.due

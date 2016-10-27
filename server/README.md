@@ -29,9 +29,15 @@
 
 - [ ] Cancel open request
 
+  - [ ] Ensure status changes
+
 - [ ] Complete request
 
+  - [ ] Ensure status changes
+
 - [ ] Send payment
+
+  - [ ] Ensure status changes
 
 - [ ] Add review of user, one per task
 
