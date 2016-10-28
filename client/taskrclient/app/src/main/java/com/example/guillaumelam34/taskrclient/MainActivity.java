@@ -18,6 +18,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.taskr.api.Api;
+import com.taskr.api.Profile;
+import com.taskr.api.Request;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -93,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
         EditText editText = (EditText) findViewById(R.id.profile_id_field);
         int userId = Integer.parseInt(editText.getText().toString());
 
-        Api.getInstance(this).getUserProfile(userId, new Api.ApiCallback<Api.Profile>() {
+        Api.getInstance(this).getUserProfile(userId, new Api.ApiCallback<Profile>() {
             @Override
-            public void onSuccess(Api.Profile profile) {
+            public void onSuccess(Profile profile) {
                 String profileString = "Name: " + profile.name + "\n" +
                         "ID: " + profile.id + "\n" +
                         "Wallet: " + profile.wallet;
@@ -131,12 +135,12 @@ public class MainActivity extends AppCompatActivity {
         double radius = DEFAULT_RADIUS; // TODO: store/get from settings?
 
         Api.getInstance(this).getNearbyRequests(latitude, longitude, radius,
-                new Api.ApiCallback<ArrayList<Api.Request>>() {
+                new Api.ApiCallback<ArrayList<Request>>() {
             @Override
-            public void onSuccess(ArrayList<Api.Request> requests) {
+            public void onSuccess(ArrayList<Request> requests) {
                 String data = "";
 
-                for(Api.Request req : requests) {
+                for(Request req : requests) {
                     data += "ID: " + req.id + "\n" +
                             "Title: " + req.title + "\n" +
                             "Amount: " + req.amount + "\n" +

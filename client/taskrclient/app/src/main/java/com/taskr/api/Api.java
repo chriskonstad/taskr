@@ -1,16 +1,17 @@
-package com.example.guillaumelam34.taskrclient;
+package com.taskr.api;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.example.guillaumelam34.taskrclient.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
@@ -20,12 +21,27 @@ public class Api {
     private static Api mApi;
     private static Context mContext;
     private static AsyncHttpClient mClient = new AsyncHttpClient();
+    private static Gson mGson = new Gson();
     private static final int MAX_RETRIES = 2;
     private static final int RETRY_DELAY_MS = 500;
 
-    private class Endpoints {
-        public static final String profile = "/api/v1/profile";
-        public static final String nearby = "/api/v1/requests/nearby";
+    private static class Endpoints {
+        public static String get(String endpoint) {
+            // Load stored hostname from settings
+            String base = PreferenceManager.getDefaultSharedPreferences(mContext)
+                    .getString(mContext.getString(R.string.key_hostname), "");
+
+            String url = "http://" + base + endpoint;
+            Log.i(TAG, "Generated endpoint: " + url);
+            return url;
+        }
+
+        public static final String PROFILE = "/api/v1/profile";
+        public static final String NEARBY = "/api/v1/requests/nearby";
+    }
+
+    private static class Types {
+        public static final Type REQUEST_LIST = new TypeToken<ArrayList<Request>>() {}.getType();
     }
 
     private Api(Context context) {
@@ -54,44 +70,17 @@ public class Api {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // PUBLIC FACING API OBJECTS
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    public class Profile {
-        public int id;
-        public String name;
-        public double wallet;
-
-        // TODO add more of the data fields
-    }
-
-    public class Request {
-        public int id;
-        public String title;
-        public double amount;
-
-        // TODO add more of the data fields
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
     // PUBLIC FACING API CALLS
     ////////////////////////////////////////////////////////////////////////////////////////////////
     public void getUserProfile(final int uid, final ApiCallback<Profile> callback) {
-        final String url = getEndpoint(Endpoints.profile) + "/" + uid;
+        final String url = Endpoints.get(Endpoints.PROFILE) + "/" + uid;
         RequestParams params = new RequestParams();
 
         AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String json = new String(responseBody);
-                Profile profile = new Profile();
-                try {
-                    JSONObject jProfile = new JSONObject(json);
-                    profile.id = jProfile.getInt("id");
-                    profile.name = jProfile.getString("name");
-                    profile.wallet = jProfile.getDouble("wallet");
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
-                }
+                Profile profile = mGson.fromJson(json, Profile.class);
 
                 callback.onSuccess(profile);
             }
@@ -111,7 +100,7 @@ public class Api {
 
     public void getNearbyRequests(double latitude, double longitude, double radius,
                                   final ApiCallback<ArrayList<Request>> callback) {
-        final String url = getEndpoint(Endpoints.nearby);
+        final String url = Endpoints.get(Endpoints.NEARBY);
         RequestParams params = new RequestParams();
         params.add("lat", Double.toString(latitude));
         params.add("long", Double.toString(longitude));
@@ -121,21 +110,7 @@ public class Api {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String json = new String(responseBody);
-                ArrayList<Request> requests = new ArrayList<>();
-
-                try {
-                    JSONArray jRequests = new JSONArray(json);
-                    for(int i=0; i<jRequests.length(); i++) {
-                        JSONObject jReq = jRequests.getJSONObject(i);
-                        Request req = new Request();
-                        req.id = jReq.getInt("id");
-                        req.title = jReq.getString("title");
-                        req.amount = jReq.getDouble("amount");
-                        requests.add(req);
-                    }
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
-                }
+                ArrayList<Request> requests = mGson.fromJson(json, Types.REQUEST_LIST);
 
                 callback.onSuccess(requests);
             }
@@ -149,18 +124,4 @@ public class Api {
 
         mClient.get(url, params, handler);
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // PRIVATE HELPER FUNCTIONS
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    private String getEndpoint(String endpoint) {
-        // Load stored hostname from settings
-        String base = PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getString(mContext.getString(R.string.key_hostname), "");
-
-        String url = "http://" + base + endpoint;
-        Log.i(TAG, "Generated endpoint: " + url);
-        return url;
-    }
-
 }
