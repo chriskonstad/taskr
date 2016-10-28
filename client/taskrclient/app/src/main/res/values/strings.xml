@@ -6,6 +6,7 @@
     <string name="find_nearby_requests">Find nearby requests</string>
 
     <!-- Preferences -->
+    <string name="category_development">Development</string>
     <string name="default_hostname">192.168.1.1:3000</string>
     <string name="key_hostname">hostname</string>
     <string name="title_activity_settings">Settings</string>

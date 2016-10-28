@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen  xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference
-        android:key="@string/key_hostname"
-        android:defaultValue="@string/default_hostname"
-        android:title="@string/hostname_title"
-        android:summary="@string/hostname_summary"
-        />
+
+    <PreferenceCategory
+        android:title="@string/category_development"
+        >
+
+        <EditTextPreference
+            android:key="@string/key_hostname"
+            android:defaultValue="@string/default_hostname"
+            android:title="@string/hostname_title"
+            android:summary="@string/hostname_summary"
+            />
+
+    </PreferenceCategory>
 </PreferenceScreen>
