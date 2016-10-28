@@ -4,7 +4,7 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.example.guillaumelam34.taskrclient.R;
+import com.taskr.client.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.AsyncHttpClient;

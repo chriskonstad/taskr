@@ -1,4 +1,4 @@
-package com.example.guillaumelam34.taskrclient;
+package com.taskr.client;
 
 import android.Manifest;
 import android.content.Context;
@@ -9,7 +9,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.LayoutInflaterCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +20,6 @@ import android.widget.TextView;
 import com.taskr.api.Api;
 import com.taskr.api.Profile;
 import com.taskr.api.Request;
-
-import junit.framework.Test;
 
 import java.util.ArrayList;
 

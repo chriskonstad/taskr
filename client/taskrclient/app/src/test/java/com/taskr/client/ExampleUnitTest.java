@@ -1,4 +1,4 @@
-package com.example.guillaumelam34.taskrclient;
+package com.taskr.client;
 
 import org.junit.Test;
 
