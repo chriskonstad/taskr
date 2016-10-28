@@ -33,7 +33,9 @@ public class Api {
         mClient.setMaxRetriesAndTimeout(MAX_RETRIES, RETRY_DELAY_MS);
     }
 
-    // Public facing Api
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // PUBLIC FACING API INFORMATION
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     public static Api getInstance(Context mContext) {
         if(null == mApi) {
             synchronized (Api.class) {
@@ -51,7 +53,9 @@ public class Api {
         public void onFailure(String message);
     }
 
-    // Public facing Api objects
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // PUBLIC FACING API OBJECTS
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     public class Profile {
         public int id;
         public String name;
@@ -68,6 +72,9 @@ public class Api {
         // TODO add more of the data fields
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // PUBLIC FACING API CALLS
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     public void getUserProfile(final int uid, final ApiCallback<Profile> callback) {
         final String url = getEndpoint(Endpoints.profile) + "/" + uid;
         RequestParams params = new RequestParams();
@@ -143,8 +150,9 @@ public class Api {
         mClient.get(url, params, handler);
     }
 
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     // PRIVATE HELPER FUNCTIONS
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     private String getEndpoint(String endpoint) {
         // Load stored hostname from settings
         String base = PreferenceManager.getDefaultSharedPreferences(mContext)
