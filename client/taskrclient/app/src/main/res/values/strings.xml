@@ -4,4 +4,13 @@
     <string name="find_profile">Find User</string>
     <string name="edit_profile_id">Enter a user id</string>
     <string name="find_nearby_requests">Find nearby requests</string>
+
+    <!-- Preferences -->
+    <string name="default_hostname">192.168.1.1:3000</string>
+    <string name="key_hostname">hostname</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="action_settings">Settings</string>
+    <string name="hostname_title">Hostname</string>
+    <string name="hostname_summary">Address of the Taskr server</string>
+
 </resources>

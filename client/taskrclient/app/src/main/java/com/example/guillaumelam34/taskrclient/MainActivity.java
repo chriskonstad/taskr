@@ -2,6 +2,7 @@ package com.example.guillaumelam34.taskrclient;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -12,6 +13,10 @@ import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -39,6 +44,25 @@ public class MainActivity extends AppCompatActivity {
         requestsJSON = (TextView) findViewById(R.id.nearby_requests_result);
 
         initLocationMgr();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void initLocationMgr(){
@@ -74,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            String url = new APIStringBuilder().buildProfileString(userId);
+            String url = new APIStringBuilder().buildProfileString(this, userId);
             QueryHelper q = new QueryHelper();
             q.setResultContainer(profileJSON);
             q.execute(url);
@@ -91,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            String url = new APIStringBuilder().buildNearbyRequestsString(latitude, longitude, DEFAULT_RADIUS);
+            String url = new APIStringBuilder().buildNearbyRequestsString(this, latitude, longitude, DEFAULT_RADIUS);
             QueryHelper q = new QueryHelper();
             q.setResultContainer(requestsJSON);
             q.execute(url);
@@ -113,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 APIRequestHelper a = new APIRequestHelper();
                 return a.sendGETRequest(new URL(urls[0]));
             } catch (IOException e) {
+                Log.e("QueryHelper", e.toString());
                 return "Unable to complete API request";
             }
         }

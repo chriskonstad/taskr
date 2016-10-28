@@ -8,6 +8,8 @@
 
 * How to run the test suite: `rake test`
 
+* How to run server with access from outside of `localhost`: `rails s --binding=0.0.0.0`
+
 * How to run server for development: `rails s`
 
 * How to launch interactive console: `rails console`
