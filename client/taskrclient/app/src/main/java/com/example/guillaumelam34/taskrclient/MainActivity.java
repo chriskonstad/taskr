@@ -24,6 +24,9 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.net.URL;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
     public static final int DEFAULT_RADIUS = 10;
     public static final int LOCATION_REQUEST = 1;
@@ -33,15 +36,14 @@ public class MainActivity extends AppCompatActivity {
     private LocationListener locationListener;
     private Location lastLocation;
 
-    private TextView profileJSON;
-    private TextView requestsJSON;
+    @BindView(R.id.profile_id_result) TextView profileJSON;
+    @BindView(R.id.nearby_requests_result) TextView requestsJSON;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        profileJSON = (TextView) findViewById(R.id.profile_id_result);
-        requestsJSON = (TextView) findViewById(R.id.nearby_requests_result);
+        ButterKnife.bind(this);
 
         initLocationMgr();
     }
