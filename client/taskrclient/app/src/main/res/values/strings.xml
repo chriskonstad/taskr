@@ -5,6 +5,8 @@
     <string name="edit_profile_id">Enter a user id</string>
     <string name="find_nearby_requests">Find nearby requests</string>
 
+    <string name="nearby_requests">Nearby Requests</string>
+
     <string name="facebook_app_id">352479678432354</string>
     <string name="action_logout">Log Out</string>
 

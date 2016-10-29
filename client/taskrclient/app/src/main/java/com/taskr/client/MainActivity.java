@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         //FacebookSdk.sdkInitialize(this.getApplicationContext());
 
+        //showFragment(new TestFragment(), false); //for debugging
         showFragment(new LoginFragment(), false);
     }
 

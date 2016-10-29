@@ -21,6 +21,10 @@ import com.taskr.api.Api;
 import com.taskr.api.Profile;
 import com.taskr.api.Request;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import butterknife.BindString;
@@ -152,20 +156,34 @@ public class TestFragment extends Fragment {
                 new Api.ApiCallback<ArrayList<Request>>() {
                     @Override
                     public void onSuccess(ArrayList<Request> requests) {
-                        String data = "";
+                        JSONArray reqArr = new JSONArray();
 
                         for(Request req : requests) {
-                            data += "ID: " + req.id + "\n" +
-                                    "Title: " + req.title + "\n" +
-                                    "Amount: " + req.amount + "\n" +
-                                    "\n";
+                            JSONObject reqObj = new JSONObject();
+                            try {
+                                reqObj.put("ID", req.id);
+                                reqObj.put("Title", req.title);
+                                reqObj.put("Amount", req.amount);
+                                reqArr.put(reqObj);
+                            }catch(JSONException e){
+                                Log.i(TAG, "Error parsing nearby requests");
+                                continue;
+                            }
                         }
 
-                        if(data.equals("")) {
-                            data = "No requests nearby";
+                        String data = "";
+                        if(reqArr.length() != 0) {
+                            data = reqArr.toString();
                         }
 
-                        requestsJSON.setText(data);
+//                        requestsJSON.setText(data);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("requests", data);
+
+                        RequestsFragment listFrag = new RequestsFragment();
+                        listFrag.setArguments(bundle);
+
+                        ((MainActivity)getActivity()).showFragment(listFrag, true);
                     }
 
                     @Override
