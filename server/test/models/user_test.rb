@@ -37,4 +37,26 @@ class UserTest < ActiveSupport::TestCase
 
     assert_equal 4.5, user2.avgRating
   end
+
+  test "login existing" do
+    namey = users(:namey)
+    user = User.login(namey.name, namey.email)
+    assert_equal namey.id, user.id
+  end
+
+  test "login new user" do
+    name = 'Login New User Test User'
+    email = 'loginnewusertestuser@example.com'
+    # Ensure this is a new user's credentials
+    User.all.each do |u|
+      assert_not_equal name, u.name
+      assert_not_equal email, u.email
+    end
+
+    user = User.login(name, email)
+    assert_not_nil user
+
+    # Ensure the new user got saved
+    assert_equal User.find_by(id: user.id), user
+  end
 end

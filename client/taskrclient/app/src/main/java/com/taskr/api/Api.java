@@ -22,6 +22,7 @@ public class Api {
     private static Context mContext;
     private static AsyncHttpClient mClient = new AsyncHttpClient();
     private static Gson mGson = new Gson();
+    private static int mId;
     private static final int MAX_RETRIES = 2;
     private static final int RETRY_DELAY_MS = 500;
 
@@ -36,8 +37,9 @@ public class Api {
             return url;
         }
 
-        public static final String PROFILE = "/api/v1/profile";
+        public static final String LOGIN = "/api/v1/login";
         public static final String NEARBY = "/api/v1/requests/nearby";
+        public static final String PROFILE = "/api/v1/profile";
     }
 
     private static class Types {
@@ -69,9 +71,46 @@ public class Api {
         public void onFailure(String message);
     }
 
+    public int getId() {
+        return mId;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // PUBLIC FACING API CALLS
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    public void login(final String name, final String email,
+                      final ApiCallback<LoginResult> callback) {
+        final String url = Endpoints.get(Endpoints.LOGIN);
+        RequestParams params = new RequestParams();
+        params.add("name", name);
+        params.add("email", email);
+
+        AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String json = new String(responseBody);
+                LoginResult result = mGson.fromJson(json, LoginResult.class);
+
+                mId = result.id;
+
+                Log.i(TAG, "Logged in as user with id: " + mId);
+
+                callback.onSuccess(result);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
+                                  Throwable error) {
+                callback.onFailure("Error (" +
+                        statusCode +
+                        "): Unable to login for user with email: " +
+                        email);
+            }
+        };
+
+        mClient.post(url, params, handler);
+    }
+
     public void getUserProfile(final int uid, final ApiCallback<Profile> callback) {
         final String url = Endpoints.get(Endpoints.PROFILE) + "/" + uid;
         RequestParams params = new RequestParams();

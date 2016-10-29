@@ -15,17 +15,14 @@ class ProfileController < ApplicationController
                                                :actions]})
   end
 
-  # Create a new user profile
-  def create
-    user = User.create(name: params[:name],
-                       email: params[:email],
-                       wallet: params[:wallet])
+  # Allow the user to both sign in and login in, depending on if the user exists
+  def login
+    name = params[:name]
+    email = params[:email]
 
-    if user.save
-      render json: user
-    else
-      render nothing: true, status: :bad_request
-    end
+    render nothing: true, status: :bad_request if name.nil? || email.nil?
+
+    user = User.login(name, email)
+    render json: { id: user.id }
   end
 end
-

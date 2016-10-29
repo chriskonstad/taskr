@@ -1,8 +1,10 @@
 package com.taskr.client;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,9 +19,10 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.Profile;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.taskr.api.Api;
 
 import org.json.JSONObject;
 
@@ -33,7 +36,6 @@ import butterknife.ButterKnife;
 
 public class LoginFragment extends Fragment {
     private static final String TAG = "LoginFragment";
-    private static final String ID = "id";
     private static final String EMAIL = "email";
     private static final String NAME = "name";
     CallbackManager mCallbackManager;
@@ -63,22 +65,19 @@ public class LoginFragment extends Fragment {
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.i(TAG, "Successful login");
+                Log.i(TAG, "Successful first login");
                 // This is for the first time login only, not called when authorized after having
                 // already logged in before
-                // TODO Handle login here? But it already happens in updateWithToken??
             }
 
             @Override
             public void onCancel() {
                 Log.i(TAG, "Canceled login");
-                // TODO Handle cancel here
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.e(TAG, "Error during login");
-                // TODO Handle error here
             }
         });
 
@@ -106,53 +105,77 @@ public class LoginFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        // Hide the overflow menu because we don't want that in settings
+        // Hide the overflow menu (except settings for now) because we don't want that in settings
         for(int i=0; i<menu.size(); i++) {
-            menu.getItem(i).setVisible(false);
+            if(menu.getItem(i).getItemId() != R.id.action_settings) {
+                menu.getItem(i).setVisible(false);
+            }
         }
     }
 
     private void updateWithToken(AccessToken currentAccessToken) {
         if(null != currentAccessToken && null != getActivity()) {
             mAccessToken = currentAccessToken;
-            onAuthenticated();
+            onAuthenticatedWithFb();
         }
     }
 
-    private void onAuthenticated() {
-        // Get user information from FB
-
-        GraphRequest request = GraphRequest.newMeRequest(mAccessToken, new GraphRequest.GraphJSONObjectCallback() {
+    private void onAuthenticatedWithFb() {
+        GraphRequest request = GraphRequest.newMeRequest(mAccessToken,
+                new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
                 Log.i(TAG, "Got user information from FB");
                 Bundle fbData = readFbData(object);
 
-                String id = fbData.getString(ID);
                 String name = fbData.getString(NAME);
                 String email = fbData.getString(EMAIL);
-                Log.i(TAG, "Id: " + id);
                 Log.i(TAG, "Name: " + name);
                 Log.i(TAG, "Email: " + email);
 
-                // TODO Use this data to call the account login/creation endpoint,
-                // TODO Use the response of account login/creation endpoint to show main fragment
-                // TODO Store the Taskr User ID returned from login in the API singleton
+                Api.getInstance(getContext()).login(name, email,
+                        new Api.ApiCallback<com.taskr.api.LoginResult>() {
+                    @Override
+                    public void onSuccess(com.taskr.api.LoginResult returnValue) {
+                        onLoggedIn();
+                    }
 
-                // Launch the rest of the app
-                ((MainActivity)getActivity()).showFragment(new TestFragment(), false);
+                    @Override
+                    public void onFailure(String message) {
+                        // Logout of FB to force the user to re-login
+                        LoginManager.getInstance().logOut();
+                        new AlertDialog.Builder(getContext())
+                                .setTitle(getString(R.string.login_error_title))
+                                .setMessage(message)
+                                .setIcon(R.drawable.alert_circle)
+                                .setPositiveButton(R.string.ok,
+                                        new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                })
+                                .show();
+                    }
+                });
             }
         });
 
         Bundle params = new Bundle();
-        params.putString("fields", ID + ", " + NAME + ", " + EMAIL);
+        params.putString("fields", NAME + ", " + EMAIL);
         request.setParameters(params);
-        // TODO Launch a loading alert dialog, and dismiss it when done
         request.executeAsync();
     }
 
+    // Only call this when fully authenticated with the Taskr server, which happens after
+    // authenticating with FB
+    private void onLoggedIn() {
+        // Launch the rest of the app
+        ((MainActivity)getActivity()).showFragment(new TestFragment(), false);
+    }
+
     private Bundle readFbData(JSONObject object) {
-        String[] fields = {ID, NAME, EMAIL};
+        String[] fields = {NAME, EMAIL};
 
         Bundle bundle = new Bundle();
         try {

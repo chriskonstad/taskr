@@ -12,6 +12,13 @@
     >
 
     <TextView
+        android:id="@+id/logged_in_as"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+
+    <TextView
         android:text = "Find User by ID"
         android:textSize="20sp"
         android:textColor="#000000"

@@ -9,6 +9,8 @@
 
     <string name="facebook_app_id">352479678432354</string>
     <string name="action_logout">Log Out</string>
+    <string name="login_error_title">Error Logging In</string>
+    <string name="ok">Ok</string>
 
     <!-- Preferences -->
     <string name="category_development">Development</string>

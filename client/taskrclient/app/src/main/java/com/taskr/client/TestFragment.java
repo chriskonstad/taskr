@@ -46,6 +46,7 @@ public class TestFragment extends Fragment {
     private Location lastLocation;
 
     @BindString(R.string.app_name) String mTitle;
+    @BindView(R.id.logged_in_as) TextView loggedInAs;
     @BindView(R.id.profile_id_result) TextView profileJSON;
     @BindView(R.id.nearby_requests_result) TextView requestsJSON;
     @BindView(R.id.profile_id_field) EditText profileId;
@@ -76,6 +77,8 @@ public class TestFragment extends Fragment {
                 findNearbyRequests(view);
             }
         });
+
+        loggedInAs.setText("Logged in as user with id: " + Api.getInstance(getContext()).getId());
 
         return rootView;
     }

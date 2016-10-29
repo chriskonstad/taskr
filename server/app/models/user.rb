@@ -22,5 +22,18 @@ class User < ActiveRecord::Base
     avg /= reviews.length
     return avg
   end
+
+  def self.login(name, email)
+    user = User.find_by(email: email)
+    if !user
+      user = User.create(name: name,
+                         email: email,
+                         wallet: 0.0)
+      puts "Created user with email: '#{email}'"
+    else
+      puts "Found user with email '#{email}'"
+    end
+    user
+  end
 end
 
