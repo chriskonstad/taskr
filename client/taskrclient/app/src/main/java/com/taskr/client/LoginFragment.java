@@ -1,5 +1,6 @@
 package com.taskr.client;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -133,16 +134,25 @@ public class LoginFragment extends Fragment {
                 Log.i(TAG, "Name: " + name);
                 Log.i(TAG, "Email: " + email);
 
+                final ProgressDialog dialog = new ProgressDialog(getActivity());
+                dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                dialog.setMessage(getString(R.string.logging_into_taskr));
+                dialog.setIndeterminate(true);
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
+
                 Api.getInstance(getContext()).login(name, email,
                         new Api.ApiCallback<com.taskr.api.LoginResult>() {
                     @Override
                     public void onSuccess(com.taskr.api.LoginResult returnValue) {
+                        dialog.dismiss();
                         onLoggedIn();
                     }
 
                     @Override
                     public void onFailure(String message) {
                         // Logout of FB to force the user to re-login
+                        dialog.dismiss();
                         LoginManager.getInstance().logOut();
                         new AlertDialog.Builder(getContext())
                                 .setTitle(getString(R.string.login_error_title))
@@ -171,7 +181,11 @@ public class LoginFragment extends Fragment {
     // authenticating with FB
     private void onLoggedIn() {
         // Launch the rest of the app
-        ((MainActivity)getActivity()).showFragment(new TestFragment(), false);
+        if(null != getActivity()) {
+            ((MainActivity)getActivity()).showFragment(new TestFragment(), false);
+        } else {
+            Log.w(TAG, "Unable to get mainactivity.");
+        }
     }
 
     private Bundle readFbData(JSONObject object) {
