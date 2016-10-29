@@ -1,14 +1,24 @@
 package com.taskr.client;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +35,24 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
-        showFragment(new TestFragment(), false);
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.taskr.client",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
+
+        //FacebookSdk.sdkInitialize(this.getApplicationContext());
+
+        showFragment(new LoginFragment(), false);
     }
 
     @Override
@@ -41,12 +68,16 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 showFragment(new SettingsFragment(), true);
                 return true;
+            case R.id.action_logout:
+                LoginManager.getInstance().logOut();
+                showFragment(new LoginFragment(), false);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void showFragment(Fragment fragment, boolean addToBackstack) {
+    public void showFragment(Fragment fragment, boolean addToBackstack) {
         if(null != fragment) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.content_frame, fragment);
