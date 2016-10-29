@@ -1,23 +1,13 @@
 package com.taskr.client;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -25,13 +15,13 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.taskr.api.Api;
-import com.taskr.api.Profile;
-import com.taskr.api.Request;
 
-import java.util.ArrayList;
+import org.json.JSONObject;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -43,8 +33,12 @@ import butterknife.ButterKnife;
 
 public class LoginFragment extends Fragment {
     private static final String TAG = "LoginFragment";
+    private static final String ID = "id";
+    private static final String EMAIL = "email";
+    private static final String NAME = "name";
     CallbackManager mCallbackManager;
     AccessTokenTracker mAccessTokenTracker;
+    AccessToken mAccessToken;
 
     @BindString(R.string.app_name) String mTitle;
     @BindView(R.id.login_button) LoginButton loginButton;
@@ -63,13 +57,15 @@ public class LoginFragment extends Fragment {
         getActivity().setTitle(mTitle);
         setHasOptionsMenu(true);
 
-        loginButton.setReadPermissions("email");
+        loginButton.setReadPermissions(EMAIL);
         loginButton.setFragment(this);
 
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.i(TAG, "Successful login");
+                // This is for the first time login only, not called when authorized after having
+                // already logged in before
                 // TODO Handle login here? But it already happens in updateWithToken??
             }
 
@@ -81,7 +77,7 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onError(FacebookException error) {
-                Log.i(TAG, "Error during login");
+                Log.e(TAG, "Error during login");
                 // TODO Handle error here
             }
         });
@@ -118,7 +114,56 @@ public class LoginFragment extends Fragment {
 
     private void updateWithToken(AccessToken currentAccessToken) {
         if(null != currentAccessToken && null != getActivity()) {
-            ((MainActivity)getActivity()).showFragment(new TestFragment(), false);
+            mAccessToken = currentAccessToken;
+            onAuthenticated();
         }
+    }
+
+    private void onAuthenticated() {
+        // Get user information from FB
+
+        GraphRequest request = GraphRequest.newMeRequest(mAccessToken, new GraphRequest.GraphJSONObjectCallback() {
+            @Override
+            public void onCompleted(JSONObject object, GraphResponse response) {
+                Log.i(TAG, "Got user information from FB");
+                Bundle fbData = readFbData(object);
+
+                String id = fbData.getString(ID);
+                String name = fbData.getString(NAME);
+                String email = fbData.getString(EMAIL);
+                Log.i(TAG, "Id: " + id);
+                Log.i(TAG, "Name: " + name);
+                Log.i(TAG, "Email: " + email);
+
+                // TODO Use this data to call the account login/creation endpoint,
+                // TODO Use the response of account login/creation endpoint to show main fragment
+                // TODO Store the Taskr User ID returned from login in the API singleton
+
+                // Launch the rest of the app
+                ((MainActivity)getActivity()).showFragment(new TestFragment(), false);
+            }
+        });
+
+        Bundle params = new Bundle();
+        params.putString("fields", ID + ", " + NAME + ", " + EMAIL);
+        request.setParameters(params);
+        // TODO Launch a loading alert dialog, and dismiss it when done
+        request.executeAsync();
+    }
+
+    private Bundle readFbData(JSONObject object) {
+        String[] fields = {ID, NAME, EMAIL};
+
+        Bundle bundle = new Bundle();
+        try {
+            for (String f : fields) {
+                bundle.putString(f, object.getString(f));
+            }
+        }
+        catch (Exception e) {
+            Log.wtf(TAG, e.getMessage());
+        }
+
+        return bundle;
     }
 }
