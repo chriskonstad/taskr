@@ -44,10 +44,8 @@ public class MainActivity extends AppCompatActivity {
                 md.update(signature.toByteArray());
                 Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
+        } catch (Exception e) {
+            Log.i(TAG, e.getMessage());
         }
 
         //showFragment(new TestFragment(), false); //for debugging
