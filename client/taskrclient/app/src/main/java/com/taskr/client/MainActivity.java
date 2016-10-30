@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, e.getMessage());
         }
 
-        //showFragment(new TestFragment(), false); //for debugging
-        showFragment(new LoginFragment(), false);
+        showFragment(new TestFragment(), false); //for debugging
+//        showFragment(new LoginFragment(), false);
     }
 
     @Override

@@ -11,14 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161027060241) do
+ActiveRecord::Schema.define(version: 20161030041953) do
 
   create_table "requests", force: :cascade do |t|
     t.string   "title"
     t.integer  "user_id"
     t.float    "amount"
     t.float    "lat"
-    t.float    "long"
+    t.float    "longitude"
     t.datetime "due"
     t.text     "description"
     t.datetime "created_at",              null: false

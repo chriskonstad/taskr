@@ -29,9 +29,9 @@ class RequestTest < ActiveSupport::TestCase
 
     # Ensure they take place at the sample place
     # and that one is open and one is closed
-    assert_equal completed.long, open.long
+    assert_equal completed.longitude, open.longitude
     assert_equal completed.lat, open.lat
-    assert_equal past_due.long, open.long
+    assert_equal past_due.longitude, open.longitude
     assert_equal past_due.lat, open.lat
     assert_not_nil completed.trans
     assert_nil open.trans

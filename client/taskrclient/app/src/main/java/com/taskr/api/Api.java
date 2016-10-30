@@ -151,7 +151,7 @@ public class Api {
         final String url = Endpoints.get(Endpoints.NEARBY);
         RequestParams params = new RequestParams();
         params.add("lat", Double.toString(latitude));
-        params.add("long", Double.toString(longitude));
+        params.add("longitude", Double.toString(longitude));
         params.add("radius", Double.toString(radius));
 
         AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {

@@ -24,13 +24,13 @@ class UserTest < ActiveSupport::TestCase
                          user: user1,
                          amount: 100,
                          lat: 100,
-                         long: 100,
+                         longitude: 100,
                          due: "2016-10-24 00:14:55")
     req2 = Request.create(title: "test2",
                          user: user1,
                          amount: 100,
                          lat: 100,
-                         long: 100,
+                         longitude: 100,
                          due: "2016-10-24 00:14:55")
     rev1 = Review.create(reviewer: user1, reviewee: user2, request: req1, rating: 5)
     rev2 = Review.create(reviewer: user1, reviewee: user2, request: req2, rating: 4)

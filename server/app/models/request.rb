@@ -6,7 +6,7 @@ class Request < ActiveRecord::Base
   belongs_to :actor, class_name: 'User'
   has_one :trans, class_name: 'Transaction', foreign_key: 'request_id'
 
-  validates :title, :user, :amount, :lat, :long, :due, presence: true
+  validates :title, :user, :amount, :lat, :longitude, :due, presence: true
   validates :amount, numericality: { greater_than_or_equal_to: 0 }
 
   enum status: { open: 0, accepted: 1, completed: 2, canceled: 3, paid: 4 }
@@ -39,7 +39,7 @@ class Request < ActiveRecord::Base
     # longitude/latitude
     Request.where(status: Request.statuses[:open])
            .select do |r|
-      Request.distance(longitude, latitude, r.long, r.lat) <= radius_miles &&
+      Request.distance(longitude, latitude, r.longitude, r.lat) <= radius_miles &&
         Time.now <= r.due
     end
   end

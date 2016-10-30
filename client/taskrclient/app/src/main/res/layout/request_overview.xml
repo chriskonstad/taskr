@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/request_overview"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+    <!--<TextView-->
+        <!--android:id="@+id/request_id"-->
+        <!--android:textAppearance="@style/TextAppearance.AppCompat.Small"-->
+        <!--android:layout_marginBottom="@dimen/activity_vertical_margin"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_width="match_parent" />-->
+    <!--<TextView-->
+        <!--android:id="@+id/request_title"-->
+        <!--android:textAppearance="@style/TextAppearance.AppCompat.Small"-->
+        <!--android:layout_marginBottom="@dimen/activity_vertical_margin"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_width="match_parent" />-->
+    <TextView
+        android:id="@+id/request_amount"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+    <TextView
+        android:id="@+id/request_lat"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+    <TextView
+        android:id="@+id/request_long"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+    <TextView
+        android:id="@+id/request_due"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+    <TextView
+        android:id="@+id/request_description"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+
+</LinearLayout>
