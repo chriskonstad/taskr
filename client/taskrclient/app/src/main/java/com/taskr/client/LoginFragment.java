@@ -129,8 +129,8 @@ public class LoginFragment extends Fragment {
                 Log.i(TAG, "Got user information from FB");
                 Bundle fbData = readFbData(object);
 
-                String name = fbData.getString(NAME);
-                String email = fbData.getString(EMAIL);
+                final String name = fbData.getString(NAME);
+                final String email = fbData.getString(EMAIL);
                 Log.i(TAG, "Name: " + name);
                 Log.i(TAG, "Email: " + email);
 

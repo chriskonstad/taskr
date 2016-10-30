@@ -23,8 +23,9 @@ public class Api {
     private static AsyncHttpClient mClient = new AsyncHttpClient();
     private static Gson mGson = new Gson();
     private static int mId;
-    private static final int MAX_RETRIES = 2;
-    private static final int RETRY_DELAY_MS = 500;
+    private static final int MAX_RETRIES = 0;   // YOLO, we can change this if needed later
+    private static final int RETRY_DELAY_MS = 0;
+    private static final int NO_CONNECTION = 0; // "HTTP status code" for unable to reach server
 
     private static class Endpoints {
         public static String get(String endpoint) {
@@ -101,10 +102,14 @@ public class Api {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
                                   Throwable error) {
-                callback.onFailure("Error (" +
-                        statusCode +
-                        "): Unable to login for user with email: " +
-                        email);
+                if(NO_CONNECTION == statusCode) {
+                    callback.onFailure(mContext.getString(R.string.unable_to_reach_server));
+                } else {
+                    callback.onFailure("Error (" +
+                            statusCode +
+                            "): Unable to login for user with email: " +
+                            email);
+                }
             }
         };
 
@@ -127,10 +132,14 @@ public class Api {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
                                   Throwable error) {
-                callback.onFailure("Error (" +
-                        statusCode +
-                        "): Unable to get user profile for uid: " +
-                        uid);
+                if(NO_CONNECTION == statusCode) {
+                    callback.onFailure(mContext.getString(R.string.unable_to_reach_server));
+                } else {
+                    callback.onFailure("Error (" +
+                            statusCode +
+                            "): Unable to get user profile for uid: " +
+                            uid);
+                }
             }
         };
 
@@ -157,7 +166,11 @@ public class Api {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
                                   Throwable error) {
-                callback.onFailure("Error (" + statusCode + "): Unable to get nearby requests");
+                if(NO_CONNECTION == statusCode) {
+                    callback.onFailure(mContext.getString(R.string.unable_to_reach_server));
+                } else {
+                    callback.onFailure("Error (" + statusCode + "): Unable to get nearby requests");
+                }
             }
         };
 
