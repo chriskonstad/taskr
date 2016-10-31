@@ -5,7 +5,7 @@ class CreateRequests < ActiveRecord::Migration
       t.references :user, index: true, foreign_key: true
       t.float :amount
       t.float :lat
-      t.float :long
+      t.float :longitude
       t.datetime :due
       t.text :description
       #t.references :trans, index: true, foreign_key: true

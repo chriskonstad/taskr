@@ -24,7 +24,7 @@ Rails.application.routes.draw do
         get '/:id' => 'profile#show'
       end
       scope '/requests' do
-        get '/nearby' => 'request#nearby' # params: long, lat, radius (miles)
+        get '/nearby' => 'request#nearby' # params: longitude, lat, radius (miles)
         post '/' => 'request#create'
 
         post '/accept' => 'request#accept'

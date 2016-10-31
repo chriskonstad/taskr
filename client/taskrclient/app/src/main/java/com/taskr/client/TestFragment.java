@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.taskr.api.Api;
 import com.taskr.api.Profile;
 import com.taskr.api.Request;
@@ -159,29 +160,8 @@ public class TestFragment extends Fragment {
                 new Api.ApiCallback<ArrayList<Request>>() {
                     @Override
                     public void onSuccess(ArrayList<Request> requests) {
-                        JSONArray reqArr = new JSONArray();
-
-                        for(Request req : requests) {
-                            JSONObject reqObj = new JSONObject();
-                            try {
-                                reqObj.put("ID", req.id);
-                                reqObj.put("Title", req.title);
-                                reqObj.put("Amount", req.amount);
-                                reqArr.put(reqObj);
-                            }catch(JSONException e){
-                                Log.i(TAG, "Error parsing nearby requests");
-                                continue;
-                            }
-                        }
-
-                        String data = "";
-                        if(reqArr.length() != 0) {
-                            data = reqArr.toString();
-                        }
-
-//                        requestsJSON.setText(data);
                         Bundle bundle = new Bundle();
-                        bundle.putString("requests", data);
+                        bundle.putSerializable("requests", requests);
 
                         RequestsFragment listFrag = new RequestsFragment();
                         listFrag.setArguments(bundle);

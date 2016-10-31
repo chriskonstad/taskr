@@ -6,7 +6,7 @@ samplecompleted:
   user_id: 1
   amount: 1.5
   lat: 1.5
-  long: 1.5
+  longitude: 1.5
   due: 2017-10-24 00:14:55
   description: Sample description
   status: <%= Request.statuses[:completed] %>
@@ -17,7 +17,7 @@ sampleopen:
   user_id: 1
   amount: 1.5
   lat: 1.5
-  long: 1.5
+  longitude: 1.5
   due: 2017-10-24 00:14:55
   description: MyText
   status: <%= Request.statuses[:open] %>
@@ -28,7 +28,7 @@ openpastdue:
   user_id: 1
   amount: 1.5
   lat: 1.5
-  long: 1.5
+  longitude: 1.5
   due: 2015-10-24 00:14:55
   description: MyText
   status: <%= Request.statuses[:open] %>
@@ -39,7 +39,7 @@ sampleaccepted:
   user_id: 1
   amount: 1.5
   lat: 1.5
-  long: 1.5
+  longitude: 1.5
   due: 2017-10-24 00:14:55
   description: MyText
   status: <%= Request.statuses[:accepted] %>

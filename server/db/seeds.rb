@@ -15,7 +15,7 @@ Request.create(title: "bringing out the trash",
         user_id: 1,
         amount: 100.0,
         lat: 30.0,
-        long: 50.0,
+        longitude: 50.0,
         due: DateTime.new(2017,9,1,19)
         )
 
@@ -23,7 +23,7 @@ Request.create(title: "Cleaning the house",
         user_id: 1,
         amount: 50.0,
         lat: 10.0,
-        long: 20.0,
+        longitude: 20.0,
         due: DateTime.new(2016,11,1,19)
         )
 

@@ -10,16 +10,16 @@ class RequestController < ApplicationController
 
   # Show all nearby open requests
   def nearby
-    long = params[:long].to_f
+    longitude = params[:longitude].to_f
     lat = params[:lat].to_f
     radius_miles = params[:radius].to_f
 
-    if(!params.has_key?(:long) ||
+    if(!params.has_key?(:longitude) ||
         !params.has_key?(:lat) ||
         !params.has_key?(:radius))
       render nothing: true, status: 400
     else
-      requests = Request.open_near(long, lat, radius_miles)
+      requests = Request.open_near(longitude, lat, radius_miles)
       render :json => requests.as_json
     end
   end
@@ -89,7 +89,7 @@ class RequestController < ApplicationController
                                     :user_id,
                                     :amount,
                                     :lat,
-                                    :long,
+                                    :longitude,
                                     :due,
                                     :description)
   end
@@ -98,7 +98,7 @@ class RequestController < ApplicationController
     params.require(:request).permit(:title,
                                     :amount,
                                     :lat,
-                                    :long,
+                                    :longitude,
                                     :due,
                                     :description)
   end
