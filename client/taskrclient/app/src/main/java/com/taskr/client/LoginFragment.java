@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -182,7 +183,7 @@ public class LoginFragment extends Fragment {
     private void onLoggedIn() {
         // Launch the rest of the app
         if(null != getActivity()) {
-            ((MainActivity)getActivity()).showFragment(new TestFragment(), false);
+            ((MainActivity)getActivity()).onLogin();
         } else {
             Log.w(TAG, "Unable to get mainactivity.");
         }

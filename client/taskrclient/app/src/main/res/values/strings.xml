@@ -17,6 +17,14 @@
     <string name="logging_into_taskr">Logging into Taskr</string>
     <string name="ok">Ok</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="nav_requests">Nearby Requests</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_logout">Log Out</string>
+
     <!-- Preferences -->
     <string name="category_development">Development</string>
     <string name="default_hostname">taskr130.herokuapp.com</string>

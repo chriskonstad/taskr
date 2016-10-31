@@ -23,6 +23,8 @@ public class Api {
     private static AsyncHttpClient mClient = new AsyncHttpClient();
     private static Gson mGson = new Gson();
     private static int mId;
+    private static String mName;
+    private static String mEmail;
     private static final int MAX_RETRIES = 0;   // YOLO, we can change this if needed later
     private static final int RETRY_DELAY_MS = 0;
     private static final int NO_CONNECTION = 0; // "HTTP status code" for unable to reach server
@@ -77,6 +79,14 @@ public class Api {
         return mId;
     }
 
+    public String getName() {
+        return mName;
+    }
+
+    public String getEmail() {
+        return mEmail;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // PUBLIC FACING API CALLS
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,6 +104,8 @@ public class Api {
                 LoginResult result = mGson.fromJson(json, LoginResult.class);
 
                 mId = result.id;
+                mName = name;
+                mEmail = email;
 
                 Log.i(TAG, "Logged in as user with id: " + mId);
 
