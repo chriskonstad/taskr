@@ -14,11 +14,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, e.getMessage());
         }
 
-        showFragment(new TestFragment(), false); //for debugging
-//        showFragment(new LoginFragment(), false);
+        //showFragment(new TestFragment(), false); //for debugging
+        showFragment(new LoginFragment(), false);
     }
 
     @Override
