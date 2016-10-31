@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //showFragment(new TestFragment(), false); //for debugging
+        LocationProvider.checkPermissions(this);
         showFragment(new LoginFragment(), false);
     }
 
@@ -69,6 +70,18 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        Log.i(TAG, "Permissions changed");
+        if(LocationProvider.hasPermissions(this)) {
+            Log.i(TAG, "Permissions granted");
+            LocationProvider.onPermissionsChanged(this);
+        } else {
+            Log.e(TAG, "Permissions denied");
         }
     }
 

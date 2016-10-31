@@ -9,6 +9,7 @@
     <string name="connection_error">Connection Error</string>
 
     <string name="nearby_requests">Nearby Requests</string>
+    <string name="location_error_title">Error Getting Location</string>
 
     <string name="facebook_app_id">352479678432354</string>
     <string name="action_logout">Log Out</string>

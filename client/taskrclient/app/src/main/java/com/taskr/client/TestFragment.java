@@ -1,15 +1,10 @@
 package com.taskr.client;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.DialogInterface;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.taskr.api.Api;
 import com.taskr.api.Profile;
 import com.taskr.api.Request;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -39,12 +29,6 @@ import butterknife.ButterKnife;
 public class TestFragment extends Fragment {
     private static final String TAG = "TestFragment";
     public static final int DEFAULT_RADIUS = 10;
-    public static final int LOCATION_REQUEST = 1;
-    public static final String LOCATION_PROVIDER = LocationManager.GPS_PROVIDER;
-
-    private LocationManager locationManager;
-    private LocationListener locationListener;
-    private Location lastLocation;
 
     @BindString(R.string.app_name) String mTitle;
     @BindView(R.id.logged_in_as) TextView loggedInAs;
@@ -81,39 +65,8 @@ public class TestFragment extends Fragment {
 
         loggedInAs.setText("Logged in as user with id: " + Api.getInstance(getContext()).getId());
 
+
         return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        initLocationMgr();
-    }
-
-    public void initLocationMgr(){
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST
-            );
-        }
-
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                lastLocation = location;
-            }
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {}
-            @Override
-            public void onProviderEnabled(String s) {}
-            @Override
-            public void onProviderDisabled(String s) {}
-        };
-
-        locationManager.requestLocationUpdates(LOCATION_PROVIDER, 0, 0, locationListener);
     }
 
     public void findUserById(View view) {
@@ -136,43 +89,44 @@ public class TestFragment extends Fragment {
     }
 
     public void findNearbyRequests(View view){
-        if(null == lastLocation) {
-            for(String provider : locationManager.getAllProviders()) {
-                if(null == lastLocation) {
-                    try {
-                        lastLocation = locationManager.getLastKnownLocation(provider);
-                    } catch (SecurityException e) { // Android Studio complains otherwise :)
-                        Log.e(TAG, e.getMessage());
-                    } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
-                    }
-                }
-            }
+        try {
+            Location lastLocation = LocationProvider.getInstance().getLastLocation();
+
+            double latitude = lastLocation.getLatitude();
+            double longitude = lastLocation.getLongitude();
+            double radius = DEFAULT_RADIUS; // TODO: store/get from settings?
+
+            Api.getInstance(getActivity()).getNearbyRequests(latitude, longitude, radius,
+                    new Api.ApiCallback<ArrayList<Request>>() {
+                        @Override
+                        public void onSuccess(ArrayList<Request> requests) {
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("requests", requests);
+
+                            RequestsFragment listFrag = new RequestsFragment();
+                            listFrag.setArguments(bundle);
+
+                            ((MainActivity)getActivity()).showFragment(listFrag, true);
+                        }
+
+                        @Override
+                        public void onFailure(String message) {
+                            requestsJSON.setText(message);
+                        }
+                    });
+        } catch (Exception e) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(getString(R.string.location_error_title))
+                    .setMessage(e.getMessage())
+                    .setIcon(R.drawable.alert_circle)
+                    .setPositiveButton(R.string.ok,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            })
+                    .show();
         }
-
-        // lastLocation not promised to be nonnull, but through a NPE is as good as anything else
-        // right now. Fix later
-        double latitude = lastLocation.getLatitude();
-        double longitude = lastLocation.getLongitude();
-        double radius = DEFAULT_RADIUS; // TODO: store/get from settings?
-
-        Api.getInstance(getActivity()).getNearbyRequests(latitude, longitude, radius,
-                new Api.ApiCallback<ArrayList<Request>>() {
-                    @Override
-                    public void onSuccess(ArrayList<Request> requests) {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("requests", requests);
-
-                        RequestsFragment listFrag = new RequestsFragment();
-                        listFrag.setArguments(bundle);
-
-                        ((MainActivity)getActivity()).showFragment(listFrag, true);
-                    }
-
-                    @Override
-                    public void onFailure(String message) {
-                        requestsJSON.setText(message);
-                    }
-                });
     }
 }

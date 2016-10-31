@@ -31,7 +31,8 @@ public class Api {
         public static String get(String endpoint) {
             // Load stored hostname from settings
             String base = PreferenceManager.getDefaultSharedPreferences(mContext)
-                    .getString(mContext.getString(R.string.key_hostname), "");
+                    .getString(mContext.getString(R.string.key_hostname),
+                            mContext.getString(R.string.default_hostname));
 
             String url = "http://" + base + endpoint;
             Log.i(TAG, "Generated endpoint: " + url);
