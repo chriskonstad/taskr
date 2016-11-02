@@ -38,6 +38,14 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 4.5, user2.avgRating
   end
 
+  test "average rating with no ratings" do
+    user = User.create(name: "test1",
+                        email: "testnoreviews@testemail.com",
+                        wallet: 10)
+
+    assert_equal 0.0, user.avgRating
+  end
+
   test "login existing" do
     namey = users(:namey)
     user = User.login(namey.name, namey.email)
