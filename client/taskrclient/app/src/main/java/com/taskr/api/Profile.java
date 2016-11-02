@@ -8,6 +8,7 @@ public class Profile {
     public int id;
     public String name;
     public double wallet;
+    public double avgRating;
 
     // TODO add more of the data fields
 }

@@ -30,10 +30,11 @@
                 app:srcCompat="@drawable/account">
             </ImageView>
             <TextView
+                android:id="@+id/request_user_name"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="USER'S NAME"/>
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -49,13 +50,13 @@
                 android:layout_marginRight="@dimen/requester_bar_text_margin"
                 android:layout_gravity="center"
                 android:tint="@color/iconGrey"
-                app:srcCompat="@drawable/account">
+                app:srcCompat="@drawable/star">
             </ImageView>
             <TextView
+                android:id="@+id/request_rating"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="RATING"
                 android:textSize="@dimen/requester_bar_font_small"></TextView>
         </LinearLayout>
 

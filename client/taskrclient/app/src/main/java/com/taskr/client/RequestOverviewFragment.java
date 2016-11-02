@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.taskr.api.Api;
+import com.taskr.api.Profile;
 import com.taskr.api.Request;
 
 import java.util.ArrayList;
@@ -29,6 +31,8 @@ public class RequestOverviewFragment extends Fragment {
     @BindView(R.id.request_title) TextView requestTitle;
     @BindView(R.id.request_amount) TextView requestAmount;
     @BindView(R.id.request_description) TextView requestDescription;
+    @BindView(R.id.request_user_name) TextView requestUserName;
+    @BindView(R.id.request_rating) TextView requestRating;
 
     public RequestOverviewFragment() {
 
@@ -46,6 +50,21 @@ public class RequestOverviewFragment extends Fragment {
         requestTitle.setText(req.title);
         requestAmount.setText(Double.toString(req.amount) + " Tokens");
         requestDescription.setText("Description: " + req.description);
+
+        Api.getInstance(getContext()).getUserProfile(req.user_id, new Api.ApiCallback<Profile>() {
+            @Override
+            public void onSuccess(Profile returnValue) {
+                requestUserName.setText(returnValue.name);
+                requestRating.setText(String.format("%.1f", returnValue.avgRating));
+            }
+
+            @Override
+            public void onFailure(String message) {
+                ((MainActivity)getActivity()).showErrorDialog(getString(R.string.connection_error),
+                        "Unable to load user profile information for user with id: " +
+                                Integer.toString(req.user_id));
+            }
+        });
 
         return rootView;
     }
