@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
       avg += r.rating
     end
 
-    avg /= reviews.length
+    avg /= reviews.length unless reviews.empty?
     return avg
   end
 
