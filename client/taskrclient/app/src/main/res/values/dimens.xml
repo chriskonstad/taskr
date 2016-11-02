@@ -10,4 +10,12 @@
     <!-- Login screen -->
     <dimen name="welcome_to">48dp</dimen>
     <dimen name="taskr_huge">64dp</dimen>
+
+    <!-- Request overview screen -->
+    <dimen name="requester_bar_height">35dp</dimen>
+    <dimen name="requester_bar_text_margin">4dp</dimen>
+    <dimen name="requester_small_icon_size">25dp</dimen>
+    <integer name="requester_bar_weight_large">70</integer>
+    <integer name="requester_bar_weight_small">15</integer>
+    <dimen name="requester_bar_font_small">10dp</dimen>
 </resources>

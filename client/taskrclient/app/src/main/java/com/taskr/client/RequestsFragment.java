@@ -69,7 +69,7 @@ public class RequestsFragment extends ListFragment {
             }
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(inflater.getContext(),android.R.layout.simple_list_item_1, request_text);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(inflater.getContext(),R.layout.request_single, request_text);
         setListAdapter(adapter);
 
         return rootView;

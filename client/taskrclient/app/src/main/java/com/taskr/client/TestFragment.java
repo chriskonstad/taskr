@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 
 public class TestFragment extends Fragment {
     private static final String TAG = "TestFragment";
-    public static final int DEFAULT_RADIUS = 10;
+    public static final int DEFAULT_RADIUS = 100000;
 
     @BindString(R.string.app_name) String mTitle;
     @BindView(R.id.logged_in_as) TextView loggedInAs;
