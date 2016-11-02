@@ -36,3 +36,9 @@ Review.create(reviewer_id: 2,
             reviewee_id: 1, 
             request_id: 1,
             rating: 5)
+
+Review.create(reviewer_id: 2, 
+            reviewee_id: 1, 
+            request_id: 2,
+            rating: 5)
+
