@@ -4,13 +4,26 @@ package com.taskr.client;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.taskr.api.Api;
 import com.taskr.api.Profile;
 import com.taskr.api.Request;
@@ -38,6 +51,8 @@ public class RequestOverviewFragment extends Fragment {
     @BindView(R.id.request_rating) TextView requestRating;
     @BindView(R.id.distance) TextView requestDistance;
     @BindView(R.id.due) TextView requestDue;
+    @BindView(R.id.map) FrameLayout mapContainer;
+    SupportMapFragment mapFragment;
 
     public RequestOverviewFragment() {
 
@@ -73,6 +88,40 @@ public class RequestOverviewFragment extends Fragment {
                 ((MainActivity)getActivity()).showErrorDialog(getString(R.string.connection_error),
                         "Unable to load user profile information for user with id: " +
                                 Integer.toString(req.user_id));
+            }
+        });
+
+        FragmentManager manager = getChildFragmentManager();
+        mapFragment = (SupportMapFragment) manager.findFragmentByTag("mapFragment");
+        if(mapFragment == null) {
+            mapFragment = new SupportMapFragment();
+            FragmentTransaction trans = manager.beginTransaction();
+            trans.add(R.id.map, mapFragment, "mapFragment");
+            trans.commit();
+            manager.executePendingTransactions();
+        }
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                // Add marker for request location
+                MarkerOptions marker = new MarkerOptions();
+                marker.position(new LatLng(req.lat, req.longitude));
+                googleMap.addMarker(marker);
+                googleMap.getUiSettings().setScrollGesturesEnabled(false);
+                googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+
+                try {
+                    googleMap.setMyLocationEnabled(true);
+                } catch (SecurityException e) {
+                    Log.w(TAG, "Unable to enable myLocation on google maps fragment");
+                }
+
+                CameraUpdate center = CameraUpdateFactory
+                        .newLatLng(new LatLng(req.lat, req.longitude));
+                CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+
+                googleMap.moveCamera(center);
+                googleMap.animateCamera(zoom);
             }
         });
 

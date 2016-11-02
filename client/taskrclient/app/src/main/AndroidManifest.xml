@@ -21,6 +21,11 @@
             android:value="@string/facebook_app_id"
             />
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAKv6oA_xqNZ-yLvJBsiyYdiAEPN_6tZl0"
+            />
+
         <activity android:name="com.taskr.client.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
