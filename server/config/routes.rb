@@ -37,6 +37,10 @@ Rails.application.routes.draw do
         get '/:id' => 'request#show'
         post '/:id' => 'request#edit'
       end
+      scope '/reviews' do
+        get '/:id' => 'review#show'
+        post '/' => 'review#create'
+      end
     end
   end
 

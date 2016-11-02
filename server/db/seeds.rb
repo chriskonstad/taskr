@@ -11,6 +11,10 @@ User.create(name: 'Chris Konstad',
             email: 'chriskon149@gmail.com',
             wallet: 100.0)
 
+User.create(name: 'Pramono Wang',
+            email: 'wang@gmail.com',
+            wallet: 200.0)
+
 Request.create(title: "bringing out the trash",
         user_id: 1,
         amount: 100.0,
@@ -27,3 +31,8 @@ Request.create(title: "Cleaning the house",
         due: DateTime.new(2016,11,1,19)
         )
 
+
+Review.create(reviewer_id: 2, 
+            reviewee_id: 1, 
+            request_id: 1,
+            rating: 5)
