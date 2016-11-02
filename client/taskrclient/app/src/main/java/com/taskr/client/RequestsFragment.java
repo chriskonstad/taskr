@@ -54,32 +54,28 @@ public class RequestsFragment extends ListFragment {
     }
 
     private void loadData() {
-        try {
-            Location lastLocation = LocationProvider.getInstance().getLastLocation();
+        Api.getInstance(getContext()).refreshLocation((MainActivity)getActivity());
+        Location lastLocation = Api.getInstance(getContext()).getLocation();
 
-            double latitude = lastLocation.getLatitude();
-            double longitude = lastLocation.getLongitude();
-            double radius = DEFAULT_RADIUS; // TODO: store/get from settings?
+        double latitude = lastLocation.getLatitude();
+        double longitude = lastLocation.getLongitude();
+        double radius = DEFAULT_RADIUS; // TODO: store/get from settings?
 
-            Api.getInstance(getActivity()).getNearbyRequests(latitude, longitude, radius,
-                    new Api.ApiCallback<ArrayList<Request>>() {
-                        @Override
-                        public void onSuccess(ArrayList<Request> requests) {
-                            adapter = new RequestAdapter(getContext(), requests);
-                            setListAdapter(adapter);
-                        }
+        Api.getInstance(getActivity()).getNearbyRequests(latitude, longitude, radius,
+                new Api.ApiCallback<ArrayList<Request>>() {
+                    @Override
+                    public void onSuccess(ArrayList<Request> requests) {
+                        adapter = new RequestAdapter(getContext(), requests);
+                        setListAdapter(adapter);
+                    }
 
-                        @Override
-                        public void onFailure(String message) {
-                            ((MainActivity)getActivity())
-                                    .showErrorDialog(getString(R.string.connection_error),
-                                            "Unable to load nearby requests");
-                        }
-                    });
-        } catch (Exception e) {
-            ((MainActivity)getActivity()).showErrorDialog(getString(R.string.location_error_title),
-                    e.getMessage());
-        }
+                    @Override
+                    public void onFailure(String message) {
+                        ((MainActivity)getActivity())
+                                .showErrorDialog(getString(R.string.connection_error),
+                                        "Unable to load nearby requests");
+                    }
+                });
     }
 
     @Override

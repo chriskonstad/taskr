@@ -1,12 +1,14 @@
 package com.taskr.client;
 
 import android.content.Context;
+import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.taskr.api.Api;
 import com.taskr.api.Request;
 
 import java.text.Format;
@@ -27,6 +29,7 @@ public class RequestAdapter extends ArrayAdapter<Request> {
 
     @BindView(R.id.title) TextView title;
     @BindView(R.id.due) TextView due;
+    @BindView(R.id.distance) TextView distance;
 
     public RequestAdapter(Context context, ArrayList<Request> requests) {
         super(context, -1, requests);
@@ -44,8 +47,11 @@ public class RequestAdapter extends ArrayAdapter<Request> {
         Request r = mRequests.get(position);
 
         title.setText(r.title);
-        Format formatter = new SimpleDateFormat(Request.DUE_FORMAT);
-        due.setText("Due: " + formatter.format(r.due));
+        due.setText(r.getDue());
+
+        // Show the distance from the user's current location to the request
+        float d = r.getDistance(Api.getInstance(mContext).getLocation());
+        distance.setText(String.format("%.1fmi", d));
 
         return rowView;
     }

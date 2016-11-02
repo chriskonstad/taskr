@@ -1,6 +1,7 @@
 package com.taskr.client;
 
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import com.taskr.api.Api;
 import com.taskr.api.Profile;
 import com.taskr.api.Request;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -33,6 +36,8 @@ public class RequestOverviewFragment extends Fragment {
     @BindView(R.id.request_description) TextView requestDescription;
     @BindView(R.id.request_user_name) TextView requestUserName;
     @BindView(R.id.request_rating) TextView requestRating;
+    @BindView(R.id.distance) TextView requestDistance;
+    @BindView(R.id.due) TextView requestDue;
 
     public RequestOverviewFragment() {
 
@@ -50,6 +55,11 @@ public class RequestOverviewFragment extends Fragment {
         requestTitle.setText(req.title);
         requestAmount.setText(Double.toString(req.amount) + " Tokens");
         requestDescription.setText("Description: " + req.description);
+
+        // Show the distance from the user's current location to the request
+        float distance = req.getDistance(Api.getInstance(getContext()).getLocation());
+        requestDistance.setText(String.format("%.1fmi", distance));
+        requestDue.setText(req.getDue());
 
         Api.getInstance(getContext()).getUserProfile(req.user_id, new Api.ApiCallback<Profile>() {
             @Override

@@ -1,9 +1,12 @@
 package com.taskr.api;
 
 import android.content.Context;
+import android.location.Location;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.taskr.client.LocationProvider;
+import com.taskr.client.MainActivity;
 import com.taskr.client.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -25,6 +28,7 @@ public class Api {
     private static int mId;
     private static String mName;
     private static String mEmail;
+    private static Location mLocation;
     private static final int MAX_RETRIES = 0;   // YOLO, we can change this if needed later
     private static final int RETRY_DELAY_MS = 0;
     private static final int NO_CONNECTION = 0; // "HTTP status code" for unable to reach server
@@ -85,6 +89,19 @@ public class Api {
 
     public String getEmail() {
         return mEmail;
+    }
+
+    public void refreshLocation(MainActivity activity) {
+        try {
+            mLocation = LocationProvider.getInstance().getLastLocation();
+        } catch (Exception e) {
+            activity.showErrorDialog(activity.getString(R.string.location_error_title),
+                    "Unable to get current location");
+        }
+    }
+
+    public Location getLocation() {
+        return mLocation;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
