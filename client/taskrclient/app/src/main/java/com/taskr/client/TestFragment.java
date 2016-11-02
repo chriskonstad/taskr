@@ -83,50 +83,13 @@ public class TestFragment extends Fragment {
 
             @Override
             public void onFailure(String message) {
-                profileJSON.setText(message);
+                ((MainActivity)getActivity()).showErrorDialog(getString(R.string.profile_error),
+                        message);
             }
         });
     }
 
     public void findNearbyRequests(View view){
-        try {
-            Location lastLocation = LocationProvider.getInstance().getLastLocation();
-
-            double latitude = lastLocation.getLatitude();
-            double longitude = lastLocation.getLongitude();
-            double radius = DEFAULT_RADIUS; // TODO: store/get from settings?
-
-            Api.getInstance(getActivity()).getNearbyRequests(latitude, longitude, radius,
-                    new Api.ApiCallback<ArrayList<Request>>() {
-                        @Override
-                        public void onSuccess(ArrayList<Request> requests) {
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("requests", requests);
-
-                            RequestsFragment listFrag = new RequestsFragment();
-                            listFrag.setArguments(bundle);
-
-                            ((MainActivity)getActivity()).showFragment(listFrag, true);
-                        }
-
-                        @Override
-                        public void onFailure(String message) {
-                            requestsJSON.setText(message);
-                        }
-                    });
-        } catch (Exception e) {
-            new AlertDialog.Builder(getContext())
-                    .setTitle(getString(R.string.location_error_title))
-                    .setMessage(e.getMessage())
-                    .setIcon(R.drawable.alert_circle)
-                    .setPositiveButton(R.string.ok,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-                                }
-                            })
-                    .show();
-        }
+        ((MainActivity)getActivity()).showFragment(new RequestsFragment(), true);
     }
 }

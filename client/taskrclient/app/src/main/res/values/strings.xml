@@ -8,6 +8,7 @@
 
     <string name="unable_to_reach_server">Unable to reach Taskr server</string>
     <string name="connection_error">Connection Error</string>
+    <string name="profile_error">Profile Error</string>
 
     <string name="nearby_requests">Nearby Requests</string>
     <string name="location_error_title">Error Getting Location</string>

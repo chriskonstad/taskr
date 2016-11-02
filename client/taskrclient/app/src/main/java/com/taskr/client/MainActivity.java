@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         refreshNavHeader();
         navSelect(0);
-        showFragment(new TestFragment(), false);
+        showFragment(new RequestsFragment(), false);
     }
 
     public void showErrorDialog(String title, String message) {
