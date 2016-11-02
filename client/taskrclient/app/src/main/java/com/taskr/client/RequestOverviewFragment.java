@@ -26,14 +26,10 @@ public class RequestOverviewFragment extends Fragment {
     private static final String TAG = "RequestOverviewFragment";
     private Request req;
 
-//    @BindView(R.id.request_id) TextView requestId;
     @BindView(R.id.request_title) TextView requestTitle;
     @BindView(R.id.request_amount) TextView requestAmount;
-//    @BindView(R.id.request_lat) TextView requestLat;
-//    @BindView(R.id.request_long) TextView requestLong;
-//    @BindView(R.id.request_due) TextView requestDue;
     @BindView(R.id.request_description) TextView requestDescription;
-//
+
     public RequestOverviewFragment() {
 
     }
@@ -45,18 +41,11 @@ public class RequestOverviewFragment extends Fragment {
 
         req = (Request)getArguments().getSerializable("request");
 
-//        getActivity().setTitle(req.title);
-        getActivity().setTitle("");
+        getActivity().setTitle(getString(R.string.request_overview_title));
 
-        //requestId.setText(Integer.toString(req.id));
         requestTitle.setText(req.title);
         requestAmount.setText(Double.toString(req.amount) + " Tokens");
-//        requestLat.setText("Latitude: " + Double.toString(req.lat));
-//        requestLong.setText("Longitude: " + Double.toString(req.longitude));
         requestDescription.setText("Description: " + req.description);
-
-//        DatetimeFormatter
-//        requestDue.setText(Date.toString);
 
         return rootView;
     }

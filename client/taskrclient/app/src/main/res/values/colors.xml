@@ -6,4 +6,5 @@
 
     <!-- Defaults -->
     <color name="defaultTextColor">#000000</color>
+    <color name="iconGrey">#9E9E9E</color>
 </resources>
