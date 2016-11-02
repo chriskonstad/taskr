@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_requests) {
-            showFragment(new TestFragment(), true);
+            showFragment(new RequestsFragment(), true);
         } else if (id == R.id.nav_profile) {
             // TODO change to profile fragment
             showFragment(new TestFragment(), true);

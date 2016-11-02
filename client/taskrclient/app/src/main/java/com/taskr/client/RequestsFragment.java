@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 
 public class RequestsFragment extends ListFragment {
     private static final String TAG = "RequestsFragment";
-    private ArrayList<Request> nearbyRequests;
+    private ArrayAdapter<Request> adapter;
     private static final int DEFAULT_RADIUS = 100000;   // in miles
 
     @BindString(R.string.nearby_requests) String mTitle;
@@ -42,7 +42,7 @@ public class RequestsFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id){
-        Request req = nearbyRequests.get(position);
+        Request req = adapter.getItem(position);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("request", req);
@@ -65,18 +65,7 @@ public class RequestsFragment extends ListFragment {
                     new Api.ApiCallback<ArrayList<Request>>() {
                         @Override
                         public void onSuccess(ArrayList<Request> requests) {
-                            ArrayList<String> request_text = new ArrayList<String>();
-
-                            nearbyRequests = requests;
-                            if(!nearbyRequests.isEmpty()){
-                                for(int x = 0; x < nearbyRequests.size(); x++){
-                                    Request req = nearbyRequests.get(x);
-                                    request_text.add(req.title);
-                                }
-                            }
-
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-                                    R.layout.request_single, request_text);
+                            adapter = new RequestAdapter(getContext(), requests);
                             setListAdapter(adapter);
                         }
 
