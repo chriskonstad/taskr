@@ -45,12 +45,12 @@ public class RequestOverviewFragment extends Fragment {
     private Request req;
 
     @BindView(R.id.request_title) TextView requestTitle;
-    @BindView(R.id.request_amount) TextView requestAmount;
     @BindView(R.id.request_description) TextView requestDescription;
     @BindView(R.id.request_user_name) TextView requestUserName;
     @BindView(R.id.request_rating) TextView requestRating;
     @BindView(R.id.distance) TextView requestDistance;
     @BindView(R.id.due) TextView requestDue;
+    @BindView(R.id.amount) TextView requestAmount;
     @BindView(R.id.map) FrameLayout mapContainer;
     SupportMapFragment mapFragment;
 
@@ -68,13 +68,13 @@ public class RequestOverviewFragment extends Fragment {
         getActivity().setTitle(getString(R.string.request_overview_title));
 
         requestTitle.setText(req.title);
-        requestAmount.setText(Double.toString(req.amount) + " Tokens");
         requestDescription.setText("Description: " + req.description);
 
         // Show the distance from the user's current location to the request
         float distance = req.getDistance(Api.getInstance(getContext()).getLocation());
         requestDistance.setText(String.format("%.1fmi", distance));
         requestDue.setText(req.getDue());
+        requestAmount.setText(String.format("$%.1f", req.amount));
 
         Api.getInstance(getContext()).getUserProfile(req.user_id, new Api.ApiCallback<Profile>() {
             @Override

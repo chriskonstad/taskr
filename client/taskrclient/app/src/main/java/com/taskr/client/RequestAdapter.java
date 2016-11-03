@@ -30,6 +30,7 @@ public class RequestAdapter extends ArrayAdapter<Request> {
     @BindView(R.id.title) TextView title;
     @BindView(R.id.due) TextView due;
     @BindView(R.id.distance) TextView distance;
+    @BindView(R.id.amount) TextView amount;
 
     public RequestAdapter(Context context, ArrayList<Request> requests) {
         super(context, -1, requests);
@@ -52,6 +53,8 @@ public class RequestAdapter extends ArrayAdapter<Request> {
         // Show the distance from the user's current location to the request
         float d = r.getDistance(Api.getInstance(mContext).getLocation());
         distance.setText(String.format("%.1fmi", d));
+
+        amount.setText(String.format("$%.2f", r.amount));
 
         return rowView;
     }
