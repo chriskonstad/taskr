@@ -17,7 +17,7 @@ import java.util.Date;
  */
 
 public class Request implements Serializable {
-    public static final String DUE_FORMAT = "MMM dd, yyyy 'by' h:mma";
+    public static final String DUE_FORMAT = "EEE, d MMM yyyy 'by' h:mma";
     public int id;
     public String title;
     public double amount;

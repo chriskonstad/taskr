@@ -120,52 +120,10 @@
                 android:paddingBottom="@dimen/small_vertical_margin"
                 android:paddingTop="@dimen/small_vertical_margin"
                 />
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:tint="@color/iconGrey"
-                    app:srcCompat="@drawable/timer"/>
 
-                <TextView
-                    android:id="@+id/due"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:tint="@color/iconGrey"
-                    app:srcCompat="@drawable/cash_usd"/>
-
-                <TextView
-                    android:id="@+id/amount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_marginBottom="@dimen/small_vertical_margin"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:tint="@color/iconGrey"
-                    app:srcCompat="@drawable/map_marker"/>
-
-                <TextView
-                    android:id="@+id/distance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+            <include
+                layout="@layout/request_summary"
+                />
         </LinearLayout>
 
         <LinearLayout
