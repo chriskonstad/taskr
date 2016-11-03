@@ -40,6 +40,7 @@ public class LoginFragment extends Fragment {
     private static final String TAG = "LoginFragment";
     private static final String EMAIL = "email";
     private static final String NAME = "name";
+    private static final String ID = "id";
     CallbackManager mCallbackManager;
     AccessTokenTracker mAccessTokenTracker;
     AccessToken mAccessToken;
@@ -129,28 +130,40 @@ public class LoginFragment extends Fragment {
             public void onCompleted(JSONObject object, GraphResponse response) {
                 Log.i(TAG, "Got user information from FB");
                 Bundle fbData = readFbData(object);
+                Log.i(TAG, object.toString());
 
                 final String name = fbData.getString(NAME);
                 final String email = fbData.getString(EMAIL);
+                final String id = fbData.getString(ID);
                 Log.i(TAG, "Name: " + name);
                 Log.i(TAG, "Email: " + email);
+                Log.i(TAG, "Id: " + id);
 
-                final ProgressDialog dialog = ((MainActivity)getActivity())
-                        .showProgressDialog(getString(R.string.logging_into_taskr));
-                dialog.show();
+                final ProgressDialog dialog;
+                if(null != getActivity()) {
+                    dialog = ((MainActivity)getActivity())
+                            .showProgressDialog(getString(R.string.logging_into_taskr));
+                    dialog.show();
+                } else {
+                    dialog = null;
+                }
 
-                Api.getInstance(getContext()).login(name, email,
+                Api.getInstance(getContext()).login(name, email, id,
                         new Api.ApiCallback<com.taskr.api.LoginResult>() {
                     @Override
                     public void onSuccess(com.taskr.api.LoginResult returnValue) {
-                        dialog.dismiss();
+                        if(null != dialog) {
+                            dialog.dismiss();
+                        }
                         onLoggedIn();
                     }
 
                     @Override
                     public void onFailure(String message) {
                         // Logout of FB to force the user to re-login
-                        dialog.dismiss();
+                        if(null != dialog) {
+                            dialog.dismiss();
+                        }
                         LoginManager.getInstance().logOut();
                         new AlertDialog.Builder(getContext())
                                 .setTitle(getString(R.string.login_error_title))
@@ -187,7 +200,7 @@ public class LoginFragment extends Fragment {
     }
 
     private Bundle readFbData(JSONObject object) {
-        String[] fields = {NAME, EMAIL};
+        String[] fields = {NAME, EMAIL, ID};
 
         Bundle bundle = new Bundle();
         try {

@@ -1,6 +1,7 @@
 package com.taskr.client;
 
 import android.app.ProgressDialog;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.koushikdutta.ion.Ion;
 import com.taskr.api.Api;
 import com.taskr.api.Profile;
 
@@ -30,6 +32,7 @@ import butterknife.ButterKnife;
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     public static final String UID = "user_id";
+    @BindView (R.id.profile_picture) ImageView profilePicture;
     @BindViews({R.id.star1,
             R.id.star2,
             R.id.star3,
@@ -83,6 +86,12 @@ public class ProfileFragment extends Fragment {
                 dialog.dismiss();
                 getActivity().setTitle(profile.name);
                 ButterKnife.apply(stars, SET_STARS, profile.avgRating);
+                // TODO This assumes that only the person using the app loads the profile page
+                // To fix this, we'll have to store the FBID on the server, and return that with
+                // the profile. Totally doable, but not sure if we want to do that.
+                Ion.with(profilePicture)
+                        .placeholder(R.drawable.loadingpng)
+                        .load(Api.getInstance(getContext()).getProfileUrl());
             }
 
             @Override

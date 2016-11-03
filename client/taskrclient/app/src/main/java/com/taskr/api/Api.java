@@ -34,6 +34,7 @@ public class Api {
     private static int mId;
     private static String mName;
     private static String mEmail;
+    private static String mFbid;
     private static Location mLocation;
     private static final int MAX_RETRIES = 0;   // YOLO, we can change this if needed later
     private static final int RETRY_DELAY_MS = 0;
@@ -111,6 +112,10 @@ public class Api {
         }
     }
 
+    public String getProfileUrl() {
+        return "http://graph.facebook.com/" + mFbid + "/picture?height=960&width=960";
+    }
+
     public Location getLocation() {
         return mLocation;
     }
@@ -118,7 +123,7 @@ public class Api {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // PUBLIC FACING API CALLS
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    public void login(final String name, final String email,
+    public void login(final String name, final String email, final String fbid,
                       final ApiCallback<LoginResult> callback) {
         final String url = Endpoints.get(Endpoints.LOGIN);
         RequestParams params = new RequestParams();
@@ -134,6 +139,7 @@ public class Api {
                 mId = result.id;
                 mName = name;
                 mEmail = email;
+                mFbid = fbid;
 
                 Log.i(TAG, "Logged in as user with id: " + mId);
 

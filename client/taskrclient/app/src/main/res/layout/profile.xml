@@ -6,10 +6,10 @@
     android:layout_height="match_parent">
 
     <ImageView
+        android:id="@+id/profile_picture"
         android:layout_width="match_parent"
         android:scaleType="centerCrop"
         android:layout_height="240dp"
-        android:src="@drawable/corgi_loaf"
         />
 
     <LinearLayout

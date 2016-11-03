@@ -22,9 +22,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
+import com.koushikdutta.ion.Ion;
 import com.taskr.api.Api;
 
 import java.security.MessageDigest;
@@ -98,9 +100,13 @@ public class MainActivity extends AppCompatActivity
         View header = navigationView.getHeaderView(0);
         TextView headerName = (TextView)header.findViewById(R.id.header_name);
         TextView headerEmail = (TextView)header.findViewById(R.id.header_email);
+        ImageView headerProfilePicture = (ImageView)header.findViewById(R.id.nav_profile_picture);
 
         headerName.setText(name);
         headerEmail.setText(email);
+        Ion.with(headerProfilePicture)
+                .placeholder(R.drawable.loadingpng)
+                .load(Api.getInstance(getApplicationContext()).getProfileUrl());
     }
 
     @Override
