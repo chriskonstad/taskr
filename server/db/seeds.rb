@@ -28,9 +28,16 @@ Request.create(title: "Cleaning the house",
         amount: 50.0,
         lat: 10.0,
         longitude: 20.0,
-        due: DateTime.new(2016,11,1,19)
+        due: DateTime.new(2016,11,21,19)
         )
 
+Request.create(title: "Test task",
+        user_id: 2,
+        amount: 42.0,
+        lat: 34.0689,
+        longitude: -118.4452,
+        due: DateTime.new(2016,11,8,19)
+        )
 
 Review.create(reviewer_id: 2, 
             reviewee_id: 1, 
