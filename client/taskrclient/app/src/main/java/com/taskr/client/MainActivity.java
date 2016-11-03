@@ -1,5 +1,6 @@
 package com.taskr.client;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -163,6 +164,8 @@ public class MainActivity extends AppCompatActivity
             int itemToSelect = -1;
             if(frag instanceof RequestsFragment) {
                 itemToSelect = REQUEST;
+            } else if (frag instanceof ProfileFragment) {
+                itemToSelect = PROFILE;
             } else if (frag instanceof SettingsFragment){
                 itemToSelect = SETTINGS;
             } else {
@@ -186,9 +189,8 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_requests && !(frag instanceof RequestsFragment)) {
             showFragment(new RequestsFragment(), true);
-        } else if (id == R.id.nav_profile && !(frag instanceof TestFragment)) {
-            // TODO change to profile fragment
-            showFragment(new TestFragment(), true);
+        } else if (id == R.id.nav_profile && !(frag instanceof ProfileFragment)) {
+            showFragment(ProfileFragment.newInstance(Api.getInstance(this).getId()), true);
         } else if (id == R.id.nav_settings && !(frag instanceof SettingsFragment)) {
             showFragment(new SettingsFragment(), true);
         } else if (id == R.id.nav_logout) {
@@ -235,6 +237,15 @@ public class MainActivity extends AppCompatActivity
                             }
                         })
                 .show();
+    }
+
+    public ProgressDialog showProgressDialog(String message) {
+        ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage(message);
+        dialog.setIndeterminate(true);
+        dialog.setCanceledOnTouchOutside(false);
+        return dialog;
     }
 
     private void logKeyHash() {

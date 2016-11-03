@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:scaleType="centerCrop"
+        android:layout_height="240dp"
+        android:src="@drawable/corgi_loaf"
+        />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:paddingTop="@dimen/small_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:weightSum="100"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/star1"
+            android:layout_width="0dp"
+            android:layout_weight="12"
+            android:layout_height="wrap_content"
+            />
+        <ImageView
+            android:id="@+id/star2"
+            android:layout_width="0dp"
+            android:layout_weight="12"
+            android:layout_height="wrap_content"
+            />
+        <ImageView
+            android:id="@+id/star3"
+            android:layout_width="0dp"
+            android:layout_weight="12"
+            android:layout_height="wrap_content"
+            />
+        <ImageView
+            android:id="@+id/star4"
+            android:layout_width="0dp"
+            android:layout_weight="12"
+            android:layout_height="wrap_content"
+            />
+        <ImageView
+            android:id="@+id/star5"
+            android:layout_width="0dp"
+            android:layout_weight="12"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
+</LinearLayout>

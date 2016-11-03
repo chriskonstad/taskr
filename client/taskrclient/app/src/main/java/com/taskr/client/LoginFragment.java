@@ -135,11 +135,8 @@ public class LoginFragment extends Fragment {
                 Log.i(TAG, "Name: " + name);
                 Log.i(TAG, "Email: " + email);
 
-                final ProgressDialog dialog = new ProgressDialog(getActivity());
-                dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                dialog.setMessage(getString(R.string.logging_into_taskr));
-                dialog.setIndeterminate(true);
-                dialog.setCanceledOnTouchOutside(false);
+                final ProgressDialog dialog = ((MainActivity)getActivity())
+                        .showProgressDialog(getString(R.string.logging_into_taskr));
                 dialog.show();
 
                 Api.getInstance(getContext()).login(name, email,

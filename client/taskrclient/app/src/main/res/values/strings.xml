@@ -35,6 +35,9 @@
     <string name="accept_request_error_title">Error Accepting Request</string>
     <string name="accept_request_error_msg">Looks like something broke while trying to accept the request! Please try again in a bit.</string>
 
+    <!-- Profile strings -->
+    <string name="profile_loading">Profile Loading...</string>
+
     <!-- Preferences -->
     <string name="category_development">Development</string>
     <string name="default_hostname">taskr130.herokuapp.com</string>
