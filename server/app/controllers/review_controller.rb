@@ -6,7 +6,7 @@ class ReviewController < ApplicationController
     render :json => r.as_json
   end
 
-
+#TODO: make sure that review created date is set to current date
   def create
     rev = Review.create(review_creation_params)
     if rev.id
