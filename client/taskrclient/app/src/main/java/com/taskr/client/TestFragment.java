@@ -69,7 +69,6 @@ public class TestFragment extends Fragment {
         return rootView;
     }
 
-
     public void findUserById(View view) {
         int userId = Integer.parseInt(profileId.getText().toString());
 
