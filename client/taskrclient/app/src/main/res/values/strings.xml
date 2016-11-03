@@ -27,6 +27,14 @@
     <string name="nav_settings">Settings</string>
     <string name="nav_logout">Log Out</string>
 
+    <!-- Request-related strings -->
+    <string name="load_request_error_title">Error Getting Request</string>
+    <string name="load_request_error_msg">Looks like something went wrong while trying to load a request! Please try again in a bit.</string>
+    <string name="accept_request_success_title">Request Accepted</string>
+    <string name="accept_request_success_msg">You accepted the request successfully!</string>
+    <string name="accept_request_error_title">Error Accepting Request</string>
+    <string name="accept_request_error_msg">Looks like something broke while trying to accept the request! Please try again in a bit.</string>
+
     <!-- Preferences -->
     <string name="category_development">Development</string>
     <string name="default_hostname">taskr130.herokuapp.com</string>

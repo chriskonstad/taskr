@@ -76,7 +76,7 @@ class RequestController < ApplicationController
   def handle_action(event)
     id = params[:params][:id]
     user_id = params[:auth][:user_id]
-
+    puts(user_id)
     if Request.handle_action(event, id, user_id)
       render nothing: true
     else

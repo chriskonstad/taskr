@@ -1,11 +1,12 @@
 package com.taskr.client;
 
-
 import android.location.Location;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import android.widget.Button;
+
+
 import com.taskr.api.Api;
 import com.taskr.api.Profile;
 import com.taskr.api.Request;
@@ -52,6 +56,7 @@ public class RequestOverviewFragment extends Fragment {
     @BindView(R.id.due) TextView requestDue;
     @BindView(R.id.amount) TextView requestAmount;
     @BindView(R.id.map) FrameLayout mapContainer;
+    @BindView(R.id.accept_button) Button acceptButton;
     SupportMapFragment mapFragment;
 
     public RequestOverviewFragment() {
@@ -66,6 +71,13 @@ public class RequestOverviewFragment extends Fragment {
         req = (Request)getArguments().getSerializable("request");
 
         getActivity().setTitle(getString(R.string.request_overview_title));
+
+        acceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AcceptRequest(view);
+            }
+        });
 
         requestTitle.setText(req.title);
         requestDescription.setText("Description: " + req.description);
@@ -126,5 +138,42 @@ public class RequestOverviewFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    public void AcceptRequest(View view){
+        Api.getInstance(getActivity()).acceptRequest(req.id, 1, new Api.ApiCallback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean result) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle(getString(R.string.accept_request_success_title))
+                        .setMessage(R.string.accept_request_success_msg)
+                        .setIcon(R.drawable.alert_circle)
+                        .setPositiveButton(R.string.ok,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                        ((MainActivity)getActivity()).onBackPressed();
+                                    }
+                                })
+                        .show();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle(getString(R.string.accept_request_error_title))
+                        .setMessage(R.string.accept_request_error_msg)
+                        .setIcon(R.drawable.alert_circle)
+                        .setPositiveButton(R.string.ok,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                })
+                        .show();
+            }
+        });
     }
 }

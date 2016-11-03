@@ -14,10 +14,16 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class Api {
     private static final String TAG = "Api";
@@ -48,6 +54,7 @@ public class Api {
         public static final String LOGIN = "/api/v1/login";
         public static final String NEARBY = "/api/v1/requests/nearby";
         public static final String PROFILE = "/api/v1/profile";
+        public static final String ACCEPT_REQUEST = "/api/v1/requests/accept";
     }
 
     private static class Types {
@@ -205,5 +212,52 @@ public class Api {
         };
 
         mClient.get(url, params, handler);
+    }
+
+    public void acceptRequest(final int requestId, final int uid, final ApiCallback<Boolean> callback) {
+        final String url = Endpoints.get(Endpoints.ACCEPT_REQUEST);
+//        RequestParams params = new RequestParams();
+
+        JSONObject p = new JSONObject();
+        JSONObject a = new JSONObject();
+        JSONObject params = new JSONObject();
+
+        try {
+            a.put("user_id", Integer.toString(uid));
+            p.put("id", Integer.toString(requestId));
+
+            params.put("params", p);
+            params.put("auth", a);
+        }catch(JSONException e){
+            //to do error handling
+        }
+
+        try{
+            StringEntity entity = new StringEntity(params.toString());
+
+            AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    callback.onSuccess(true);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
+                                      Throwable error) {
+                    if(NO_CONNECTION == statusCode) {
+                        callback.onFailure(mContext.getString(R.string.unable_to_reach_server));
+                    } else {
+                        callback.onFailure("Error (" +
+                                statusCode +
+                                "): Unable to accept request: " +
+                                requestId);
+                    }
+                }
+            };
+
+            mClient.post(mContext, url, entity, "application/json", handler);
+        }catch(UnsupportedEncodingException e){
+            //to do more error handling...
+        }
     }
 }
