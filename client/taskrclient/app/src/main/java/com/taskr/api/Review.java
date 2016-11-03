@@ -12,4 +12,5 @@ public class Review {
     public int request_id;
     public int rating;
     public Date created_at;
+    // probably don't need Date modified field..?
 }

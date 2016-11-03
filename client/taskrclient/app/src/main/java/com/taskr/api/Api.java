@@ -298,6 +298,7 @@ public class Api {
 
 
     // get all of the reviews that a user has received
+    // revieweeID is the id of the person the review is for
     public void getUserReviews(final int revieweeID, final ApiCallback<ArrayList<Review>> callback){
         final String url = Endpoints.get(Endpoints.USER_REVIEWS);
         RequestParams params = new RequestParams();
@@ -321,6 +322,7 @@ public class Api {
                 }
             }
         };
+
 
         mClient.get(url, params, handler);
     }

@@ -5,5 +5,6 @@ package com.taskr.api;
  */
 
 public class ReviewResult {
+    // id of newly created review
     public int id;
 }
