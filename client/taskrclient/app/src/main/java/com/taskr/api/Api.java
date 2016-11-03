@@ -56,10 +56,13 @@ public class Api {
         public static final String PROFILE = "/api/v1/profile";
         public static final String ACCEPT_REQUEST = "/api/v1/requests/accept";
         public static final String USER_REQUESTS = "/api/v1/requests/findByUid";
+        public static final String RATE_REQUEST = "/api/v1/review/create";
+        public static final String USER_REVIEWS = "/api/v1/review/show";
     }
 
     private static class Types {
         public static final Type REQUEST_LIST = new TypeToken<ArrayList<Request>>() {}.getType();
+        public static final Type REVIEW_LIST = new TypeToken<ArrayList<Review>>() {}.getType();
     }
 
     private Api(Context context) {
@@ -197,7 +200,6 @@ public class Api {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String json = new String(responseBody);
                 ArrayList<Request> requests = mGson.fromJson(json, Types.REQUEST_LIST);
-
                 callback.onSuccess(requests);
             }
 
@@ -292,5 +294,70 @@ public class Api {
         }catch(UnsupportedEncodingException e){
             //to do more error handling...
         }
+    }
+
+
+    // get all of the reviews that a user has received
+    public void getUserReviews(final int revieweeID, final ApiCallback<ArrayList<Review>> callback){
+        final String url = Endpoints.get(Endpoints.USER_REVIEWS);
+        RequestParams params = new RequestParams();
+        params.put("id", Integer.toString(revieweeID));
+
+
+        AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String json = new String(responseBody);
+                ArrayList<Review> reviews = mGson.fromJson(json, Types.REVIEW_LIST);
+                callback.onSuccess(reviews);
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
+                                  Throwable error) {
+                if(NO_CONNECTION == statusCode) {
+                    callback.onFailure(mContext.getString(R.string.unable_to_reach_server));
+                } else {
+                    callback.onFailure("Error (" + statusCode + "): Unable to get user's requests");
+                }
+            }
+        };
+
+        mClient.get(url, params, handler);
+    }
+
+    // rate a request that has been completed
+    public void rateCompletedRequest(final int requestID, final int reviewerID, final int revieweeID,
+                                     final int rating, final ApiCallback<ReviewResult> callback) {
+        final String url = Endpoints.get(Endpoints.RATE_REQUEST);
+        RequestParams params = new RequestParams();
+        params.add("reviewer_id", Integer.toString(reviewerID));
+        params.add("reviewee_id", Integer.toString(revieweeID));
+        params.add("request_id", Integer.toString(requestID));
+        params.add("rating", Integer.toString(rating));
+
+        AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String json = new String(responseBody);
+                ReviewResult result = mGson.fromJson(json, ReviewResult.class);
+                Log.i(TAG, "Successfully created review with id: " + result.id);
+                callback.onSuccess(result);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
+                                  Throwable error) {
+                if(NO_CONNECTION == statusCode) {
+                    callback.onFailure(mContext.getString(R.string.unable_to_reach_server));
+                } else {
+                    callback.onFailure("Error (" +
+                            statusCode +
+                            "): Unable rate request: " +
+                            requestID);
+                }
+            }
+        };
+
+        mClient.post(url, params, handler);
     }
 }
