@@ -29,7 +29,7 @@ public class Request implements Serializable {
     public Date created_at;
     public Date updated_at;
     public String status;
-    public Integer actor_id;
+    public int actor_id;
     // TODO add more of the data fields
 
     // Get difference between current

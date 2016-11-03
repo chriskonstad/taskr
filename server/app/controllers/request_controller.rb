@@ -61,7 +61,7 @@ class RequestController < ApplicationController
     handle_action('complete')
   end
 
-  # Let user pay a request
+  # Let user pay a requests
   def pay
     handle_action('pay')
   end
@@ -76,7 +76,7 @@ class RequestController < ApplicationController
   def handle_action(event)
     id = params[:params][:id]
     user_id = params[:auth][:user_id]
-    puts(user_id)
+
     if Request.handle_action(event, id, user_id)
       render nothing: true
     else
