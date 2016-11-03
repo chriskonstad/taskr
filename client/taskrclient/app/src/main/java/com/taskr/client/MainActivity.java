@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -53,10 +54,36 @@ public class MainActivity extends AppCompatActivity
             LocationProvider.onPermissionsChanged(this);
         }
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar,R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    //show hamburger
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                    toggle.syncState();
+                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            drawer.openDrawer(GravityCompat.START);
+                        }
+                    });
+                } else {
+                    // Show arrow
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(true); // show back button
+                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onBackPressed();
+                        }
+                    });
+                }
+            }
+        });
 
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -77,8 +104,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.toolbar_menu, menu);
+        // Uncomment this code to reenable the overflow menu... Not sure if we need/want it
+        //MenuInflater inflater = getMenuInflater();
+        //inflater.inflate(R.menu.toolbar_menu, menu);
         return true;
     }
 
@@ -133,7 +161,7 @@ public class MainActivity extends AppCompatActivity
 
             // TODO Handle profile fragment
             int itemToSelect = -1;
-            if(frag instanceof TestFragment) {
+            if(frag instanceof RequestsFragment) {
                 itemToSelect = REQUEST;
             } else if (frag instanceof SettingsFragment){
                 itemToSelect = SETTINGS;
@@ -154,12 +182,14 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_requests) {
+        Fragment frag = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+
+        if (id == R.id.nav_requests && !(frag instanceof RequestsFragment)) {
             showFragment(new RequestsFragment(), true);
-        } else if (id == R.id.nav_profile) {
+        } else if (id == R.id.nav_profile && !(frag instanceof TestFragment)) {
             // TODO change to profile fragment
             showFragment(new TestFragment(), true);
-        } else if (id == R.id.nav_settings) {
+        } else if (id == R.id.nav_settings && !(frag instanceof SettingsFragment)) {
             showFragment(new SettingsFragment(), true);
         } else if (id == R.id.nav_logout) {
             LoginManager.getInstance().logOut();
