@@ -221,6 +221,7 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         refreshNavHeader();
         navSelect(0);
+
         showFragment(new RequestsFragment(), false);
     }
 

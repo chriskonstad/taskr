@@ -34,6 +34,8 @@ public class RequestsFragment extends ListFragment {
     private ArrayAdapter<Request> adapter;
     private static final int DEFAULT_RADIUS = 100000;   // in miles
 
+    private boolean specificUserFlag = false;
+
     @BindString(R.string.nearby_requests) String mTitle;
 
     public RequestsFragment(){
@@ -53,7 +55,7 @@ public class RequestsFragment extends ListFragment {
         ((MainActivity)getActivity()).showFragment(overviewFrag, true);
     }
 
-    private void loadData() {
+    private void loadNearbyRequests() {
         Api.getInstance(getContext()).refreshLocation((MainActivity)getActivity());
         Location lastLocation = Api.getInstance(getContext()).getLocation();
 
@@ -78,10 +80,35 @@ public class RequestsFragment extends ListFragment {
                 });
     }
 
+    private void loadUserRequests(){
+        Api.getInstance(getContext()).refreshLocation((MainActivity)getActivity());
+        
+        Api.getInstance(getActivity()).getUserRequests(Api.getInstance(getContext()).getId(),
+                new Api.ApiCallback<ArrayList<Request>>() {
+                    @Override
+                    public void onSuccess(ArrayList<Request> requests) {
+                        adapter = new RequestAdapter(getContext(), requests);
+                        setListAdapter(adapter);
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        ((MainActivity)getActivity())
+                                .showErrorDialog(getString(R.string.connection_error),
+                                        "Unable to load user requests");
+                    }
+                });
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle){
         View rootView = inflater.inflate(R.layout.requests_list, container, false);
         ButterKnife.bind(this, rootView);
+
+        Bundle arguments = getArguments();
+        if(arguments != null && arguments.containsKey(getContext().getString(R.string.is_specific_user))){
+            specificUserFlag = true;
+        }
 
         getActivity().setTitle(mTitle);
 
@@ -91,6 +118,12 @@ public class RequestsFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadData();
+
+        if(specificUserFlag) {
+            loadUserRequests();
+        }
+        else{
+            loadNearbyRequests();
+        }
     }
 }

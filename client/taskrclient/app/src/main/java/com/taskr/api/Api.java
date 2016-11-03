@@ -55,6 +55,7 @@ public class Api {
         public static final String NEARBY = "/api/v1/requests/nearby";
         public static final String PROFILE = "/api/v1/profile";
         public static final String ACCEPT_REQUEST = "/api/v1/requests/accept";
+        public static final String USER_REQUESTS = "/api/v1/requests/findByUid";
     }
 
     private static class Types {
@@ -207,6 +208,38 @@ public class Api {
                     callback.onFailure(mContext.getString(R.string.unable_to_reach_server));
                 } else {
                     callback.onFailure("Error (" + statusCode + "): Unable to get nearby requests");
+                }
+            }
+        };
+
+        mClient.get(url, params, handler);
+    }
+
+    public void getUserRequests(int uid,
+                                  final ApiCallback<ArrayList<Request>> callback) {
+        final String url = Endpoints.get(Endpoints.USER_REQUESTS);
+        RequestParams params = new RequestParams();
+        params.put("user_id", Integer.toString(uid));
+
+        //Will need to eventually make this take a parameter to allow users to filter between requests
+        //that they have picked up and requests that they have posted
+        params.put("role", mContext.getString(R.string.role_any));
+
+        AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String json = new String(responseBody);
+                ArrayList<Request> requests = mGson.fromJson(json, Types.REQUEST_LIST);
+                callback.onSuccess(requests);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
+                                  Throwable error) {
+                if(NO_CONNECTION == statusCode) {
+                    callback.onFailure(mContext.getString(R.string.unable_to_reach_server));
+                } else {
+                    callback.onFailure("Error (" + statusCode + "): Unable to get user's requests");
                 }
             }
         };

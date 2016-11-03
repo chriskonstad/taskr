@@ -141,7 +141,7 @@ public class RequestOverviewFragment extends Fragment {
     }
 
     public void AcceptRequest(View view){
-        Api.getInstance(getActivity()).acceptRequest(req.id, 1, new Api.ApiCallback<Boolean>() {
+        Api.getInstance(getActivity()).acceptRequest(req.id, Api.getInstance(getContext()).getId(), new Api.ApiCallback<Boolean>() {
             @Override
             public void onSuccess(Boolean result) {
                 new AlertDialog.Builder(getContext())

@@ -47,4 +47,8 @@
     <string name="hostname_title">Hostname</string>
     <string name="hostname_summary">Address of the Taskr server</string>
 
+    <string name="is_specific_user">IsSpecificUser</string>
+    <string name="role_requester">requester</string>
+    <string name="role_fulfiller">fulfiller</string>
+    <string name="role_any">any</string>
 </resources>
