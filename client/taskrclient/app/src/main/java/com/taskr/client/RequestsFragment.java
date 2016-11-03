@@ -116,8 +116,8 @@ public class RequestsFragment extends ListFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
 
         if(specificUserFlag) {
             loadUserRequests();

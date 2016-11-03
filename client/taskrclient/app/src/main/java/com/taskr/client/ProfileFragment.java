@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,9 +42,9 @@ public class ProfileFragment extends Fragment {
         public void set(@NonNull ImageView view, Double value, int index) {
             int starNum = index + 1;
             double diff = value - starNum;
-            if(0.75 <= diff) {
+            if(-0.25 <= diff) {
                 view.setImageResource(R.drawable.star);
-            } else if (0.25 <= diff) {
+            } else if (-0.75 <= diff) {
                 view.setImageResource(R.drawable.star_half);
             } else {
                 view.setImageResource(R.drawable.star_outline);
