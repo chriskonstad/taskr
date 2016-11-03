@@ -34,6 +34,8 @@ Rails.application.routes.draw do
         post '/pay' => 'request#pay'
         post '/cancel' => 'request#cancel'
 
+        get '/findByUid' => 'request#findByUid'
+
         get '/:id' => 'request#show'
         post '/:id' => 'request#edit'
       end

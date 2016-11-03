@@ -46,6 +46,15 @@ class RequestController < ApplicationController
     end
   end
 
+  # Find all requests associated
+  def findByUid
+    user_id = params[:user_id]
+    role = params[:role]
+    
+    requests = Request.find_by_uid(user_id, role)
+    render :json => requests.as_json
+  end
+
   # Let user accept a request
   def accept
     handle_action('accept')

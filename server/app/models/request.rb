@@ -50,6 +50,25 @@ class Request < ActiveRecord::Base
     !req.nil?
   end
 
+  def self.find_by_uid(user_id, role)
+    # role = { "requester", "fulfiller", "any" }
+    uid = Integer(user_id)
+
+    if role == "requester"
+      Request.select do |r|
+        r.user.id == uid
+      end
+    elsif role == "fulfiller"
+      Request.select do |r|
+        r.actor_id == uid
+      end
+    else
+      Request.select do |r|
+        r.user.id == uid || r.actor_id == uid
+      end
+    end
+  end
+
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   # Use a FSM to handle the status of the request
   def self.handle_action(event, rid, aid)
