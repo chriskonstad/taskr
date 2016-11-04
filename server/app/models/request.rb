@@ -37,11 +37,13 @@ class Request < ActiveRecord::Base
   def self.open_near(longitude, latitude, radius_miles)
     # Find all open, not past-due requests within radius_miles of
     # longitude/latitude
-    Request.where(status: Request.statuses[:open])
+    requests = Request.where(status: Request.statuses[:open])
            .select do |r|
       Request.distance(longitude, latitude, r.longitude, r.lat) <= radius_miles &&
         Time.now <= r.due
     end
+
+    requests.sort_by(&:due)
   end
 
   def self.do_edit(rid, uid, params)
