@@ -75,6 +75,10 @@ public class RequestOverviewFragment extends Fragment {
 
         getActivity().setTitle(getString(R.string.request_overview_title));
 
+        if(Api.getInstance().getId() == req.user_id) {
+            acceptButton.setEnabled(false);
+            acceptButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_disabled));
+        }
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

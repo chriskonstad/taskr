@@ -3,6 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorGrey">#6c6c6c</color>
+    <color name="colorGreyDark">#5a5a5a</color>
 
     <!-- Defaults -->
     <color name="defaultTextColor">#000000</color>

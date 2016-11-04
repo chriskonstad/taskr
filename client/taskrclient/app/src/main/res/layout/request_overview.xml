@@ -101,6 +101,7 @@
                 android:layout_height="fill_parent"
                 android:scaleType="centerCrop"
                 />
+
         </LinearLayout>
 
         <LinearLayout
