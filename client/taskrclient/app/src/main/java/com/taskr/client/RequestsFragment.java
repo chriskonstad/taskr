@@ -4,6 +4,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import butterknife.BindString;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -37,6 +39,7 @@ public class RequestsFragment extends ListFragment {
     private boolean specificUserFlag = false;
 
     @BindString(R.string.nearby_requests) String mTitle;
+    @BindView(R.id.swiperefresh) SwipeRefreshLayout swipeRefreshLayout;
 
     public RequestsFragment(){
 
@@ -112,18 +115,30 @@ public class RequestsFragment extends ListFragment {
 
         getActivity().setTitle(mTitle);
 
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         return rootView;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
+    private void refresh() {
         if(specificUserFlag) {
             loadUserRequests();
         }
         else{
             loadNearbyRequests();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        refresh();
     }
 }
