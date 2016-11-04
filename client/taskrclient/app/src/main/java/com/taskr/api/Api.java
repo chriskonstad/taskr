@@ -5,6 +5,7 @@ import android.location.Location;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.facebook.login.LoginManager;
 import com.taskr.client.LocationProvider;
 import com.taskr.client.MainActivity;
 import com.taskr.client.R;
@@ -31,7 +32,7 @@ public class Api {
     private static Context mContext;
     private static AsyncHttpClient mClient = new AsyncHttpClient();
     private static Gson mGson = new Gson();
-    private static int mId;
+    private static int mId = -1;
     private static String mName;
     private static String mEmail;
     private static String mFbid;
@@ -66,23 +67,44 @@ public class Api {
         public static final Type REVIEW_LIST = new TypeToken<ArrayList<Review>>() {}.getType();
     }
 
-    private Api(Context context) {
-        mContext = context;
+    private Api() {
         mClient.setMaxRetriesAndTimeout(MAX_RETRIES, RETRY_DELAY_MS);
+    }
+
+    private void checkInitialized() {
+        if(null == mContext) {
+            throw new NotInitializesException("No application context assigned");
+        }
+    }
+
+    private void checkAuthenticated() {
+        if(null == mFbid || null == mName || null == mEmail) {
+            throw new AuthenticationException("No FBID associated with session");
+        }
+    }
+
+    // Make sure the API is ready to make authenticated requests
+    private void checkReady() {
+        checkInitialized();
+        checkAuthenticated();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // PUBLIC FACING API INFORMATION
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    public static Api getInstance(Context mContext) {
+    public static Api getInstance() {
         if(null == mApi) {
             synchronized (Api.class) {
                 if(null == mApi) {
-                    mApi = new Api(mContext);
+                    mApi = new Api();
                 }
             }
         }
         return mApi;
+    }
+
+    public void init(Context baseApplicationContext) {
+        mContext = baseApplicationContext;
     }
 
     public interface ApiCallback<T> {
@@ -91,19 +113,35 @@ public class Api {
         public void onFailure(String message);
     }
 
+    public class AuthenticationException extends RuntimeException {
+        public AuthenticationException(String message) {
+            super(message);
+        }
+    }
+
+    public class NotInitializesException extends RuntimeException {
+        public NotInitializesException(String message) {
+            super(message);
+        }
+    }
+
     public int getId() {
+        checkReady();
         return mId;
     }
 
     public String getName() {
+        checkReady();
         return mName;
     }
 
     public String getEmail() {
+        checkReady();
         return mEmail;
     }
 
     public String getFbid() {
+        checkReady();
         return mFbid;
     }
 
@@ -123,8 +161,19 @@ public class Api {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // PUBLIC FACING API CALLS
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Log the logged in user out of Taskr and FB
+    public void logout() {
+        LoginManager.getInstance().logOut();
+        mId = -1;
+        mName = null;
+        mEmail = null;
+        mFbid = null;
+    }
+
     public void login(final String name, final String email, final String fbid,
                       final ApiCallback<LoginResult> callback) {
+        checkInitialized();
         final String url = Endpoints.get(Endpoints.LOGIN);
         RequestParams params = new RequestParams();
         params.add("name", name);
@@ -165,6 +214,7 @@ public class Api {
     }
 
     public void getUserProfile(final int uid, final ApiCallback<Profile> callback) {
+        checkReady();
         final String url = Endpoints.get(Endpoints.PROFILE) + "/" + uid;
         RequestParams params = new RequestParams();
 
@@ -196,6 +246,7 @@ public class Api {
 
     public void getNearbyRequests(double latitude, double longitude, double radius,
                                   final ApiCallback<ArrayList<Request>> callback) {
+        checkReady();
         final String url = Endpoints.get(Endpoints.NEARBY);
         RequestParams params = new RequestParams();
         params.add("lat", Double.toString(latitude));
@@ -226,6 +277,7 @@ public class Api {
 
     public void getUserRequests(int uid,
                                   final ApiCallback<ArrayList<Request>> callback) {
+        checkReady();
         final String url = Endpoints.get(Endpoints.USER_REQUESTS);
         RequestParams params = new RequestParams();
         params.put("user_id", Integer.toString(uid));
@@ -257,6 +309,7 @@ public class Api {
     }
 
     public void acceptRequest(final int requestId, final int uid, final ApiCallback<Boolean> callback) {
+        checkReady();
         final String url = Endpoints.get(Endpoints.ACCEPT_REQUEST);
 //        RequestParams params = new RequestParams();
 
@@ -308,6 +361,7 @@ public class Api {
     // get all of the reviews that a user has received
     // revieweeID is the id of the person the review is for
     public void getUserReviews(final int revieweeID, final ApiCallback<ArrayList<Review>> callback){
+        checkReady();
         final String url = Endpoints.get(Endpoints.USER_REVIEWS);
         RequestParams params = new RequestParams();
         params.put("id", Integer.toString(revieweeID));
@@ -338,6 +392,7 @@ public class Api {
     // rate a request that has been completed
     public void rateCompletedRequest(final int requestID, final int reviewerID, final int revieweeID,
                                      final int rating, final ApiCallback<ReviewResult> callback) {
+        checkReady();
         final String url = Endpoints.get(Endpoints.RATE_REQUEST);
         RequestParams params = new RequestParams();
         params.add("reviewer_id", Integer.toString(reviewerID));

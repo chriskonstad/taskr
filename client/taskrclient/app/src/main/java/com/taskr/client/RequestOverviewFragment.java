@@ -86,12 +86,12 @@ public class RequestOverviewFragment extends Fragment {
         requestDescription.setText("Description: " + req.description);
 
         // Show the distance from the user's current location to the request
-        float distance = req.getDistance(Api.getInstance(getContext()).getLocation());
+        float distance = req.getDistance(Api.getInstance().getLocation());
         requestDistance.setText(String.format("%.1fmi", distance));
         requestDue.setText(req.getDue());
         requestAmount.setText(String.format("$%.1f", req.amount));
 
-        Api.getInstance(getContext()).getUserProfile(req.user_id, new Api.ApiCallback<Profile>() {
+        Api.getInstance().getUserProfile(req.user_id, new Api.ApiCallback<Profile>() {
             @Override
             public void onSuccess(Profile returnValue) {
                 requestUserName.setText(returnValue.name);
@@ -147,7 +147,7 @@ public class RequestOverviewFragment extends Fragment {
     }
 
     public void AcceptRequest(View view){
-        Api.getInstance(getActivity()).acceptRequest(req.id, Api.getInstance(getContext()).getId(), new Api.ApiCallback<Boolean>() {
+        Api.getInstance().acceptRequest(req.id, Api.getInstance().getId(), new Api.ApiCallback<Boolean>() {
             @Override
             public void onSuccess(Boolean result) {
                 new AlertDialog.Builder(getContext())

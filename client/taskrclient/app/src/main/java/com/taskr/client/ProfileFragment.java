@@ -72,7 +72,7 @@ public class ProfileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.profile, container, false);
         ButterKnife.bind(this, rootView);
 
-        Api api = Api.getInstance(getContext());
+        Api api = Api.getInstance();
 
         getActivity().setTitle(R.string.profile_loading);
         int uid = getArguments().getInt(UID);

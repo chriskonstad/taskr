@@ -63,7 +63,7 @@ public class TestFragment extends Fragment {
             }
         });
 
-        loggedInAs.setText("Logged in as user with id: " + Api.getInstance(getContext()).getId());
+        loggedInAs.setText("Logged in as user with id: " + Api.getInstance().getId());
 
 
         return rootView;
@@ -73,7 +73,7 @@ public class TestFragment extends Fragment {
     public void findUserById(View view) {
         int userId = Integer.parseInt(profileId.getText().toString());
 
-        Api.getInstance(getActivity()).getUserProfile(userId, new Api.ApiCallback<Profile>() {
+        Api.getInstance().getUserProfile(userId, new Api.ApiCallback<Profile>() {
             @Override
             public void onSuccess(Profile profile) {
                 String profileString = "Name: " + profile.name + "\n" +

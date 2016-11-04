@@ -148,7 +148,7 @@ public class LoginFragment extends Fragment {
                     dialog = null;
                 }
 
-                Api.getInstance(getContext()).login(name, email, id,
+                Api.getInstance().login(name, email, id,
                         new Api.ApiCallback<com.taskr.api.LoginResult>() {
                     @Override
                     public void onSuccess(com.taskr.api.LoginResult returnValue) {
@@ -164,7 +164,7 @@ public class LoginFragment extends Fragment {
                         if(null != dialog) {
                             dialog.dismiss();
                         }
-                        LoginManager.getInstance().logOut();
+                        Api.getInstance().logout();
                         new AlertDialog.Builder(getContext())
                                 .setTitle(getString(R.string.login_error_title))
                                 .setMessage(message)

@@ -56,14 +56,14 @@ public class RequestsFragment extends ListFragment {
     }
 
     private void loadNearbyRequests() {
-        Api.getInstance(getContext()).refreshLocation((MainActivity)getActivity());
-        Location lastLocation = Api.getInstance(getContext()).getLocation();
+        Api.getInstance().refreshLocation((MainActivity)getActivity());
+        Location lastLocation = Api.getInstance().getLocation();
 
         double latitude = lastLocation.getLatitude();
         double longitude = lastLocation.getLongitude();
         double radius = DEFAULT_RADIUS; // TODO: store/get from settings?
 
-        Api.getInstance(getActivity()).getNearbyRequests(latitude, longitude, radius,
+        Api.getInstance().getNearbyRequests(latitude, longitude, radius,
                 new Api.ApiCallback<ArrayList<Request>>() {
                     @Override
                     public void onSuccess(ArrayList<Request> requests) {
@@ -81,9 +81,9 @@ public class RequestsFragment extends ListFragment {
     }
 
     private void loadUserRequests(){
-        Api.getInstance(getContext()).refreshLocation((MainActivity)getActivity());
+        Api.getInstance().refreshLocation((MainActivity)getActivity());
         
-        Api.getInstance(getActivity()).getUserRequests(Api.getInstance(getContext()).getId(),
+        Api.getInstance().getUserRequests(Api.getInstance().getId(),
                 new Api.ApiCallback<ArrayList<Request>>() {
                     @Override
                     public void onSuccess(ArrayList<Request> requests) {

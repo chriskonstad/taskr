@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity
 
         logKeyHash();
 
+        // Init the API
+        Api.getInstance().init(getApplicationContext());
+
         if(!LocationProvider.hasPermissions(this)) {
             LocationProvider.checkPermissions(this);
         } else {
@@ -95,8 +98,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void refreshNavHeader() {
-        String name = Api.getInstance(this).getName();
-        String email = Api.getInstance(this).getEmail();
+        String name = Api.getInstance().getName();
+        String email = Api.getInstance().getEmail();
 
         View header = navigationView.getHeaderView(0);
         TextView headerName = (TextView)header.findViewById(R.id.header_name);
@@ -107,7 +110,7 @@ public class MainActivity extends AppCompatActivity
         headerEmail.setText(email);
         Ion.with(headerProfilePicture)
                 .placeholder(R.drawable.loadingpng)
-                .load(Profile.buildProfilePictureUrl(Api.getInstance(this).getFbid()));
+                .load(Profile.buildProfilePictureUrl(Api.getInstance().getFbid()));
     }
 
     @Override
@@ -197,11 +200,11 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_requests && !(frag instanceof RequestsFragment)) {
             showFragment(new RequestsFragment(), true);
         } else if (id == R.id.nav_profile && !(frag instanceof ProfileFragment)) {
-            showFragment(ProfileFragment.newInstance(Api.getInstance(this).getId()), true);
+            showFragment(ProfileFragment.newInstance(Api.getInstance().getId()), true);
         } else if (id == R.id.nav_settings && !(frag instanceof SettingsFragment)) {
             showFragment(new SettingsFragment(), true);
         } else if (id == R.id.nav_logout) {
-            LoginManager.getInstance().logOut();
+            Api.getInstance().logout();
             showLogin();
         }
 

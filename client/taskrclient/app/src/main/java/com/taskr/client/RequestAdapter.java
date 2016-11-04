@@ -51,7 +51,7 @@ public class RequestAdapter extends ArrayAdapter<Request> {
         due.setText(r.getDue());
 
         // Show the distance from the user's current location to the request
-        float d = r.getDistance(Api.getInstance(mContext).getLocation());
+        float d = r.getDistance(Api.getInstance().getLocation());
         distance.setText(String.format("%.1fmi", d));
 
         amount.setText(String.format("$%.2f", r.amount));
