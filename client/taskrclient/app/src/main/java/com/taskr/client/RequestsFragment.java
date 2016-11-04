@@ -72,6 +72,7 @@ public class RequestsFragment extends ListFragment {
                     public void onSuccess(ArrayList<Request> requests) {
                         adapter = new RequestAdapter(getContext(), requests);
                         setListAdapter(adapter);
+                        onDoneRefreshing();
                     }
 
                     @Override
@@ -79,6 +80,7 @@ public class RequestsFragment extends ListFragment {
                         ((MainActivity)getActivity())
                                 .showErrorDialog(getString(R.string.connection_error),
                                         "Unable to load nearby requests");
+                        onDoneRefreshing();
                     }
                 });
     }
@@ -92,6 +94,7 @@ public class RequestsFragment extends ListFragment {
                     public void onSuccess(ArrayList<Request> requests) {
                         adapter = new RequestAdapter(getContext(), requests);
                         setListAdapter(adapter);
+                        onDoneRefreshing();
                     }
 
                     @Override
@@ -99,6 +102,7 @@ public class RequestsFragment extends ListFragment {
                         ((MainActivity)getActivity())
                                 .showErrorDialog(getString(R.string.connection_error),
                                         "Unable to load user requests");
+                        onDoneRefreshing();
                     }
                 });
     }
@@ -120,7 +124,6 @@ public class RequestsFragment extends ListFragment {
             @Override
             public void onRefresh() {
                 refresh();
-                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -134,6 +137,10 @@ public class RequestsFragment extends ListFragment {
         else{
             loadNearbyRequests();
         }
+    }
+
+    private void onDoneRefreshing() {
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
