@@ -73,14 +73,15 @@ class Request < ActiveRecord::Base
   # Use a FSM to handle the status of the request
   def self.handle_action(event, rid, aid)
     req = Request.find_by(id: rid)
+    aid = aid.to_i
     ret = false
     if req
       fm = FiniteMachine.new initial: req.status.to_sym
-      fm.event(:accept, open: :accepted, if: -> { req.user.id != aid })
-      fm.event(:reject, accepted: :open, if: -> { req.actor_id == aid })
-      fm.event(:complete, accepted: :completed, if: -> { req.actor_id == aid })
-      fm.event(:cancel, open: :canceled, if: -> { req.user.id == aid })
-      fm.event(:pay, completed: :paid, if: -> { req.user.id == aid })
+      fm.event(:accept, open: :accepted, if: -> { !req.user_id.eql? aid })
+      fm.event(:reject, accepted: :open, if: -> { req.actor_id.eql? aid })
+      fm.event(:complete, accepted: :completed, if: -> { req.actor_id.eql? aid })
+      fm.event(:cancel, open: :canceled, if: -> { req.user.id.eql? aid })
+      fm.event(:pay, completed: :paid, if: -> { req.user.id.eql? aid })
 
       fm.on_enter(:accepted) do
         req.update(status: :accepted,
