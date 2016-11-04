@@ -9,10 +9,12 @@
 
 User.create(name: 'Chris Konstad',
             email: 'chriskon149@gmail.com',
+            fbid: '867392256730734',
             wallet: 100.0)
 
 User.create(name: 'Pramono Wang',
             email: 'wang@gmail.com',
+            fbid: '1372155267',
             wallet: 200.0)
 
 Request.create(title: "bringing out the trash",

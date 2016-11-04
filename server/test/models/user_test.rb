@@ -2,15 +2,24 @@ require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
   test "all components included" do
-    assert User.create(name: "test", email: "test@test.com", wallet: 0).valid?
+    assert User.create(name: "test",
+                       email: "test@test.com",
+                       fbid: "123456",
+                       wallet: 0).valid?
     assert_not User.create(name: "test", email: "test@test.com").valid?
     assert_not User.create(name: "test", wallet: 0).valid?
     assert_not User.create(email: "test@test.com", wallet: 0).valid?
   end
 
   test "unique email" do
-    assert User.create(name: "Test", email: "test@test.com", wallet: 0).valid?
-    assert_not User.create(name: "Test2", email: "test@test.com", wallet: 0).valid?
+    assert User.create(name: "Test",
+                       email: "test@test.com",
+                       fbid: "12345",
+                       wallet: 0).valid?
+    assert_not User.create(name: "Test2",
+                           email: "test@test.com",
+                           fbid: "123456",
+                           wallet: 0).valid?
   end
 
   test "wallet non-negative" do
@@ -48,20 +57,21 @@ class UserTest < ActiveSupport::TestCase
 
   test "login existing" do
     namey = users(:namey)
-    user = User.login(namey.name, namey.email)
+    user = User.login(namey.name, namey.email, namey.fbid)
     assert_equal namey.id, user.id
   end
 
   test "login new user" do
     name = 'Login New User Test User'
     email = 'loginnewusertestuser@example.com'
+    fbid = '12345'
     # Ensure this is a new user's credentials
     User.all.each do |u|
       assert_not_equal name, u.name
       assert_not_equal email, u.email
     end
 
-    user = User.login(name, email)
+    user = User.login(name, email, fbid)
     assert_not_nil user
 
     # Ensure the new user got saved

@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
-  validates :name, :email, :wallet, presence: true
+  validates :name, :email, :wallet, :fbid, presence: true
   validates :email, uniqueness: true
+  validates :fbid, uniqueness: true
   validates :wallet, :numericality => { :greater_than_or_equal_to => 0 }
 
   has_many :request
@@ -23,11 +24,12 @@ class User < ActiveRecord::Base
     return avg
   end
 
-  def self.login(name, email)
+  def self.login(name, email, fbid)
     user = User.find_by(email: email)
     if !user
       user = User.create(name: name,
                          email: email,
+                         fbid: fbid,
                          wallet: 0.0)
       puts "Created user with email: '#{email}'"
     else

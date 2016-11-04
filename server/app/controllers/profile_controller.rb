@@ -19,10 +19,11 @@ class ProfileController < ApplicationController
   def login
     name = params[:name]
     email = params[:email]
+    fbid = params[:fbid]
 
-    render nothing: true, status: :bad_request if name.nil? || email.nil?
+    render nothing: true, status: :bad_request if name.nil? || email.nil? || fbid.nil?
 
-    user = User.login(name, email)
+    user = User.login(name, email, fbid)
     render json: { id: user.id }
   end
 end
