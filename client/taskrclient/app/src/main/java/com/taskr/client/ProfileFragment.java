@@ -86,12 +86,9 @@ public class ProfileFragment extends Fragment {
                 dialog.dismiss();
                 getActivity().setTitle(profile.name);
                 ButterKnife.apply(stars, SET_STARS, profile.avgRating);
-                // TODO This assumes that only the person using the app loads the profile page
-                // To fix this, we'll have to store the FBID on the server, and return that with
-                // the profile. Totally doable, but not sure if we want to do that.
                 Ion.with(profilePicture)
                         .placeholder(R.drawable.loadingpng)
-                        .load(Api.getInstance(getContext()).getProfileUrl());
+                        .load(profile.getProfilePictureUrl());
             }
 
             @Override

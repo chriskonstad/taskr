@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,6 +29,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import android.widget.Button;
 
 
+import com.koushikdutta.ion.Ion;
 import com.taskr.api.Api;
 import com.taskr.api.Profile;
 import com.taskr.api.Request;
@@ -57,6 +59,7 @@ public class RequestOverviewFragment extends Fragment {
     @BindView(R.id.amount) TextView requestAmount;
     @BindView(R.id.map) FrameLayout mapContainer;
     @BindView(R.id.accept_button) Button acceptButton;
+    @BindView(R.id.profile_picture) ImageView profilePicture;
     SupportMapFragment mapFragment;
 
     public RequestOverviewFragment() {
@@ -93,6 +96,9 @@ public class RequestOverviewFragment extends Fragment {
             public void onSuccess(Profile returnValue) {
                 requestUserName.setText(returnValue.name);
                 requestRating.setText(String.format("%.1f", returnValue.avgRating));
+                Ion.with(profilePicture)
+                        .placeholder(R.drawable.loadingpng)
+                        .load(returnValue.getProfilePictureUrl());
             }
 
             @Override

@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.facebook.login.LoginManager;
 import com.koushikdutta.ion.Ion;
 import com.taskr.api.Api;
+import com.taskr.api.Profile;
 
 import java.security.MessageDigest;
 
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity
         headerEmail.setText(email);
         Ion.with(headerProfilePicture)
                 .placeholder(R.drawable.loadingpng)
-                .load(Api.getInstance(getApplicationContext()).getProfileUrl());
+                .load(Profile.buildProfilePictureUrl(Api.getInstance(this).getFbid()));
     }
 
     @Override

@@ -103,6 +103,10 @@ public class Api {
         return mEmail;
     }
 
+    public String getFbid() {
+        return mFbid;
+    }
+
     public void refreshLocation(MainActivity activity) {
         try {
             mLocation = LocationProvider.getInstance().getLastLocation();
@@ -110,10 +114,6 @@ public class Api {
             activity.showErrorDialog(activity.getString(R.string.location_error_title),
                     "Unable to get current location");
         }
-    }
-
-    public String getProfileUrl() {
-        return "http://graph.facebook.com/" + mFbid + "/picture?height=960&width=960";
     }
 
     public Location getLocation() {
@@ -129,6 +129,7 @@ public class Api {
         RequestParams params = new RequestParams();
         params.add("name", name);
         params.add("email", email);
+        params.add("fbid", fbid);
 
         AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
             @Override
@@ -279,6 +280,7 @@ public class Api {
             AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Log.i(TAG, "Got status code: " + Integer.toString(statusCode));
                     callback.onSuccess(true);
                 }
 
