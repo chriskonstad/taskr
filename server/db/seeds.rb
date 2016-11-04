@@ -36,6 +36,7 @@ Request.create(title: "Cleaning the house",
 Request.create(title: "Test task",
         user_id: 2,
         amount: 42.0,
+        description: 'This is a sample of a task request.',
         lat: 34.0689,
         longitude: -118.4452,
         due: DateTime.new(2016,11,8,19)
