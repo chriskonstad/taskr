@@ -7,6 +7,10 @@
             android:icon="@drawable/human_greeting"
             android:title="@string/nav_requests" />
         <item
+            android:id="@+id/nav_mine"
+            android:icon="@drawable/pin"
+            android:title="@string/nav_mine" />
+        <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/account"
             android:title="@string/nav_profile" />
