@@ -34,6 +34,15 @@
     <string name="accept_request_success_msg">You accepted the request successfully!</string>
     <string name="accept_request_error_title">Error Accepting Request</string>
     <string name="accept_request_error_msg">Looks like something broke while trying to accept the request! Please try again in a bit.</string>
+    <string name="action_complete">Complete</string>
+    <string name="action_completed">Completed</string>
+    <string name="action_pay">Pay</string>
+    <string name="action_paid">Paid</string>
+    <string name="action_accept">Accept</string>
+    <string name="action_canceled">Canceled</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_accepted">Accepted</string>
+    <string name="action_bug">Hey you found a bug :)</string>
 
     <!-- Profile strings -->
     <string name="profile_loading">Profile Loading...</string>

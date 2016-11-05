@@ -1,6 +1,5 @@
 package com.taskr.client;
 
-import android.location.Location;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,20 +10,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import android.widget.Button;
 
@@ -33,11 +28,6 @@ import com.koushikdutta.ion.Ion;
 import com.taskr.api.Api;
 import com.taskr.api.Profile;
 import com.taskr.api.Request;
-
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,7 +48,7 @@ public class RequestOverviewFragment extends Fragment {
     @BindView(R.id.due) TextView requestDue;
     @BindView(R.id.amount) TextView requestAmount;
     @BindView(R.id.map) FrameLayout mapContainer;
-    @BindView(R.id.accept_button) Button acceptButton;
+    @BindView(R.id.action_button) Button actionButton;
     @BindView(R.id.profile_picture) ImageView profilePicture;
     SupportMapFragment mapFragment;
 
@@ -75,13 +65,65 @@ public class RequestOverviewFragment extends Fragment {
 
         getActivity().setTitle(getString(R.string.request_overview_title));
 
+        int title = R.string.action_bug;
+        boolean enabled = true;
         if(Api.getInstance().getId() == req.user_id) {
-            acceptButton.setEnabled(false);
-            acceptButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_disabled));
+            switch(req.status) {
+                case Request.Status.ACCEPTED:
+                    enabled = false;
+                    title = R.string.action_accepted;
+                    break;
+                case Request.Status.CANCELED:
+                    enabled = false;
+                    title = R.string.action_canceled;
+                    break;
+                case Request.Status.COMPLETED:
+                    title = R.string.action_pay;
+                    break;
+                case Request.Status.OPEN:
+                    title = R.string.action_edit;
+                    break;
+                case Request.Status.PAID:
+                    enabled = false;
+                    title = R.string.action_paid;
+                    break;
+                default:
+                    enabled = false;
+            }
+        } else {
+            switch (req.status) {
+                case Request.Status.ACCEPTED:
+                    title = R.string.action_complete;
+                    break;
+                case Request.Status.CANCELED:
+                    enabled = false;
+                    title = R.string.action_canceled;
+                    break;
+                case Request.Status.COMPLETED:
+                    enabled = false;
+                    title = R.string.action_completed;
+                    break;
+                case Request.Status.OPEN:
+                    title = R.string.action_accept;
+                    break;
+                case Request.Status.PAID:
+                    enabled = false;
+                    title = R.string.action_paid;
+                    break;
+                default:
+                    enabled = false;
+            }
         }
-        acceptButton.setOnClickListener(new View.OnClickListener() {
+        actionButton.setEnabled(enabled);
+        if(!enabled) {
+            actionButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_disabled));
+        }
+
+        actionButton.setText(getString(title));
+        actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO Change onClick listener based on text
                 AcceptRequest(view);
             }
         });
