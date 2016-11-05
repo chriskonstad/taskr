@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
+
   scope '/api' do
     scope '/v1' do
       scope '/test' do
@@ -42,6 +43,10 @@ Rails.application.routes.draw do
       scope '/reviews' do
         get '/:id' => 'review#show'
         post '/' => 'review#create'
+      end
+      scope '/payments' do
+        get '/:id' => 'transaction#show'
+        post '/' => 'transaction#create'
       end
     end
   end

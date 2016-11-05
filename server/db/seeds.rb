@@ -52,3 +52,4 @@ Review.create(reviewer_id: 2,
             request_id: 2,
             rating: 5)
 
+Transaction.create(payer_id: 1, payee_id: 2, amount: 100, request_id: 1)
