@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,6 +48,7 @@ public class RequestOverviewFragment extends Fragment {
     @BindView(R.id.distance) TextView requestDistance;
     @BindView(R.id.due) TextView requestDue;
     @BindView(R.id.amount) TextView requestAmount;
+    @BindView(R.id.status) TextView status;
     @BindView(R.id.map) FrameLayout mapContainer;
     @BindView(R.id.action_button) Button actionButton;
     @BindView(R.id.profile_picture) ImageView profilePicture;
@@ -192,6 +194,8 @@ public class RequestOverviewFragment extends Fragment {
         if(!enabled) {
             actionButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_disabled));
         }
+        status.setText(req.status);
+        status.setTextColor(ContextCompat.getColor(getContext(), Request.Status.getColor(req.status)));
 
         requestTitle.setText(req.title);
         requestDescription.setText("Description: " + req.description);
