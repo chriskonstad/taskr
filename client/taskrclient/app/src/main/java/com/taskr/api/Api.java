@@ -308,26 +308,21 @@ public class Api {
         mClient.get(url, params, handler);
     }
 
-    public void acceptRequest(final int requestId, final int uid, final ApiCallback<Boolean> callback) {
+    public void acceptRequest(final int requestId, final ApiCallback<Boolean> callback) {
         checkReady();
         final String url = Endpoints.get(Endpoints.ACCEPT_REQUEST);
-//        RequestParams params = new RequestParams();
 
         JSONObject p = new JSONObject();
         JSONObject a = new JSONObject();
         JSONObject params = new JSONObject();
 
         try {
-            a.put("user_id", Integer.toString(uid));
+            a.put("user_id", Integer.toString(mId));
             p.put("id", Integer.toString(requestId));
 
             params.put("params", p);
             params.put("auth", a);
-        }catch(JSONException e){
-            //to do error handling
-        }
 
-        try{
             StringEntity entity = new StringEntity(params.toString());
 
             AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
@@ -352,8 +347,8 @@ public class Api {
             };
 
             mClient.post(mContext, url, entity, "application/json", handler);
-        }catch(UnsupportedEncodingException e){
-            //to do more error handling...
+        }catch(Exception e){
+            Log.e(TAG, "Unable to accept request: " + e.getMessage());
         }
     }
 

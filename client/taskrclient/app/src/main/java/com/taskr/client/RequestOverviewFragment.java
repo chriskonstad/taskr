@@ -1,6 +1,5 @@
 package com.taskr.client;
 
-import android.location.Location;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,20 +10,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import android.widget.Button;
 
@@ -33,11 +28,6 @@ import com.koushikdutta.ion.Ion;
 import com.taskr.api.Api;
 import com.taskr.api.Profile;
 import com.taskr.api.Request;
-
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,9 +48,71 @@ public class RequestOverviewFragment extends Fragment {
     @BindView(R.id.due) TextView requestDue;
     @BindView(R.id.amount) TextView requestAmount;
     @BindView(R.id.map) FrameLayout mapContainer;
-    @BindView(R.id.accept_button) Button acceptButton;
+    @BindView(R.id.action_button) Button actionButton;
     @BindView(R.id.profile_picture) ImageView profilePicture;
     SupportMapFragment mapFragment;
+
+    // Possible onClick listeners for the action button
+    Button.OnClickListener listenerAccept = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Api.getInstance().acceptRequest(req.id, new Api.ApiCallback<Boolean>() {
+                @Override
+                public void onSuccess(Boolean result) {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle(getString(R.string.accept_request_success_title))
+                            .setMessage(R.string.accept_request_success_msg)
+                            .setIcon(R.drawable.information)
+                            .setPositiveButton(R.string.ok,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface,
+                                                            int i) {
+                                            dialogInterface.dismiss();
+                                            ((MainActivity)getActivity()).onBackPressed();
+                                        }
+                                    })
+                            .show();
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle(getString(R.string.accept_request_error_title))
+                            .setMessage(R.string.accept_request_error_msg)
+                            .setIcon(R.drawable.alert_circle)
+                            .setPositiveButton(R.string.ok,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface,
+                                                            int i) {
+                                            dialogInterface.dismiss();
+                                        }
+                                    })
+                            .show();
+                }
+            });
+        }
+    };
+
+    Button.OnClickListener listenerPay = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+        }
+    };
+
+    Button.OnClickListener listenerEdit = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+        }
+    };
+
+    Button.OnClickListener listenerComplete = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+        }
+    };
 
     public RequestOverviewFragment() {
 
@@ -75,16 +127,71 @@ public class RequestOverviewFragment extends Fragment {
 
         getActivity().setTitle(getString(R.string.request_overview_title));
 
-        if(Api.getInstance().getId() == req.user_id) {
-            acceptButton.setEnabled(false);
-            acceptButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_disabled));
-        }
-        acceptButton.setOnClickListener(new View.OnClickListener() {
+        int title = R.string.action_bug;
+        boolean enabled = true;
+        Button.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AcceptRequest(view);
+                throw new RuntimeException("No onClick listener set for the action button!");
             }
-        });
+        };
+        if(Api.getInstance().getId() == req.user_id) {
+            switch(req.status) {
+                case Request.Status.ACCEPTED:
+                    enabled = false;
+                    title = R.string.action_accepted;
+                    break;
+                case Request.Status.CANCELED:
+                    enabled = false;
+                    title = R.string.action_canceled;
+                    break;
+                case Request.Status.COMPLETED:
+                    title = R.string.action_pay;
+                    listener = listenerPay;
+                    break;
+                case Request.Status.OPEN:
+                    title = R.string.action_edit;
+                    listener = listenerEdit;
+                    break;
+                case Request.Status.PAID:
+                    enabled = false;
+                    title = R.string.action_paid;
+                    break;
+                default:
+                    enabled = false;
+            }
+        } else {
+            switch (req.status) {
+                case Request.Status.ACCEPTED:
+                    title = R.string.action_complete;
+                    listener = listenerComplete;
+                    break;
+                case Request.Status.CANCELED:
+                    enabled = false;
+                    title = R.string.action_canceled;
+                    break;
+                case Request.Status.COMPLETED:
+                    enabled = false;
+                    title = R.string.action_completed;
+                    break;
+                case Request.Status.OPEN:
+                    title = R.string.action_accept;
+                    listener = listenerAccept;
+                    break;
+                case Request.Status.PAID:
+                    enabled = false;
+                    title = R.string.action_paid;
+                    break;
+                default:
+                    enabled = false;
+            }
+        }
+        actionButton.setText(getString(title));
+        actionButton.setEnabled(enabled);
+        actionButton.setOnClickListener(listener);
+        if(!enabled) {
+            actionButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_disabled));
+        }
 
         requestTitle.setText(req.title);
         requestDescription.setText("Description: " + req.description);
@@ -148,42 +255,5 @@ public class RequestOverviewFragment extends Fragment {
         });
 
         return rootView;
-    }
-
-    public void AcceptRequest(View view){
-        Api.getInstance().acceptRequest(req.id, Api.getInstance().getId(), new Api.ApiCallback<Boolean>() {
-            @Override
-            public void onSuccess(Boolean result) {
-                new AlertDialog.Builder(getContext())
-                        .setTitle(getString(R.string.accept_request_success_title))
-                        .setMessage(R.string.accept_request_success_msg)
-                        .setIcon(R.drawable.alert_circle)
-                        .setPositiveButton(R.string.ok,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                        ((MainActivity)getActivity()).onBackPressed();
-                                    }
-                                })
-                        .show();
-            }
-
-            @Override
-            public void onFailure(String message) {
-                new AlertDialog.Builder(getContext())
-                        .setTitle(getString(R.string.accept_request_error_title))
-                        .setMessage(R.string.accept_request_error_msg)
-                        .setIcon(R.drawable.alert_circle)
-                        .setPositiveButton(R.string.ok,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                })
-                        .show();
-            }
-        });
     }
 }

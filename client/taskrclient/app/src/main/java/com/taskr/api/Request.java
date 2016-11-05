@@ -18,6 +18,13 @@ import java.util.Date;
 
 public class Request implements Serializable {
     public static final String DUE_FORMAT = "EEE, d MMM yyyy 'by' h:mma";
+    public static class Status {
+        public static final String OPEN = "open";
+        public static final String ACCEPTED = "accepted";
+        public static final String COMPLETED = "completed";
+        public static final String CANCELED = "canceled";
+        public static final String PAID = "paid";
+    }
     public int id;
     public String title;
     public double amount;
