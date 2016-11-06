@@ -6,6 +6,13 @@
     <color name="colorGrey">#6c6c6c</color>
     <color name="colorGreyDark">#5a5a5a</color>
 
+    <!-- Status colors for text -->
+    <color name="open">#9C27B0</color>
+    <color name="accepted">#4CAF50</color>
+    <color name="completed">#FF9800</color>
+    <color name="canceled">#9E9E9E</color>
+    <color name="paid">#2196F3</color>
+
     <!-- Defaults -->
     <color name="defaultTextColor">#000000</color>
     <color name="transparent_black">#77000000</color>

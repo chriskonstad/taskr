@@ -33,16 +33,22 @@ import butterknife.ButterKnife;
 
 public class RequestsFragment extends ListFragment {
     private static final String TAG = "RequestsFragment";
+    public static final String LOGGED_IN_USER = "IsSpecificUser";
     private ArrayAdapter<Request> adapter;
     private static final int DEFAULT_RADIUS = 100000;   // in miles
 
     private boolean specificUserFlag = false;
 
-    @BindString(R.string.nearby_requests) String mTitle;
+    @BindString(R.string.nearby_requests) String mTitleNearby;
+    @BindString(R.string.my_requests) String mTitleMine;
     @BindView(R.id.swiperefresh) SwipeRefreshLayout swipeRefreshLayout;
 
     public RequestsFragment(){
 
+    }
+
+    public boolean isLoggedInUser() {
+        return specificUserFlag;
     }
 
     @Override
@@ -113,11 +119,12 @@ public class RequestsFragment extends ListFragment {
         ButterKnife.bind(this, rootView);
 
         Bundle arguments = getArguments();
-        if(arguments != null && arguments.containsKey(getContext().getString(R.string.is_specific_user))){
+        if(arguments != null && arguments.containsKey(LOGGED_IN_USER)){
             specificUserFlag = true;
+            getActivity().setTitle(mTitleMine);
+        } else {
+            getActivity().setTitle(mTitleNearby);
         }
-
-        getActivity().setTitle(mTitle);
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

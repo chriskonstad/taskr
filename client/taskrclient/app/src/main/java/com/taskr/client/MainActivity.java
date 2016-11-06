@@ -31,6 +31,7 @@ import com.taskr.api.Api;
 import com.taskr.api.Profile;
 
 import java.security.MessageDigest;
+import java.util.concurrent.Callable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -167,13 +168,15 @@ public class MainActivity extends AppCompatActivity
 
             Fragment frag = getSupportFragmentManager().findFragmentById(R.id.content_frame);
             int REQUEST = 0;
-            int PROFILE = 1;
-            int SETTINGS = 2;
+            int MINE = 1;
+            int PROFILE = 2;
+            int SETTINGS = 3;
 
-            // TODO Handle profile fragment
             int itemToSelect = -1;
-            if(frag instanceof RequestsFragment) {
+            if(frag instanceof RequestsFragment && !((RequestsFragment)frag).isLoggedInUser()) {
                 itemToSelect = REQUEST;
+            } else if (frag instanceof RequestsFragment) {
+                itemToSelect = MINE;
             } else if (frag instanceof ProfileFragment) {
                 itemToSelect = PROFILE;
             } else if (frag instanceof SettingsFragment){
@@ -197,8 +200,16 @@ public class MainActivity extends AppCompatActivity
 
         Fragment frag = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
-        if (id == R.id.nav_requests && !(frag instanceof RequestsFragment)) {
+        if (id == R.id.nav_requests &&
+                !(frag instanceof RequestsFragment && !((RequestsFragment)frag).isLoggedInUser())) {
             showFragment(new RequestsFragment(), true);
+        } else if (id == R.id.nav_mine &&
+                !(frag instanceof RequestsFragment && ((RequestsFragment)frag).isLoggedInUser())) {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(RequestsFragment.LOGGED_IN_USER, true);
+            Fragment reqFrag = new RequestsFragment();
+            reqFrag.setArguments(bundle);
+            showFragment(reqFrag, true);
         } else if (id == R.id.nav_profile && !(frag instanceof ProfileFragment)) {
             showFragment(ProfileFragment.newInstance(Api.getInstance().getId()), true);
         } else if (id == R.id.nav_settings && !(frag instanceof SettingsFragment)) {
@@ -233,6 +244,28 @@ public class MainActivity extends AppCompatActivity
         navSelect(0);
 
         showFragment(new RequestsFragment(), false);
+    }
+
+    public void showInfoDialog(String title, String message, final Callable<Void> callback) {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setIcon(R.drawable.information)
+                .setPositiveButton(R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                if(null != callback) {
+                                    try {
+                                        callback.call();
+                                    } catch (Exception e) {
+                                        Log.e(TAG, e.getMessage());
+                                    }
+                                }
+                            }
+                        })
+                .show();
     }
 
     public void showErrorDialog(String title, String message) {

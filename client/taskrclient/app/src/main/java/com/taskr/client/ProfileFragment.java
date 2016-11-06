@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.koushikdutta.ion.Ion;
@@ -33,6 +34,7 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     public static final String UID = "user_id";
     @BindView (R.id.profile_picture) ImageView profilePicture;
+    @BindView (R.id.ratings_list) ListView ratingsList;
     @BindViews({R.id.star1,
             R.id.star2,
             R.id.star3,
@@ -89,6 +91,9 @@ public class ProfileFragment extends Fragment {
                 Ion.with(profilePicture)
                         .placeholder(R.drawable.loadingpng)
                         .load(profile.getProfilePictureUrl());
+                Log.i(TAG, "Found " + Integer.toString(profile.ratings.size()) + " reviews");
+                RatingAdapter adapter = new RatingAdapter(getContext(), profile.ratings);
+                ratingsList.setAdapter(adapter);
             }
 
             @Override

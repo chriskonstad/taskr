@@ -2,6 +2,7 @@ package com.taskr.client;
 
 import android.content.Context;
 import android.location.Location;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public class RequestAdapter extends ArrayAdapter<Request> {
     @BindView(R.id.due) TextView due;
     @BindView(R.id.distance) TextView distance;
     @BindView(R.id.amount) TextView amount;
+    @BindView(R.id.status) TextView status;
 
     public RequestAdapter(Context context, ArrayList<Request> requests) {
         super(context, -1, requests);
@@ -55,6 +57,8 @@ public class RequestAdapter extends ArrayAdapter<Request> {
         distance.setText(String.format("%.1fmi", d));
 
         amount.setText(String.format("$%.2f", r.amount));
+        status.setText(r.status);
+        status.setTextColor(ContextCompat.getColor(getContext(), Request.Status.getColor(r.status)));
 
         return rowView;
     }

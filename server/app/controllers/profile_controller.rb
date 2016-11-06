@@ -11,6 +11,7 @@ class ProfileController < ApplicationController
                                                :earned,
                                                :rated,
                                                :rating,
+                                               :ratings,
                                                :request,
                                                :actions]})
   end

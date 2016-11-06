@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,8 @@ import com.taskr.api.Api;
 import com.taskr.api.Profile;
 import com.taskr.api.Request;
 
+import java.util.concurrent.Callable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -47,6 +50,7 @@ public class RequestOverviewFragment extends Fragment {
     @BindView(R.id.distance) TextView requestDistance;
     @BindView(R.id.due) TextView requestDue;
     @BindView(R.id.amount) TextView requestAmount;
+    @BindView(R.id.status) TextView status;
     @BindView(R.id.map) FrameLayout mapContainer;
     @BindView(R.id.action_button) Button actionButton;
     @BindView(R.id.profile_picture) ImageView profilePicture;
@@ -59,37 +63,23 @@ public class RequestOverviewFragment extends Fragment {
             Api.getInstance().acceptRequest(req.id, new Api.ApiCallback<Boolean>() {
                 @Override
                 public void onSuccess(Boolean result) {
-                    new AlertDialog.Builder(getContext())
-                            .setTitle(getString(R.string.accept_request_success_title))
-                            .setMessage(R.string.accept_request_success_msg)
-                            .setIcon(R.drawable.information)
-                            .setPositiveButton(R.string.ok,
-                                    new DialogInterface.OnClickListener() {
+                    ((MainActivity)getActivity())
+                            .showInfoDialog(getString(R.string.accept_request_success_title),
+                                    getString(R.string.accept_request_error_msg),
+                                    new Callable<Void>() {
                                         @Override
-                                        public void onClick(DialogInterface dialogInterface,
-                                                            int i) {
-                                            dialogInterface.dismiss();
+                                        public Void call() throws Exception {
                                             ((MainActivity)getActivity()).onBackPressed();
+                                            return null;
                                         }
-                                    })
-                            .show();
+                                    });
                 }
 
                 @Override
                 public void onFailure(String message) {
-                    new AlertDialog.Builder(getContext())
-                            .setTitle(getString(R.string.accept_request_error_title))
-                            .setMessage(R.string.accept_request_error_msg)
-                            .setIcon(R.drawable.alert_circle)
-                            .setPositiveButton(R.string.ok,
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface,
-                                                            int i) {
-                                            dialogInterface.dismiss();
-                                        }
-                                    })
-                            .show();
+                    ((MainActivity)getActivity())
+                            .showErrorDialog(getString(R.string.accept_request_error_title),
+                                    getString(R.string.accept_request_error_msg));
                 }
             });
         }
@@ -98,19 +88,42 @@ public class RequestOverviewFragment extends Fragment {
     Button.OnClickListener listenerPay = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            // TODO
         }
     };
 
     Button.OnClickListener listenerEdit = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+            // TODO
         }
     };
 
     Button.OnClickListener listenerComplete = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            Api.getInstance().completeRequest(req.id, new Api.ApiCallback<Boolean>() {
+                @Override
+                public void onSuccess(Boolean result) {
+                    ((MainActivity)getActivity())
+                            .showInfoDialog(getString(R.string.complete_request_success_title),
+                                    getString(R.string.complete_request_success_msg),
+                                    new Callable<Void>() {
+                        @Override
+                        public Void call() throws Exception {
+                            ((MainActivity)getActivity()).onBackPressed();
+                            return null;
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    ((MainActivity)getActivity())
+                            .showErrorDialog(getString(R.string.complete_request_error_title),
+                                    getString(R.string.complete_request_error_msg));
+                }
+            });
         }
     };
 
@@ -192,6 +205,8 @@ public class RequestOverviewFragment extends Fragment {
         if(!enabled) {
             actionButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_disabled));
         }
+        status.setText(req.status);
+        status.setTextColor(ContextCompat.getColor(getContext(), Request.Status.getColor(req.status)));
 
         requestTitle.setText(req.title);
         requestDescription.setText("Description: " + req.description);

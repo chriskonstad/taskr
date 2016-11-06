@@ -2,6 +2,7 @@ package com.taskr.api;
 
 import android.location.Location;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.taskr.client.LocationProvider;
 import com.taskr.client.MainActivity;
@@ -24,6 +25,21 @@ public class Request implements Serializable {
         public static final String COMPLETED = "completed";
         public static final String CANCELED = "canceled";
         public static final String PAID = "paid";
+
+        public static int getColor(String status) {
+            if(status.equals(OPEN)) {
+                return R.color.open;
+            } else if (status.equals(ACCEPTED)) {
+                return R.color.accepted;
+            } else if (status.equals(COMPLETED)) {
+                return R.color.completed;
+            } else if (status.equals(CANCELED)) {
+                return R.color.canceled;
+            } else if (status.equals(PAID)) {
+                return R.color.paid;
+            }
+            return R.color.defaultTextColor;
+        }
     }
     public int id;
     public String title;
