@@ -7,7 +7,7 @@ class TransactionController < ApplicationController
 
   def create
     # Amount in cents
-
+    
     trans = Transaction.create(transaction_creation_params)
 
     if trans.id
@@ -16,21 +16,23 @@ class TransactionController < ApplicationController
     	render nothing: true, status: 500
     end
 
-    customer = Stripe::Customer.create(
-      :email => params[:stripeEmail],
-      :source  => params[:stripeToken]
-    )
+    # Stripe.api_key = "sk_test_HWnsmI0iuGrMndEcCGbP7xtc"
 
-    charge = Stripe::Charge.create(
-      :customer    => trans.payer_id,
-      :amount      => trans.amount,
-      :description => 'Rails Stripe customer',
-      :currency    => 'usd'
-    )
+    # customer = Stripe::Customer.create(
+    #   :email => params[:id]
+    # )
 
-    rescue Stripe::CardError => e
-      flash[:error] = e.message
-      redirect_to new_charge_path
+    #need to have the form
+
+    # charge = Stripe::Charge.create(
+    #   :customer    => customer.id,
+    #   :amount      => trans.amount,
+    #   :description => 'Rails Stripe customer',
+    #   :currency    => 'usd'
+    # )
+
+    # rescue Stripe::CardError => e
+    #   flash[:error] = e.message
    
 
   end
@@ -39,6 +41,11 @@ class TransactionController < ApplicationController
     t = Transaction.where(payer_id: params[:id]).first
     render :json => t.as_json
   end
+
+
+  # curl https://api.stripe.com/v1/customers 
+  # -u sk_test_ 
+  # -d description ="Stripe Customer"
 
  
 
@@ -50,7 +57,6 @@ class TransactionController < ApplicationController
   									:amount, 
   									:request_id)
   end
-
 
 
 end

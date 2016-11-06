@@ -52,4 +52,12 @@ Review.create(reviewer_id: 2,
             request_id: 2,
             rating: 5)
 
-Transaction.create(payer_id: 1, payee_id: 2, amount: 100, request_id: 1)
+# Transaction.create(payer_id: 1, payee_id: 2, amount: 100, request_id: 1)
+
+#post the review
+# {"review" : 
+#         {"reviewer_id":2,"reviewee_id":1,"request_id":1,"rating":5}
+# }
+
+#post the transaction
+# {"transaction" : {"payer_id" : 1, "payee_id" : 2, "amount": 100, "request_id": 1}}
