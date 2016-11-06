@@ -24,6 +24,19 @@ class User < ActiveRecord::Base
     return avg
   end
 
+  def ratings
+    rev = Review.where(reviewee_id: id)
+    rev.map do |r|
+      {
+        id: r.id,
+        name: User.find_by(id: r.reviewer_id).name,
+        title: Request.find_by(id: r.request_id).title,
+        created_at: r.created_at,
+        rating: r.rating
+      }
+    end
+  end
+
   def self.login(name, email, fbid)
     user = User.find_by(email: email)
     if !user
