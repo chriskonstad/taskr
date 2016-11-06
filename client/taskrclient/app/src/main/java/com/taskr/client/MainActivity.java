@@ -31,6 +31,7 @@ import com.taskr.api.Api;
 import com.taskr.api.Profile;
 
 import java.security.MessageDigest;
+import java.util.concurrent.Callable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -243,6 +244,28 @@ public class MainActivity extends AppCompatActivity
         navSelect(0);
 
         showFragment(new RequestsFragment(), false);
+    }
+
+    public void showInfoDialog(String title, String message, final Callable<Void> callback) {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setIcon(R.drawable.information)
+                .setPositiveButton(R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                if(null != callback) {
+                                    try {
+                                        callback.call();
+                                    } catch (Exception e) {
+                                        Log.e(TAG, e.getMessage());
+                                    }
+                                }
+                            }
+                        })
+                .show();
     }
 
     public void showErrorDialog(String title, String message) {

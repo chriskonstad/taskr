@@ -57,6 +57,7 @@ public class Api {
         public static final String NEARBY = "/api/v1/requests/nearby";
         public static final String PROFILE = "/api/v1/profile";
         public static final String ACCEPT_REQUEST = "/api/v1/requests/accept";
+        public static final String COMPLETE_REQUEST = "/api/v1/requests/complete";
         public static final String USER_REQUESTS = "/api/v1/requests/findByUid";
         public static final String RATE_REQUEST = "/api/v1/review/create";
         public static final String USER_REVIEWS = "/api/v1/review/show";
@@ -308,9 +309,9 @@ public class Api {
         mClient.get(url, params, handler);
     }
 
-    public void acceptRequest(final int requestId, final ApiCallback<Boolean> callback) {
+    private void actOnRequest(final String url, final int requestId,
+                              final ApiCallback<Boolean> callback) {
         checkReady();
-        final String url = Endpoints.get(Endpoints.ACCEPT_REQUEST);
 
         JSONObject p = new JSONObject();
         JSONObject a = new JSONObject();
@@ -340,7 +341,7 @@ public class Api {
                     } else {
                         callback.onFailure("Error (" +
                                 statusCode +
-                                "): Unable to accept request: " +
+                                "): Unable to act on request: " +
                                 requestId);
                     }
                 }
@@ -352,6 +353,15 @@ public class Api {
         }
     }
 
+    public void acceptRequest(final int requestId, final ApiCallback<Boolean> callback) {
+        final String url = Endpoints.get(Endpoints.ACCEPT_REQUEST);
+        actOnRequest(url, requestId, callback);
+    }
+
+    public void completeRequest(final int requestId, final ApiCallback<Boolean> callback) {
+        final String url = Endpoints.get(Endpoints.COMPLETE_REQUEST);
+        actOnRequest(url, requestId, callback);
+    }
 
     // get all of the reviews that a user has received
     // revieweeID is the id of the person the review is for
