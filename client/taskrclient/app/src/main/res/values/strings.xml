@@ -30,6 +30,7 @@
     <string name="nav_logout">Log Out</string>
 
     <!-- Request-related strings -->
+    <string name="request_title">Request</string>
     <string name="load_request_error_title">Error Getting Request</string>
     <string name="load_request_error_msg">Looks like something went wrong while trying to load a request! Please try again in a bit.</string>
     <string name="accept_request_success_title">Request Accepted</string>
@@ -49,6 +50,11 @@
     <string name="action_edit">Edit</string>
     <string name="action_accepted">Accepted</string>
     <string name="action_bug">Hey you found a bug :)</string>
+
+    <string name="req_title">Title</string>
+    <string name="req_amount">Amount</string>
+    <string name="req_due">Due By</string>
+    <string name="req_description">Description</string>
 
     <!-- Profile strings -->
     <string name="profile_loading">Profile Loading...</string>

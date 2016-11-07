@@ -133,6 +133,7 @@ public class RequestsFragment extends ListFragment {
             public void onClick(View view) {
                 // TODO Show create request fragment
                 Log.i(TAG, "FAB pressed");
+                ((MainActivity)getActivity()).showFragment(new RequestFragment(), true);
             }
         });
 
