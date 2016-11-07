@@ -2,6 +2,7 @@ package com.taskr.client;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -42,6 +43,7 @@ public class RequestsFragment extends ListFragment {
     @BindString(R.string.nearby_requests) String mTitleNearby;
     @BindString(R.string.my_requests) String mTitleMine;
     @BindView(R.id.swiperefresh) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.fab) FloatingActionButton fab;
 
     public RequestsFragment(){
 
@@ -125,6 +127,14 @@ public class RequestsFragment extends ListFragment {
         } else {
             getActivity().setTitle(mTitleNearby);
         }
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO Show create request fragment
+                Log.i(TAG, "FAB pressed");
+            }
+        });
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

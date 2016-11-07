@@ -18,7 +18,10 @@ import android.widget.TextView;
 import com.koushikdutta.ion.Ion;
 import com.taskr.api.Api;
 import com.taskr.api.Profile;
+import com.taskr.api.Rating;
+import com.taskr.api.Request;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindString;
@@ -87,12 +90,16 @@ public class ProfileFragment extends Fragment {
             public void onSuccess(Profile profile) {
                 dialog.dismiss();
                 getActivity().setTitle(profile.name);
+                Log.i(TAG, "Avg rating: " + Double.toString(profile.avgRating));
                 ButterKnife.apply(stars, SET_STARS, profile.avgRating);
                 Ion.with(profilePicture)
                         .placeholder(R.drawable.loadingpng)
                         .load(profile.getProfilePictureUrl());
-                Log.i(TAG, "Found " + Integer.toString(profile.ratings.size()) + " reviews");
-                RatingAdapter adapter = new RatingAdapter(getContext(), profile.ratings);
+                ArrayList<Rating> ratings = profile.ratings;
+                if(null == ratings) {
+                    ratings = new ArrayList<Rating>();
+                }
+                RatingAdapter adapter = new RatingAdapter(getContext(), ratings);
                 ratingsList.setAdapter(adapter);
             }
 
