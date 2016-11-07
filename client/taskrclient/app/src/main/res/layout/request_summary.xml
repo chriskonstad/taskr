@@ -13,6 +13,22 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:tint="@color/iconGrey"
+            app:srcCompat="@drawable/gauge"/>
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:tint="@color/iconGrey"
             app:srcCompat="@drawable/timer"/>
 
         <TextView
@@ -46,27 +62,12 @@
             android:tint="@color/iconGrey"
             app:srcCompat="@drawable/map_marker"/>
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="100"
-            >
+            />
 
-            <TextView
-                android:id="@+id/distance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="50"
-                />
-
-            <TextView
-                android:id="@+id/status"
-                android:textAlignment="viewEnd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="50"
-                />
-        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
