@@ -50,11 +50,20 @@
     <string name="action_edit">Edit</string>
     <string name="action_accepted">Accepted</string>
     <string name="action_bug">Hey you found a bug :)</string>
+    <string name="create_request_title">Request Created</string>
+    <string name="create_request_message">Successfully created the request!</string>
+    <string name="create_request_error_title">Failed to Create Request</string>
+    <string name="create_request">Create Request</string>
+    <string name="edit_request">Edit Request</string>
 
     <string name="req_title">Title</string>
     <string name="req_amount">Amount</string>
     <string name="req_due">Due By</string>
     <string name="req_description">Description</string>
+    <string name="req_location">Location</string>
+
+    <!-- Places -->
+    <string name="places_error_title">Unable to load Google Places</string>
 
     <!-- Profile strings -->
     <string name="profile_loading">Profile Loading...</string>

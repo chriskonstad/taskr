@@ -56,6 +56,7 @@ public class Api {
         public static final String LOGIN = "/api/v1/login";
         public static final String NEARBY = "/api/v1/requests/nearby";
         public static final String PROFILE = "/api/v1/profile";
+        public static final String CREATE_REQUEST = "/api/v1/requests";
         public static final String ACCEPT_REQUEST = "/api/v1/requests/accept";
         public static final String COMPLETE_REQUEST = "/api/v1/requests/complete";
         public static final String USER_REQUESTS = "/api/v1/requests/findByUid";
@@ -429,5 +430,38 @@ public class Api {
         };
 
         mClient.post(url, params, handler);
+    }
+
+    public void createRequest(Request request, final ApiCallback<RequestResult> callback) {
+        checkReady();
+        final String url = Endpoints.get(Endpoints.CREATE_REQUEST);
+
+        try {
+            String json = mGson.toJson(request);
+            StringEntity entity = new StringEntity(json);
+
+            AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    String resultJson = new String(responseBody);
+                    RequestResult result = mGson.fromJson(resultJson, RequestResult.class);
+                    callback.onSuccess(result);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
+                                      Throwable error) {
+                    if(NO_CONNECTION == statusCode) {
+                        callback.onFailure(mContext.getString(R.string.unable_to_reach_server));
+                    } else {
+                        callback.onFailure("Error (" + statusCode + "): Unable to create request");
+                    }
+                }
+            };
+
+            mClient.post(mContext, url, entity, "application/json", handler);
+        }catch(Exception e){
+            Log.e(TAG, "Unable to create request: " + e.getMessage());
+        }
     }
 }

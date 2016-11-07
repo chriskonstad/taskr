@@ -58,18 +58,27 @@
             />
     </android.support.design.widget.TextInputLayout>
 
-    <!-- TODO Replace with mapview -->
-    <EditText
-        android:id="@+id/location"
-        android:hint="LOCATION (REPLACE WITH MAP)"
-        android:layout_height="wrap_content"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        />
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/location"
+            android:hint="@string/req_location"
+            android:cursorVisible="false"
+            android:textIsSelectable="false"
+            android:focusable="false"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            />
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/button"
-        android:text="TEST (TESTING LAUNCH MAP VIEW)"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@drawable/rounded_button"
+        android:textAllCaps="false"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/button_wide_text_size"/>
 </LinearLayout>

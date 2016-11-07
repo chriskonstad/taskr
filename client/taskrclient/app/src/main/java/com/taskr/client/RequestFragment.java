@@ -2,23 +2,27 @@ package com.taskr.client;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.taskr.api.Api;
 import com.taskr.api.Request;
+import com.taskr.api.RequestResult;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -27,34 +31,56 @@ import java.util.Calendar;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnTextChanged;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
- * Created by chris on 10/28/16.
+ * Created by chris on 11/6/16.
  */
 
 // Use this class for both creating and editing fragments
 public class RequestFragment extends Fragment {
     private static final String TAG = "RequestFragment";
+    private static final int PLACE_PICKER_REQUEST = 1;
+    public static final String REQUEST = "request";
 
-    @BindString(R.string.request_title) String mTitle;
+    @BindString(R.string.create_request) String createRequest;
+    @BindString(R.string.edit_request) String editRequest;
+    @BindView(R.id.title) EditText title;
     @BindView(R.id.amount) EditText amount;
     @BindView(R.id.due) EditText due;
+    @BindView(R.id.description) EditText description;
+    @BindView(R.id.location) EditText location;
     @BindView(R.id.button) Button button;
 
     Calendar calendar = Calendar.getInstance();
+    Place place;
+    Request request = new Request();
+    boolean editing = false;
 
     public RequestFragment() {
         // Required for fragment subclass
     }
 
-    // TODO: Make it possible to load up an existing request, allowing users to edit requests
-    // with this too
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
         View rootView = inflater.inflate(R.layout.fragment_request, container, false);
         ButterKnife.bind(this, rootView);
 
-        getActivity().setTitle(mTitle);
+        String action = createRequest;
+        // Load the existing request if editing
+        if(null != getArguments()) {
+            Request input = (Request)getArguments().getSerializable(REQUEST);
+            if(null != input) {
+                editing = true;
+                request = input;
+                action = editRequest;
+                loadRequest();
+            }
+        }
+        button.setText(action);
+        getActivity().setTitle(action);
 
         // Ensure the numeric keyboard appears
         amount.setRawInputType(Configuration.KEYBOARD_12KEY);
@@ -65,32 +91,114 @@ public class RequestFragment extends Fragment {
                 promptDue();
             }
         });
-        button.setOnClickListener(new View.OnClickListener() {
+
+        location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Eventually replace with a map view? Not sure how to handle that...
-                /*
-                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                final EditText input = new EditText(getContext());
-                input.setInputType(InputType.TYPE_CLASS_NUMBER);
-                input.setRawInputType(Configuration.KEYBOARD_12KEY);
-                alert.setTitle("Amount");
-                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        //Put actions for OK button here
-                    }
-                });
-                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        //Put actions for CANCEL button here, or leave in blank
-                    }
-                });
-                alert.show();
-                */
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+                // Ensure the request's current location is visible, otherwise use user's location
+                if(editing) {
+                    LatLngBounds bounds = LatLngBounds.builder()
+                            .include(new LatLng(request.lat, request.longitude))
+                            .build();
+
+                    builder.setLatLngBounds(bounds);
+                }
+
+                try {
+                    startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
+                } catch (Exception e) {
+                    ((MainActivity)getActivity())
+                            .showErrorDialog(getString(R.string.places_error_title),
+                                    e.getMessage());
+                }
             }
         });
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveRequest();
+            }
+        });
+
+        checkIfDone();
         return rootView;
+    }
+
+    // Either create request or update it if it already exists
+    private void saveRequest() {
+        request.title = title.getText().toString();
+        request.amount = Double.parseDouble(amount.getText().toString());
+        request.user_id = Api.getInstance().getId();
+        request.lat = place.getLatLng().latitude;
+        request.longitude = place.getLatLng().longitude;
+        request.due = calendar.getTime();
+        request.description = description.getText().toString();
+        // DO NOT MANUALLY UPDATE ID, CREATED_AT, UPDATED_AT, STATUS, or ACTOR_ID
+
+        if(editing) {
+            // TODO allow for editing of requests
+        } else {
+            Api.getInstance().createRequest(request, new Api.ApiCallback<RequestResult>() {
+                @Override
+                public void onSuccess(RequestResult returnValue) {
+                    Log.i(TAG, "Created request with id: " + returnValue.id);
+                    ((MainActivity)getActivity())
+                            .showInfoDialog(getString(R.string.create_request_title),
+                                    getString(R.string.create_request_message),
+                                    null);
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    ((MainActivity)getActivity())
+                            .showErrorDialog(getString(R.string.create_request_error_title),
+                                    message);
+                }
+            });
+        }
+    }
+
+    private void loadRequest() {
+        title.setText(request.title);
+        amount.setText(String.format("%.2f", request.amount));
+        calendar.setTime(request.due);
+        refreshDue();
+        description.setText(request.description);
+        LatLng latlng = new LatLng(request.lat, request.longitude);
+
+        // TODO Use reverse geocoder to find name for latlong pair
+        location.setText(latlng.toString());
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                place = PlacePicker.getPlace(getContext(), data);
+                location.setText(place.getName());
+            }
+        }
+    }
+
+    @OnTextChanged({R.id.title, R.id.amount, R.id.due, R.id.description, R.id.location})
+    public void checkIfDone() {
+        if(ready()) {
+            button.setEnabled(true);
+            button.setBackground(getResources().getDrawable(R.drawable.rounded_button));
+        } else {
+            button.setEnabled(false);
+            button.setBackground(getResources().getDrawable(R.drawable.rounded_button_disabled));
+        }
+    }
+
+    private boolean ready() {
+        return !title.getText().toString().isEmpty() &&
+                !amount.getText().toString().isEmpty() &&
+                !due.getText().toString().isEmpty() &&
+                !description.getText().toString().isEmpty() &&
+                !location.getText().toString().isEmpty();
     }
 
     private void promptDue() {

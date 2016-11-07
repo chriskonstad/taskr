@@ -95,7 +95,11 @@ public class RequestOverviewFragment extends Fragment {
     Button.OnClickListener listenerEdit = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            // TODO
+            Fragment editFragment = new RequestFragment();
+            Bundle args = new Bundle();
+            args.putSerializable(RequestFragment.REQUEST, req);
+            editFragment.setArguments(args);
+            ((MainActivity)getActivity()).showFragment(editFragment, true);
         }
     };
 
