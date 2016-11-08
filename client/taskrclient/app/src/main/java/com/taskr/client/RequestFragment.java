@@ -4,6 +4,8 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -27,6 +29,8 @@ import com.taskr.api.RequestResult;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 
 import butterknife.BindString;
@@ -199,8 +203,23 @@ public class RequestFragment extends Fragment {
         description.setText(request.description);
         LatLng latlng = new LatLng(request.lat, request.longitude);
 
-        // TODO Use reverse geocoder to find name for latlong pair
-        location.setText(latlng.toString());
+        String text = latlng.toString();
+        try {
+            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(request.lat, request.longitude, 1);
+            if(null != addresses && !addresses.isEmpty()) {
+                Address a = addresses.get(0);
+                if(null != a.getAddressLine(0)) {
+                    text = a.getAddressLine(0);
+                } else if(null != a.getFeatureName()) {
+                    text = a.getFeatureName();
+                }
+            }
+        } catch (Exception e) {
+            ((MainActivity)getActivity())
+                    .showErrorDialog(getString(R.string.geocode_error_title),e.getMessage());
+        }
+        location.setText(text);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
