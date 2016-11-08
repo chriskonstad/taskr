@@ -59,12 +59,21 @@
     <string name="edit_request_message">Successfully edited the request!</string>
     <string name="edit_request_error_title">Failed to Edit Request</string>
     <string name="geocode_error_title">Unable to Lookup Location</string>
+    <string name="cancel_request">Cancel Request</string>
+    <string name="cancel_title">Canceled Request</string>
+    <string name="cancel_error_title">Failed to Cancel Request</string>
+    <string name="cancel_message">Successfully canceled the request!</string>
 
     <string name="req_title">Title</string>
     <string name="req_amount">Amount</string>
     <string name="req_due">Due By</string>
     <string name="req_description">Description</string>
     <string name="req_location">Location</string>
+
+    <string name="sure">Are you sure?</string>
+    <string name="yes">Yes</string>
+    <string name="no">no</string>
+    <string name="sure_cancel">Are you sure you want to cancel your request?</string>
 
     <!-- Places -->
     <string name="places_error_title">Unable to load Google Places</string>

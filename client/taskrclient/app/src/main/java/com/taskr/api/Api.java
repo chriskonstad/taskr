@@ -59,6 +59,7 @@ public class Api {
         public static final String PROFILE = "/api/v1/profile";
         public static final String CREATE_REQUEST = "/api/v1/requests";
         public static final String ACCEPT_REQUEST = "/api/v1/requests/accept";
+        public static final String CANCEL_REQUEST = "/api/v1/requests/cancel";
         public static final String EDIT_REQUEST = "/api/v1/requests";
         public static final String COMPLETE_REQUEST = "/api/v1/requests/complete";
         public static final String USER_REQUESTS = "/api/v1/requests/findByUid";
@@ -363,6 +364,11 @@ public class Api {
 
     public void completeRequest(final int requestId, final ApiCallback<Boolean> callback) {
         final String url = Endpoints.get(Endpoints.COMPLETE_REQUEST);
+        actOnRequest(url, requestId, callback);
+    }
+
+    public void cancelRequest(final int requestId, final ApiCallback<Boolean> callback) {
+        final String url = Endpoints.get(Endpoints.CANCEL_REQUEST);
         actOnRequest(url, requestId, callback);
     }
 

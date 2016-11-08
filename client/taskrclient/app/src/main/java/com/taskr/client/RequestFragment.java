@@ -2,12 +2,14 @@ package com.taskr.client;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +60,7 @@ public class RequestFragment extends Fragment {
     @BindView(R.id.description) EditText description;
     @BindView(R.id.location) EditText location;
     @BindView(R.id.button) Button button;
+    @BindView(R.id.cancel) Button cancel;
 
     Calendar calendar = Calendar.getInstance();
     Place place;
@@ -75,12 +78,14 @@ public class RequestFragment extends Fragment {
 
         String action = createRequest;
         // Load the existing request if editing
+        cancel.setVisibility(View.INVISIBLE);
         if(null != getArguments()) {
             Request input = (Request)getArguments().getSerializable(REQUEST);
             if(null != input) {
                 editing = true;
                 request = input;
                 action = editRequest;
+                cancel.setVisibility(View.VISIBLE);
                 loadRequest();
             }
         }
@@ -125,6 +130,53 @@ public class RequestFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 saveRequest();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.sure)
+                        .setIcon(R.drawable.help_circle)
+                        .setMessage(R.string.sure_cancel)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Api.getInstance().cancelRequest(request.id,
+                                        new Api.ApiCallback<Boolean>() {
+                                    @Override
+                                    public void onSuccess(Boolean returnValue) {
+                                        ((MainActivity)getActivity())
+                                                .showInfoDialog(getString(R.string.cancel_title),
+                                                        getString(R.string.cancel_message),
+                                                        new Callable<Void>() {
+                                                            @Override
+                                                            public Void call() throws Exception {
+                                                                ((MainActivity)getActivity())
+                                                                        .onBackPressed();
+                                                                // TODO Back press twice?
+                                                                return null;
+                                                            }
+                                                        });
+                                    }
+
+                                    @Override
+                                    public void onFailure(String message) {
+                                        ((MainActivity)getActivity())
+                                                .showErrorDialog(getString(R.string.cancel_error_title),
+                                                        message);
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .show();
             }
         });
 

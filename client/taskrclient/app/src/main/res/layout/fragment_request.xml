@@ -80,5 +80,18 @@
         android:background="@drawable/rounded_button"
         android:textAllCaps="false"
         android:textColor="#ffffff"
+        android:textSize="@dimen/button_wide_text_size"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="@string/cancel_request"
+        android:background="@drawable/rounded_button_cancel"
+        android:textAllCaps="false"
+        android:textColor="#ffffff"
         android:textSize="@dimen/button_wide_text_size"/>
 </LinearLayout>
