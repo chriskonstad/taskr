@@ -28,7 +28,7 @@ class ProfileController < ApplicationController
     render json: { id: user.id }
 
     customer = Stripe::Customer.create(
-      :email => params[:id]
+      :email => params[:fbid]
     )
     
   end
