@@ -104,12 +104,15 @@ class RequestController < ApplicationController
   end
 
   def edit_params
-    params.require(:request).permit(:title,
-                                    :amount,
-                                    :lat,
-                                    :longitude,
-                                    :due,
-                                    :description)
+    params.require(:auth)
+    params.require(:request).permit(
+      :title,
+      :amount,
+      :lat,
+      :longitude,
+      :due,
+      :description
+    )
   end
 end
 

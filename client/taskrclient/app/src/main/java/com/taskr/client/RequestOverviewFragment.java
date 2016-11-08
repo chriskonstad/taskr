@@ -219,7 +219,7 @@ public class RequestOverviewFragment extends Fragment {
         float distance = req.getDistance(Api.getInstance().getLocation());
         requestDistance.setText(String.format("%.1fmi", distance));
         requestDue.setText(req.getDue());
-        requestAmount.setText(String.format("$%.1f", req.amount));
+        requestAmount.setText(String.format("$%.2f", req.amount));
 
         Api.getInstance().getUserProfile(req.user_id, new Api.ApiCallback<Profile>() {
             @Override

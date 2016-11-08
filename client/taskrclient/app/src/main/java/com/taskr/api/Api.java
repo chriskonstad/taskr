@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.facebook.login.LoginManager;
+import com.google.gson.JsonElement;
 import com.taskr.client.LocationProvider;
 import com.taskr.client.MainActivity;
 import com.taskr.client.R;
@@ -58,6 +59,7 @@ public class Api {
         public static final String PROFILE = "/api/v1/profile";
         public static final String CREATE_REQUEST = "/api/v1/requests";
         public static final String ACCEPT_REQUEST = "/api/v1/requests/accept";
+        public static final String EDIT_REQUEST = "/api/v1/requests";
         public static final String COMPLETE_REQUEST = "/api/v1/requests/complete";
         public static final String USER_REQUESTS = "/api/v1/requests/findByUid";
         public static final String RATE_REQUEST = "/api/v1/review/create";
@@ -462,6 +464,43 @@ public class Api {
             mClient.post(mContext, url, entity, "application/json", handler);
         }catch(Exception e){
             Log.e(TAG, "Unable to create request: " + e.getMessage());
+        }
+    }
+
+    public void editRequest(Request request, final ApiCallback<Void> callback) {
+        checkReady();
+        final String url = Endpoints.get(Endpoints.EDIT_REQUEST) + "/" + request.id;
+
+        JSONObject a = new JSONObject();
+        JSONObject params = new JSONObject();
+
+        try {
+            a.put("user_id", Integer.toString(mId));
+            params.put("auth", a);
+            JSONObject json = new JSONObject(mGson.toJson(request, Request.class));
+            params.put("request", json);
+            StringEntity entity = new StringEntity(params.toString());
+
+            AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    callback.onSuccess(null);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
+                                      Throwable error) {
+                    if (NO_CONNECTION == statusCode) {
+                        callback.onFailure(mContext.getString(R.string.unable_to_reach_server));
+                    } else {
+                        callback.onFailure("Error (" + statusCode + "): Unable to edit request: ");
+                    }
+                }
+            };
+
+            mClient.post(mContext, url, entity, "application/json", handler);
+        } catch (Exception e) {
+            Log.e(TAG, "Unable to accept request: " + e.getMessage());
         }
     }
 }

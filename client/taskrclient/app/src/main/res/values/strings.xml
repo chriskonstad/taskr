@@ -55,6 +55,9 @@
     <string name="create_request_error_title">Failed to Create Request</string>
     <string name="create_request">Create Request</string>
     <string name="edit_request">Edit Request</string>
+    <string name="edit_request_title">Request Edited</string>
+    <string name="edit_request_message">Successfully edited the request!</string>
+    <string name="edit_request_error_title">Failed to Edit Request</string>
 
     <string name="req_title">Title</string>
     <string name="req_amount">Amount</string>

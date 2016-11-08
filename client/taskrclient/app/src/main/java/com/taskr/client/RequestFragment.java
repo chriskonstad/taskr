@@ -27,6 +27,7 @@ import com.taskr.api.RequestResult;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.concurrent.Callable;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -132,14 +133,37 @@ public class RequestFragment extends Fragment {
         request.title = title.getText().toString();
         request.amount = Double.parseDouble(amount.getText().toString());
         request.user_id = Api.getInstance().getId();
-        request.lat = place.getLatLng().latitude;
-        request.longitude = place.getLatLng().longitude;
+        if(null != place) {
+            request.lat = place.getLatLng().latitude;
+            request.longitude = place.getLatLng().longitude;
+        }
         request.due = calendar.getTime();
         request.description = description.getText().toString();
         // DO NOT MANUALLY UPDATE ID, CREATED_AT, UPDATED_AT, STATUS, or ACTOR_ID
 
         if(editing) {
-            // TODO allow for editing of requests
+            Api.getInstance().editRequest(request, new Api.ApiCallback<Void>() {
+                @Override
+                public void onSuccess(Void v) {
+                    ((MainActivity)getActivity())
+                            .showInfoDialog(getString(R.string.edit_request_title),
+                                    getString(R.string.edit_request_message),
+                                    new Callable<Void>() {
+                                        @Override
+                                        public Void call() throws Exception {
+                                            ((MainActivity)getActivity()).onBackPressed();
+                                            return null;
+                                        }
+                                    });
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    ((MainActivity)getActivity())
+                            .showErrorDialog(getString(R.string.edit_request_error_title),
+                                    message);
+                }
+            });
         } else {
             Api.getInstance().createRequest(request, new Api.ApiCallback<RequestResult>() {
                 @Override
@@ -148,7 +172,13 @@ public class RequestFragment extends Fragment {
                     ((MainActivity)getActivity())
                             .showInfoDialog(getString(R.string.create_request_title),
                                     getString(R.string.create_request_message),
-                                    null);
+                                    new Callable<Void>() {
+                                        @Override
+                                        public Void call() throws Exception {
+                                            ((MainActivity)getActivity()).onBackPressed();
+                                            return null;
+                                        }
+                                    });
                 }
 
                 @Override
