@@ -64,6 +64,7 @@ public class LoginFragment extends Fragment {
 
         loginButton.setReadPermissions(EMAIL);
         loginButton.setFragment(this);
+        loginButton.setBackgroundResource(R.drawable.rounded_button);
 
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override

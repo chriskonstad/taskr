@@ -12,5 +12,12 @@
             android:summary="@string/hostname_summary"
             />
 
+        <EditTextPreference
+            android:key="@string/key_search_radius"
+            android:defaultValue="@string/default_search_radius"
+            android:title="@string/search_radius_title"
+            android:summary="@string/search_radius_summary"
+            />
+
     </PreferenceCategory>
 </PreferenceScreen>

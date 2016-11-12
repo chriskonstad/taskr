@@ -2,6 +2,7 @@ package com.taskr.client;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -72,7 +73,11 @@ public class RequestsFragment extends ListFragment {
 
         double latitude = lastLocation.getLatitude();
         double longitude = lastLocation.getLongitude();
-        double radius = DEFAULT_RADIUS; // TODO: store/get from settings?
+        double radius = Double.parseDouble(PreferenceManager.getDefaultSharedPreferences(getContext())
+                .getString(getContext().getString(R.string.key_search_radius),
+                        getContext().getString(R.string.default_search_radius)));
+
+        Log.i(TAG, "the search radius is " + Double.toString(radius) + " miles");
 
         Api.getInstance().getNearbyRequests(latitude, longitude, radius,
                 new Api.ApiCallback<ArrayList<Request>>() {

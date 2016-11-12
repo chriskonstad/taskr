@@ -7,6 +7,8 @@
     <color name="colorGreyDark">#5a5a5a</color>
     <color name="colorCancel">#F44336</color>
     <color name="colorCancelDark">#D32F2F</color>
+    <color name="colorPrimaryClick">#4d5ec1</color>
+    <color name="colorPrimaryDarkClick">#3647b3</color>
 
     <!-- Status colors for text -->
     <color name="open">#9C27B0</color>
