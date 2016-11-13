@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  */
 
 public class ProfileFragment extends Fragment {
-    private static final String TAG = "ProfileFragment";
+    private String TAG;
     public static final String UID = "user_id";
     @BindView (R.id.profile_picture) ImageView profilePicture;
     @BindView (R.id.ratings_list) ListView ratingsList;
@@ -76,6 +76,8 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
         View rootView = inflater.inflate(R.layout.profile, container, false);
         ButterKnife.bind(this, rootView);
+
+        TAG = getString(R.string.profile_fragment_tag);
 
         Api api = Api.getInstance();
 

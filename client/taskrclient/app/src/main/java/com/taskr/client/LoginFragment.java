@@ -37,7 +37,7 @@ import butterknife.ButterKnife;
  */
 
 public class LoginFragment extends Fragment {
-    private static final String TAG = "LoginFragment";
+    private String TAG;
     private static final String EMAIL = "email";
     private static final String NAME = "name";
     private static final String ID = "id";
@@ -61,6 +61,8 @@ public class LoginFragment extends Fragment {
 
         getActivity().setTitle(mTitle);
         setHasOptionsMenu(true);
+
+        TAG = getString(R.string.login_fragment_tag);
 
         loginButton.setReadPermissions(EMAIL);
         loginButton.setFragment(this);

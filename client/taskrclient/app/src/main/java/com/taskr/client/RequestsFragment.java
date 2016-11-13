@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  */
 
 public class RequestsFragment extends ListFragment {
-    private static final String TAG = "RequestsFragment";
+    private String TAG;
     public static final String LOGGED_IN_USER = "IsSpecificUser";
     private ArrayAdapter<Request> adapter;
     private static final int DEFAULT_RADIUS = 100000;   // in miles
@@ -61,10 +61,12 @@ public class RequestsFragment extends ListFragment {
         Bundle bundle = new Bundle();
         bundle.putSerializable("request", req);
 
+        TAG = getString(R.string.requests_fragment_tag);
+
         RequestOverviewFragment overviewFrag = new RequestOverviewFragment();
         overviewFrag.setArguments(bundle);
 
-        ((MainActivity)getActivity()).showFragment(overviewFrag, true);
+        ((MainActivity)getActivity()).showFragment(overviewFrag, true, new TransitionParams(getString(R.string.requests_fragment_tag), getString(R.string.request_overview_fragment_tag)));
     }
 
     private void loadNearbyRequests() {
@@ -138,7 +140,7 @@ public class RequestsFragment extends ListFragment {
             public void onClick(View view) {
                 // TODO Show create request fragment
                 Log.i(TAG, "FAB pressed");
-                ((MainActivity)getActivity()).showFragment(new RequestFragment(), true);
+                ((MainActivity)getActivity()).showFragment(new RequestFragment(), true, new TransitionParams(getString(R.string.requests_fragment_tag), getString(R.string.request_fragment_tag)));
             }
         });
 

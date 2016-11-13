@@ -48,7 +48,7 @@ import static android.app.Activity.RESULT_OK;
 
 // Use this class for both creating and editing fragments
 public class RequestFragment extends Fragment {
-    private static final String TAG = "RequestFragment";
+    private String TAG;
     private static final int PLACE_PICKER_REQUEST = 1;
     public static final String REQUEST = "request";
 
@@ -75,6 +75,8 @@ public class RequestFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
         View rootView = inflater.inflate(R.layout.fragment_request, container, false);
         ButterKnife.bind(this, rootView);
+
+        TAG = getString(R.string.request_fragment_tag);
 
         String action = createRequest;
         // Load the existing request if editing

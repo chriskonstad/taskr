@@ -40,7 +40,7 @@ import butterknife.ButterKnife;
  */
 
 public class RequestOverviewFragment extends Fragment {
-    private static final String TAG = "RequestOverviewFragment";
+    private String TAG;
     private Request req;
 
     @BindView(R.id.request_title) TextView requestTitle;
@@ -99,7 +99,7 @@ public class RequestOverviewFragment extends Fragment {
             Bundle args = new Bundle();
             args.putSerializable(RequestFragment.REQUEST, req);
             editFragment.setArguments(args);
-            ((MainActivity)getActivity()).showFragment(editFragment, true);
+            ((MainActivity)getActivity()).showFragment(editFragment, true, new TransitionParams(getString(R.string.request_overview_fragment_tag), getString(R.string.request_fragment_tag)));
         }
     };
 
@@ -139,6 +139,8 @@ public class RequestOverviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle){
         View rootView = inflater.inflate(R.layout.request_overview, container, false);
         ButterKnife.bind(this, rootView);
+
+        TAG = getString(R.string.request_overview_fragment_tag);
 
         req = (Request)getArguments().getSerializable("request");
 

@@ -6,6 +6,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.Menu;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
+    private String TAG;
     @Override
     public void onCreatePreferences(Bundle bundle, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
@@ -15,6 +16,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onCreate(Bundle b) {
         super.onCreate(b);
 
+        TAG = getString(R.string.settings_fragment_tag);
         // Ensure we get out onPrepareOptionsMenu called back
         setHasOptionsMenu(true);
     }

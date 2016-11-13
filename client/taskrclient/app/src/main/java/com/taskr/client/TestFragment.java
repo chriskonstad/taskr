@@ -91,6 +91,6 @@ public class TestFragment extends Fragment {
     }
 
     public void findNearbyRequests(View view){
-        ((MainActivity)getActivity()).showFragment(new RequestsFragment(), true);
+        //((MainActivity)getActivity()).showFragment(new RequestsFragment(), true);
     }
 }

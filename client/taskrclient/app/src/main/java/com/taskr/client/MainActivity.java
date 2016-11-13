@@ -1,6 +1,7 @@
 package com.taskr.client;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -19,13 +20,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.login.LoginManager;
 import com.koushikdutta.ion.Ion;
 import com.taskr.api.Api;
 import com.taskr.api.Profile;
@@ -38,7 +37,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = "MainActivity";
+    private String TAG;
 
     @BindView(R.id.nav_view) NavigationView navigationView;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -52,6 +51,8 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         logKeyHash();
+
+        TAG = getString(R.string.main_activity_tag);
 
         // Init the API
         Api.getInstance().init(getApplicationContext());
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_settings:
-                showFragment(new SettingsFragment(), true);
+                showFragment(new SettingsFragment(), true, new TransitionParams(getApplicationContext().getString(R.string.settings_fragment_tag), ""));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -145,9 +146,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void showFragment(Fragment fragment, boolean addToBackstack) {
+    public void showFragment(Fragment fragment, boolean addToBackstack, TransitionParams transitionParams) {
         if(null != fragment) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            new TransitionFactory(getApplicationContext()).setCustomAnimations(transaction, transitionParams);
             transaction.replace(R.id.content_frame, fragment);
             if(addToBackstack) {
                 transaction.addToBackStack(null);
@@ -202,18 +204,18 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_requests &&
                 !(frag instanceof RequestsFragment && !((RequestsFragment)frag).isLoggedInUser())) {
-            showFragment(new RequestsFragment(), true);
+            showFragment(new RequestsFragment(), false, new TransitionParams("", getString(R.string.requests_fragment_tag)));
         } else if (id == R.id.nav_mine &&
                 !(frag instanceof RequestsFragment && ((RequestsFragment)frag).isLoggedInUser())) {
             Bundle bundle = new Bundle();
             bundle.putBoolean(RequestsFragment.LOGGED_IN_USER, true);
             Fragment reqFrag = new RequestsFragment();
             reqFrag.setArguments(bundle);
-            showFragment(reqFrag, true);
+            showFragment(reqFrag, false, new TransitionParams("", getString(R.string.requests_fragment_tag)));
         } else if (id == R.id.nav_profile && !(frag instanceof ProfileFragment)) {
-            showFragment(ProfileFragment.newInstance(Api.getInstance().getId()), true);
+            showFragment(ProfileFragment.newInstance(Api.getInstance().getId()), false, new TransitionParams("", getString(R.string.profile_fragment_tag)));
         } else if (id == R.id.nav_settings && !(frag instanceof SettingsFragment)) {
-            showFragment(new SettingsFragment(), true);
+            showFragment(new SettingsFragment(), false, new TransitionParams("", getString(R.string.settings_fragment_tag)));
         } else if (id == R.id.nav_logout) {
             Api.getInstance().logout();
             showLogin();
@@ -235,7 +237,7 @@ public class MainActivity extends AppCompatActivity
     private void showLogin() {
         navSelect(0);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        showFragment(new LoginFragment(), false);
+        showFragment(new LoginFragment(), false, new TransitionParams("", getString(R.string.login_fragment_tag)));
     }
 
     public void onLogin() {
@@ -243,7 +245,7 @@ public class MainActivity extends AppCompatActivity
         refreshNavHeader();
         navSelect(0);
 
-        showFragment(new RequestsFragment(), false);
+        showFragment(new RequestsFragment(), false, new TransitionParams(getString(R.string.login_fragment_tag), getString(R.string.requests_fragment_tag)));
     }
 
     public void showInfoDialog(String title, String message, final Callable<Void> callback) {

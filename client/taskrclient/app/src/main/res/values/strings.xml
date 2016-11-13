@@ -97,4 +97,14 @@
     <string name="role_requester">requester</string>
     <string name="role_fulfiller">fulfiller</string>
     <string name="role_any">any</string>
+
+    <!-- Tag names -->
+    <string name="main_activity_tag">MainActivity</string>
+    <string name="login_fragment_tag">LoginFragment</string>
+    <string name="profile_fragment_tag">ProfileTag</string>
+    <string name="request_fragment_tag">RequestFragment</string>
+    <string name="request_overview_fragment_tag">RequestOverviewFragment</string>
+    <string name="requests_fragment_tag">RequestsFragment</string>
+    <string name="settings_fragment_tag">SettingsFragment</string>
+
 </resources>
