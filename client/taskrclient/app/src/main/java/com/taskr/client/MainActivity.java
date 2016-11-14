@@ -1,8 +1,10 @@
 package com.taskr.client;
 
+import android.app.Notification;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -38,6 +40,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private String TAG;
+    private NotificationHandler notificationHandler;
 
     @BindView(R.id.nav_view) NavigationView navigationView;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -95,8 +98,36 @@ public class MainActivity extends AppCompatActivity
         });
 
         navigationView.setNavigationItemSelectedListener(this);
+    }
 
-        showLogin();
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        Intent notificationIntent = getIntent();
+
+        if(notificationIntent.hasExtra(getString(R.string.notification_type))){
+            String notificationType = notificationIntent.getStringExtra(getString(R.string.notification_type));
+
+            if(notificationType.equals("review")){
+                showFragment(ProfileFragment.newInstance(Api.getInstance().getId()), false, new TransitionParams("", getString(R.string.profile_fragment_tag)));
+            }
+            else if(notificationType.equals("request")){
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(RequestsFragment.LOGGED_IN_USER, true);
+                Fragment reqFrag = new RequestsFragment();
+                reqFrag.setArguments(bundle);
+                showFragment(reqFrag, false, new TransitionParams("", getString(R.string.requests_fragment_tag)));
+            }
+        }
+        else {
+            showLogin();
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent){
+        this.setIntent(intent);
     }
 
     public void refreshNavHeader() {
@@ -241,6 +272,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onLogin() {
+        notificationHandler = new NotificationHandler(getApplicationContext(), Api.getInstance().getId());
+        notificationHandler.startNotificationCheck();
+
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         refreshNavHeader();
         navSelect(0);
@@ -306,6 +340,14 @@ public class MainActivity extends AppCompatActivity
             }
         } catch (Exception e) {
             Log.i(TAG, e.getMessage());
+        }
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        if(notificationHandler != null) {
+            notificationHandler.stopNotificationCheck();
         }
     }
 }

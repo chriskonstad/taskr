@@ -107,4 +107,6 @@
     <string name="requests_fragment_tag">RequestsFragment</string>
     <string name="settings_fragment_tag">SettingsFragment</string>
 
+    <!-- Notification Strings -->
+    <string name="notification_type">notification_type</string>
 </resources>
