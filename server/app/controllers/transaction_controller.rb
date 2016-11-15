@@ -16,11 +16,18 @@ class TransactionController < ApplicationController
     	render nothing: true, status: 500
     end
 
+
+    #retrieve the customer then charge the customer
+
     # Stripe.api_key = "sk_test_HWnsmI0iuGrMndEcCGbP7xtc"
 
     # customer = Stripe::Customer.create(
     #   :email => params[:id]
     # )
+    
+
+    # customer =  Stripe::Customer.retrieve(params[:id])
+    
 
     #need to have the form
 
