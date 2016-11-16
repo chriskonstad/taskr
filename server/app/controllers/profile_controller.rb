@@ -22,14 +22,26 @@ class ProfileController < ApplicationController
     email = params[:email]
     fbid = params[:fbid]
 
-    render nothing: true, status: :bad_request if name.nil? || email.nil? || fbid.nil?
+
+    
 
     user = User.login(name, email, fbid)
-    render json: { id: user.id }
-
-    customer = Stripe::Customer.create(
+    
+    if (user.id)
+      render json: { id: user.id }
+      customer = Stripe::Customer.create(
       :email => params[:fbid]
-    )
+       )
+      
+    else
+      render nothing: true, status: :bad_request if name.nil? || email.nil? || fbid.nil?
+    end
+    # if (Stripe::Customer.retrieve()
+
+    # else
+     
+    # end
+    
     
   end
 end

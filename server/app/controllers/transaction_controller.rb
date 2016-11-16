@@ -11,10 +11,13 @@ class TransactionController < ApplicationController
     trans = Transaction.create(transaction_creation_params)
 
     if trans.id
-    	render :json => {"id" => trans.id }.to_json
+    	# render :json => {"id" => trans.id }.to_json
+      customer = Stripe::Customer.retrieve('867392256730734')
+      render :json => {"customer => customer"}.to_json
     else
     	render nothing: true, status: 500
     end
+
 
 
     #retrieve the customer then charge the customer

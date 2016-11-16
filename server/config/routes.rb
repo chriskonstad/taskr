@@ -48,6 +48,9 @@ Rails.application.routes.draw do
         get '/:id' => 'transaction#show'
         post '/:id' => 'transaction#create'
       end
+      scope '/transactions' do
+        post '/:id' => 'transactions#create'
+      end
     end
   end
 
