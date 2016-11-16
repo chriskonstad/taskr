@@ -42,12 +42,13 @@ class TransactionController < ApplicationController
       customers = Stripe::Customer.list(:limit => 1)
 
       customer = customers.select do |c|
-        c.email == "1234"
+        c.email == [params[:id]]
       end
 
-      
+      #amount = trans.amount
+
       Stripe::Charge.create(
-        :amount => 200, #is equal to 2 dollars
+        :amount => trans.amount.round, #is equal to 2 dollars
         :currency => "usd",
         :source => token, # obtained with Stripe.js
         :description => "Charge for 1234@example.com"
