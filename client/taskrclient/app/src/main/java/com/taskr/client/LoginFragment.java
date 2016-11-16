@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -46,7 +48,9 @@ public class LoginFragment extends Fragment {
     AccessToken mAccessToken;
 
     @BindString(R.string.app_name) String mTitle;
+    @BindString(R.string.default_hostname) String DEFAULT_HOSTNAME;
     @BindView(R.id.login_button) LoginButton loginButton;
+    @BindView(R.id.hostname) TextView hostnameView;
 
     public LoginFragment() {
         // Required for fragment subclass
@@ -86,6 +90,13 @@ public class LoginFragment extends Fragment {
                 Log.e(TAG, "Error during login");
             }
         });
+
+        // Display the set server hostname IF it is not set to the production server
+        String hostname = PreferenceManager.getDefaultSharedPreferences(getContext())
+                .getString(getContext().getString(R.string.key_hostname), DEFAULT_HOSTNAME);
+        if(!hostname.equals(DEFAULT_HOSTNAME)) {
+            hostnameView.setText(hostname);
+        }
 
         return rootView;
     }
