@@ -12,14 +12,29 @@ class TransactionController < ApplicationController
 
     if trans.id
     	# render :json => {"id" => trans.id }.to_json
-      customer = Stripe::Customer.retrieve('cus_9ZUHAPLnqbdgyF')
+      # customer = Stripe::Customer.retrieve('cus_9ZUHAPLnqbdgyF')
+      
+      # Stripe::Customer.create
+      #   :email => "1234",
+      #   :description => "testing user",
+      #   :source => "tok_19GLJLAHXVnt8dzeeAzTI33f"
+      # }
+
+       
+
+      ct = Stripe::Customer.create(
+        :email => '1234',
+        :description => 'testing user'
+        # :source => 'tok_19GLJLAHXVnt8dzeeAzTI33a'
+      )
+
+      customers = Stripe::Customer.list(:limit => 1)
+
+      customer = customers.select do |c|
+        c.email == "1234"
+      end
+
       render :json => {"customer" => customer}.to_json
-
-      # customers = Stripe::Customer.all
-
-      # customer = customers.select do |c|
-      #   c.email == "867392256730734"
-      # end
     else
     	render nothing: true, status: 500
     end
