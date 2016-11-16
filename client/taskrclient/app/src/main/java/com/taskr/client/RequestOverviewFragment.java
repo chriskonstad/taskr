@@ -65,7 +65,7 @@ public class RequestOverviewFragment extends Fragment {
                 public void onSuccess(Boolean result) {
                     ((MainActivity)getActivity())
                             .showInfoDialog(getString(R.string.accept_request_success_title),
-                                    getString(R.string.accept_request_error_msg),
+                                    getString(R.string.accept_request_success_msg),
                                     new Callable<Void>() {
                                         @Override
                                         public Void call() throws Exception {
