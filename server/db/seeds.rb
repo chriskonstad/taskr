@@ -18,19 +18,19 @@ User.create(name: 'Pramono Wang',
             wallet: 200.0)
 
 Request.create(title: "bringing out the trash",
-        user_id: 1,
+        user_id: 2,
         amount: 100.0,
-        lat: 30.0,
-        longitude: 50.0,
+        lat: 34.0688,
+        longitude: -118.4453,
         due: DateTime.new(2017,9,1,19)
         )
 
 Request.create(title: "Cleaning the house",
         user_id: 1,
         amount: 50.0,
-        lat: 10.0,
-        longitude: 20.0,
-        due: DateTime.new(2016,11,21,19)
+        lat: 34.0690,
+        longitude: -118.4455,
+        due: DateTime.new(2016,12,21,19)
         )
 
 Request.create(title: "Test task",
@@ -39,8 +39,20 @@ Request.create(title: "Test task",
         description: 'This is a sample of a task request.',
         lat: 34.0689,
         longitude: -118.4452,
-        due: DateTime.new(2016,11,8,19)
+        due: DateTime.new(2016,12,8,19)
         )
+
+req = Request.create(title: "Sample Completed Task",
+        user_id: 1,
+        amount: 50.0,
+        lat: 34.0690,
+        longitude: -118.4455,
+        due: DateTime.new(2016,12,21,19),
+        description: 'This is a sample task that is completed'
+        )
+
+Request.handle_action("accept", req.id, 2)
+Request.handle_action("complete", req.id, 2)
 
 Review.create(reviewer_id: 2, 
             reviewee_id: 1, 
