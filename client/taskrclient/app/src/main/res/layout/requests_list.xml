@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/map_nearby_requests"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        />
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,7 +22,7 @@
         <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
         </ListView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
@@ -27,6 +35,31 @@
         android:src="@drawable/plus"
         android:layout_gravity="bottom|right|end"
         android:layout_margin="@dimen/fab_margin"
+        />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:src="@drawable/list"
+        android:layout_gravity="bottom|right|end"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginBottom="75dp"
+        app:backgroundTint="@color/fabDefault"
+        android:visibility="invisible"
+        />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:src="@drawable/map"
+        android:layout_gravity="bottom|right|end"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginBottom="75dp"
+        app:backgroundTint="@color/fabDefault"
         />
 
 </android.support.design.widget.CoordinatorLayout>

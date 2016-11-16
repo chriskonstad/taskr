@@ -21,4 +21,7 @@
     <color name="defaultTextColor">#000000</color>
     <color name="transparent_black">#77000000</color>
     <color name="iconGrey">#9E9E9E</color>
+
+    <!-- FAB colors -->
+    <color name="fabDefault">#FFEA51</color>
 </resources>
