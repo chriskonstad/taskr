@@ -20,47 +20,46 @@ class TransactionController < ApplicationController
       #   :source => "tok_19GLJLAHXVnt8dzeeAzTI33f"
       # }
 
-       
+      token = Stripe::Token.create(
+          :card => {
+            :number => "4242424242424242",
+            :exp_month => 11,
+            :exp_year => 2017,
+            :cvc => "314"
+          },
+        );
+      
 
-      ct = Stripe::Customer.create(
-        :email => '1234',
-        :description => 'testing user'
-        # :source => 'tok_19GLJLAHXVnt8dzeeAzTI33a'
-      )
 
+      # ct = Stripe::Customer.create(
+      #   :email => '1234',
+      #   :description => 'testing user',
+      #   :source => token
+      # )
+
+
+      #to search by the email
       customers = Stripe::Customer.list(:limit => 1)
 
       customer = customers.select do |c|
         c.email == "1234"
       end
 
-      render :json => {"customer" => customer}.to_json
+      
+      Stripe::Charge.create(
+        :amount => 200, #is equal to 2 dollars
+        :currency => "usd",
+        :source => token, # obtained with Stripe.js
+        :description => "Charge for 1234@example.com"
+      )
+
+      # render :json => {"customer" => customer}.to_json
+      render :json => {"token" => token}.to_json
     else
     	render nothing: true, status: 500
     end
 
-
-
-    #retrieve the customer then charge the customer
-
-    # Stripe.api_key = "sk_test_HWnsmI0iuGrMndEcCGbP7xtc"
-
-    # customer = Stripe::Customer.create(
-    #   :email => params[:id]
-    # )
-    
-
-    # customer =  Stripe::Customer.retrieve(params[:id])
-    
-
-    #need to have the form
-
-    # charge = Stripe::Charge.create(
-    #   :customer    => customer.id,
-    #   :amount      => trans.amount,
-    #   :description => 'Rails Stripe customer',
-    #   :currency    => 'usd'
-    # )
+    #token tok_19GLziAHXVnt8dzezIu3kmEj
 
     # rescue Stripe::CardError => e
     #   flash[:error] = e.message
