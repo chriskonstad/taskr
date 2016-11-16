@@ -88,7 +88,28 @@ public class RequestOverviewFragment extends Fragment {
     Button.OnClickListener listenerPay = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            // TODO
+            Api.getInstance().payRequest(req.id, new Api.ApiCallback<Boolean>() {
+                @Override
+                public void onSuccess(Boolean result) {
+                    ((MainActivity)getActivity())
+                            .showInfoDialog(getString(R.string.pay_request_success_title),
+                                    getString(R.string.pay_request_success_msg),
+                                    new Callable<Void>() {
+                                        @Override
+                                        public Void call() throws Exception {
+                                            ((MainActivity)getActivity()).onBackPressed();
+                                            return null;
+                                        }
+                                    });
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    ((MainActivity)getActivity())
+                            .showErrorDialog(getString(R.string.pay_request_error_title),
+                                    getString(R.string.pay_request_error_msg));
+                }
+            });
         }
     };
 
