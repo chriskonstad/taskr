@@ -43,6 +43,11 @@ public class Api {
     private static final int NO_CONNECTION = 0; // "HTTP status code" for unable to reach server
 
     private static class Endpoints {
+        /**
+         * Generate the full URL of the given endpoint
+         * @param endpoint endpoint to use for the URL
+         * @return the full URL
+         */
         public static String get(String endpoint) {
             // Load stored hostname from settings
             String base = PreferenceManager.getDefaultSharedPreferences(mContext)
@@ -98,6 +103,11 @@ public class Api {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // PUBLIC FACING API INFORMATION
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Get the API singleton
+     * @return the API instance
+     */
     public static Api getInstance() {
         if(null == mApi) {
             synchronized (Api.class) {
@@ -109,48 +119,95 @@ public class Api {
         return mApi;
     }
 
+    /**
+     * Initialize the API with the given context
+     * <p>
+     * The context is stored for the life of the APi, or until init is called again
+     * </p>
+     * @param baseApplicationContext context to init the API with
+     */
     public void init(Context baseApplicationContext) {
         mContext = baseApplicationContext;
     }
 
+    /**
+     * The API's callback interface for asynchronous (network) calls
+     * @param <T> the type the API call returns
+     */
     public interface ApiCallback<T> {
+        /**
+         * The callback for a successful API call
+         * @param returnValue the value returned from the server as a Java class
+         */
         public void onSuccess(T returnValue);
-        // TODO: What is the best datatype to return on failure?
+
+        /**
+         * The callback for an unsuccessful API call
+         * @param message the error message
+         */
         public void onFailure(String message);
     }
 
+    /**
+     * Exception for authentication errors.
+     * Mostly thrown when there is an API call requiring authentication but the API instance is not
+     * authenticated against Taskr's server
+     */
     public class AuthenticationException extends RuntimeException {
         public AuthenticationException(String message) {
             super(message);
         }
     }
 
+    /**
+     * Exception for when the API is used before being initialized
+     */
     public class NotInitializesException extends RuntimeException {
         public NotInitializesException(String message) {
             super(message);
         }
     }
 
+    /**
+     * Get the logged in Taskr user ID
+     * @return API's taskr user id
+     */
     public int getId() {
         checkReady();
         return mId;
     }
 
+    /**
+     * Get the name of the logged in user
+     * @return user's name
+     */
     public String getName() {
         checkReady();
         return mName;
     }
 
+    /**
+     * get the email of the logged in user
+     * @return user's email
+     */
     public String getEmail() {
         checkReady();
         return mEmail;
     }
 
+    /**
+     * Get the Facebook ID of the logged in user
+     * @return user's Facebook ID
+     */
     public String getFbid() {
         checkReady();
         return mFbid;
     }
 
+    /**
+     * Force the API to refresh the user's current location
+     * @param activity used for showing error dialog
+     */
     public void refreshLocation(MainActivity activity) {
         try {
             mLocation = LocationProvider.getInstance().getLastLocation();
@@ -160,6 +217,10 @@ public class Api {
         }
     }
 
+    /**
+     * Get the currently stored location
+     * @return user's current location
+     */
     public Location getLocation() {
         return mLocation;
     }
@@ -168,7 +229,9 @@ public class Api {
     // PUBLIC FACING API CALLS
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Log the logged in user out of Taskr and FB
+    /**
+     * Log the logged in user out of Taskr and FB
+     */
     public void logout() {
         LoginManager.getInstance().logOut();
         mId = -1;
@@ -177,6 +240,13 @@ public class Api {
         mFbid = null;
     }
 
+    /**
+     * Log the user into Taskr. They are already logged into FB
+     * @param name user's name (from FB)
+     * @param email user's email (from FB)
+     * @param fbid user's Facebook ID
+     * @param callback callback for response
+     */
     public void login(final String name, final String email, final String fbid,
                       final ApiCallback<LoginResult> callback) {
         checkInitialized();
@@ -219,6 +289,11 @@ public class Api {
         mClient.post(url, params, handler);
     }
 
+    /**
+     * Get the profile of a user
+     * @param uid user's ID
+     * @param callback callback with response
+     */
     public void getUserProfile(final int uid, final ApiCallback<Profile> callback) {
         checkReady();
         final String url = Endpoints.get(Endpoints.PROFILE) + "/" + uid;
@@ -250,6 +325,13 @@ public class Api {
         mClient.get(url, params, handler);
     }
 
+    /**
+     * Get all open nearby requests
+     * @param latitude
+     * @param longitude
+     * @param radius in miles
+     * @param callback
+     */
     public void getNearbyRequests(double latitude, double longitude, double radius,
                                   final ApiCallback<ArrayList<Request>> callback) {
         checkReady();
@@ -281,6 +363,11 @@ public class Api {
         mClient.get(url, params, handler);
     }
 
+    /**
+     * Get the requests associated with a user
+     * @param uid user's ID
+     * @param callback
+     */
     public void getUserRequests(int uid,
                                   final ApiCallback<ArrayList<Request>> callback) {
         checkReady();
@@ -314,6 +401,12 @@ public class Api {
         mClient.get(url, params, handler);
     }
 
+    /**
+     * Act (accept, complete, cancel, pay, etc.) on a request
+     * @param url URL of the action to perform
+     * @param requestId
+     * @param callback
+     */
     private void actOnRequest(final String url, final int requestId,
                               final ApiCallback<Boolean> callback) {
         checkReady();
@@ -358,28 +451,51 @@ public class Api {
         }
     }
 
+    /**
+     * Accept a request
+     * @param requestId
+     * @param callback
+     */
     public void acceptRequest(final int requestId, final ApiCallback<Boolean> callback) {
         final String url = Endpoints.get(Endpoints.ACCEPT_REQUEST);
         actOnRequest(url, requestId, callback);
     }
 
+    /**
+     * Complete a request
+     * @param requestId
+     * @param callback
+     */
     public void completeRequest(final int requestId, final ApiCallback<Boolean> callback) {
         final String url = Endpoints.get(Endpoints.COMPLETE_REQUEST);
         actOnRequest(url, requestId, callback);
     }
 
+    /**
+     * Cancel a request
+     * @param requestId
+     * @param callback
+     */
     public void cancelRequest(final int requestId, final ApiCallback<Boolean> callback) {
         final String url = Endpoints.get(Endpoints.CANCEL_REQUEST);
         actOnRequest(url, requestId, callback);
     }
 
+    /**
+     * Pay a request
+     * @param requestId
+     * @param callback
+     */
     public void payRequest(final int requestId, final ApiCallback<Boolean> callback) {
         final String url = Endpoints.get(Endpoints.PAY_REQUEST);
         actOnRequest(url, requestId, callback);
     }
 
-    // get all of the reviews that a user has received
-    // revieweeID is the id of the person the review is for
+    /**
+     * Get all of the reviews a user has received
+     * @param revieweeID user ID
+     * @param callback
+     */
     public void getUserReviews(final int revieweeID, final ApiCallback<ArrayList<Review>> callback){
         checkReady();
         final String url = Endpoints.get(Endpoints.USER_REVIEWS);
@@ -409,7 +525,14 @@ public class Api {
         mClient.get(url, params, handler);
     }
 
-    // rate a request that has been completed
+    /**
+     * Rate a request that has been completed
+     * @param requestID
+     * @param reviewerID
+     * @param revieweeID
+     * @param rating integer [1,5]
+     * @param callback
+     */
     public void rateCompletedRequest(final int requestID, final int reviewerID, final int revieweeID,
                                      final int rating, final ApiCallback<ReviewResult> callback) {
         checkReady();
@@ -446,6 +569,11 @@ public class Api {
         mClient.post(url, params, handler);
     }
 
+    /**
+     * Upload a request to the server
+     * @param request
+     * @param callback
+     */
     public void createRequest(Request request, final ApiCallback<RequestResult> callback) {
         checkReady();
         final String url = Endpoints.get(Endpoints.CREATE_REQUEST);
@@ -479,6 +607,11 @@ public class Api {
         }
     }
 
+    /**
+     * Update an existing request on the server
+     * @param request
+     * @param callback
+     */
     public void editRequest(Request request, final ApiCallback<Void> callback) {
         checkReady();
         final String url = Endpoints.get(Endpoints.EDIT_REQUEST) + "/" + request.id;

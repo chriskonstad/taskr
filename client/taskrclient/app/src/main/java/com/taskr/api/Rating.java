@@ -18,6 +18,10 @@ public class Rating {
     public int rating;
     public Date created_at;
 
+    /**
+     * Get the formatted string form of the created at datetime
+     * @return formatted string form of the created at datetime
+     */
     public String getCreatedAt() {
         Format formatter = new SimpleDateFormat(DATE_FORMAT);
         return formatter.format(created_at);

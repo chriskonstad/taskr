@@ -26,6 +26,11 @@ public class Request implements Serializable {
         public static final String CANCELED = "canceled";
         public static final String PAID = "paid";
 
+        /**
+         * Get the color to use for the given status string
+         * @param status the current status
+         * @return the color to use to display it
+         */
         public static int getColor(String status) {
             if(status.equals(OPEN)) {
                 return R.color.open;
@@ -55,7 +60,11 @@ public class Request implements Serializable {
     public int actor_id;
     // TODO add more of the data fields
 
-    // Get difference between current
+    /**
+     * Get the distance from a location to this request
+     * @param location the location to get the distance from
+     * @return the distance, in miles, from location to this request
+     */
     public float getDistance(Location location) {
         // Get the distance in meter, blame Android's API here
         float[] distanceTemp = new float[1];
@@ -65,7 +74,10 @@ public class Request implements Serializable {
         return distanceTemp[0] / 1609.34f; // convert meters to miles
     }
 
-    // Return the due date as a formatted string
+    /**
+     * Get formatted due datetime string
+     * @return formatted due datetime string
+     */
     public String getDue() {
         Format formatter = new SimpleDateFormat(DUE_FORMAT);
         return formatter.format(due);
