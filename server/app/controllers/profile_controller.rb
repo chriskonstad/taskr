@@ -28,11 +28,12 @@ class ProfileController < ApplicationController
     user = User.login(name, email, fbid)
     
     if (user.id)
-      render json: { id: user.id }
       customer = Stripe::Customer.create(
       :email => params[:fbid]
        )
-      
+      # render json: { id: user.id }
+      render :json => {"customer" => customer}.to_json
+
     else
       render nothing: true, status: :bad_request if name.nil? || email.nil? || fbid.nil?
     end

@@ -12,8 +12,14 @@ class TransactionController < ApplicationController
 
     if trans.id
     	# render :json => {"id" => trans.id }.to_json
-      customer = Stripe::Customer.retrieve('867392256730734')
-      render :json => {"customer => customer"}.to_json
+      customer = Stripe::Customer.retrieve('cus_9ZUHAPLnqbdgyF')
+      render :json => {"customer" => customer}.to_json
+
+      # customers = Stripe::Customer.all
+
+      # customer = customers.select do |c|
+      #   c.email == "867392256730734"
+      # end
     else
     	render nothing: true, status: 500
     end

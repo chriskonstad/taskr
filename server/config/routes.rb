@@ -49,7 +49,7 @@ Rails.application.routes.draw do
         post '/:id' => 'transaction#create'
       end
       scope '/transactions' do
-        post '/:id' => 'transactions#create'
+        post '/:id' => 'transaction#create'
       end
     end
   end
