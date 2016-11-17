@@ -242,7 +242,7 @@ public class RequestsFragment extends ListFragment {
 
                     MarkerOptions marker = new MarkerOptions();
                     marker.position(new LatLng(req.lat, req.longitude))
-                            .title(req.title + " ($" + Double.toString(req.amount) + ")")
+                            .title(req.title + " ($" + String.format("%.2f", req.amount) + ")")
                             .snippet(req.description);
                     Marker reqMarker = googleMap.addMarker(marker);
                     markerRequests.put(reqMarker, req);
