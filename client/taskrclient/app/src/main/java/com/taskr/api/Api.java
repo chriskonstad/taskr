@@ -528,28 +528,23 @@ public class Api {
     /**
      * Rate a request that has been completed
      * @param requestID
-     * @param reviewerID
-     * @param revieweeID
      * @param rating integer [1,5]
      * @param callback
      */
-    public void rateCompletedRequest(final int requestID, final int reviewerID, final int revieweeID,
-                                     final int rating, final ApiCallback<ReviewResult> callback) {
+    public void rateCompletedRequest(final int requestID, final int rating, final ApiCallback<Boolean> callback) {
         checkReady();
         final String url = Endpoints.get(Endpoints.RATE_REQUEST);
         RequestParams params = new RequestParams();
-        params.add("reviewer_id", Integer.toString(reviewerID));
-        params.add("reviewee_id", Integer.toString(revieweeID));
+        params.add("reviewer_id", Integer.toString(mId));
+        params.add("reviewee_id", Integer.toString(-1));
         params.add("request_id", Integer.toString(requestID));
         params.add("rating", Integer.toString(rating));
 
         AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                String json = new String(responseBody);
-                ReviewResult result = mGson.fromJson(json, ReviewResult.class);
-                Log.i(TAG, "Successfully created review with id: " + result.id);
-                callback.onSuccess(result);
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody){
+                Log.i(TAG, "Successfully created review.");
+                callback.onSuccess(true);
             }
 
             @Override
@@ -560,8 +555,8 @@ public class Api {
                 } else {
                     callback.onFailure("Error (" +
                             statusCode +
-                            "): Unable rate request: " +
-                            requestID);
+                            "): Unable to rate request id: " +
+                            requestID + " and rating: " + rating);
                 }
             }
         };

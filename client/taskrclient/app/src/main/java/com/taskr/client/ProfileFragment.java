@@ -74,7 +74,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
-        View rootView = inflater.inflate(R.layout.profile, container, false);
+            View rootView = inflater.inflate(R.layout.profile, container, false);
         ButterKnife.bind(this, rootView);
 
         TAG = getString(R.string.profile_fragment_tag);

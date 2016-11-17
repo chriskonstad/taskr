@@ -52,6 +52,14 @@
         />
 
     <TextView
+        android:textSize="15sp"
+        android:textColor="#000000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_review_list"
+        />
+
+    <TextView
         android:text = "Find Nearby Requests"
         android:textSize="20sp"
         android:textColor="#000000"
@@ -67,9 +75,9 @@
         />
 
     <TextView
-        android:textSize="15sp"
+        android:textSize="16sp"
         android:textColor="#000000"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/nearby_requests_result"
         />

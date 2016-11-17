@@ -236,7 +236,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings && !(frag instanceof SettingsFragment)) {
             showFragment(new SettingsFragment(), false, new TransitionParams("", getString(R.string.settings_fragment_tag)));
         } else if (id == R.id.nav_logout) {
-            Api.getInstance().logout();
             showLogin();
         }
 

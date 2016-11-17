@@ -101,6 +101,7 @@ public class RequestOverviewFragment extends Fragment {
                                             return null;
                                         }
                                     });
+                    rateFulfiller();
                 }
 
                 @Override
@@ -298,4 +299,22 @@ public class RequestOverviewFragment extends Fragment {
 
         return rootView;
     }
+
+    private void rateFulfiller()
+    {
+        if (req == null)
+            return;
+        Bundle bundle = new Bundle();
+        bundle.putInt("requestID", req.id);
+        RatingFragment ratingFragment = new RatingFragment();
+        ratingFragment.setArguments(bundle);
+        ratingFragment.show(getActivity().getSupportFragmentManager(), "Rating Fragment");
+    }
+
+    Button.OnClickListener ratingTest = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            rateFulfiller();
+        }
+    };
 }
