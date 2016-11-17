@@ -15,12 +15,12 @@
 
     <!-- Request overview screen -->
     <dimen name="requester_bar_height">35dp</dimen>
-    <dimen name="requester_bar_text_margin">4dp</dimen>
+    <dimen name="requester_bar_text_margin">8dp</dimen>
     <dimen name="requester_small_icon_size">25dp</dimen>
     <integer name="requester_bar_weight_large">70</integer>
-    <integer name="requester_bar_weight_small">15</integer>
-    <dimen name="requester_bar_font_small">10dp</dimen>
-    <dimen name="requester_bar_font_large">16dp</dimen>
+    <integer name="requester_bar_weight_small">30</integer>
+    <dimen name="requester_bar_font_small">18dp</dimen>
+    <dimen name="requester_bar_font_large">18dp</dimen>
 
     <!-- Buttons? -->
     <dimen name="button_wide_text_size">18dp</dimen>

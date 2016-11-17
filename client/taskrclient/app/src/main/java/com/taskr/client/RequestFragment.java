@@ -276,6 +276,7 @@ public class RequestFragment extends Fragment {
         location.setText(text);
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {

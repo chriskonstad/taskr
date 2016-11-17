@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private String TAG;
     private NotificationHandler notificationHandler;
+    private boolean loggedIn = false;
 
     @BindView(R.id.nav_view) NavigationView navigationView;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -104,24 +105,11 @@ public class MainActivity extends AppCompatActivity
     protected void onResume(){
         super.onResume();
 
-        Intent notificationIntent = getIntent();
-
-        if(notificationIntent.hasExtra(getString(R.string.notification_type))){
-            String notificationType = notificationIntent.getStringExtra(getString(R.string.notification_type));
-
-            if(notificationType.equals("review")){
-                showFragment(ProfileFragment.newInstance(Api.getInstance().getId()), false, new TransitionParams("", getString(R.string.profile_fragment_tag)));
-            }
-            else if(notificationType.equals("request")){
-                Bundle bundle = new Bundle();
-                bundle.putBoolean(RequestsFragment.LOGGED_IN_USER, true);
-                Fragment reqFrag = new RequestsFragment();
-                reqFrag.setArguments(bundle);
-                showFragment(reqFrag, false, new TransitionParams("", getString(R.string.requests_fragment_tag)));
-            }
-        }
-        else {
+        if(!loggedIn){
             showLogin();
+        }
+        else{
+            handleInitialRouting();
         }
     }
 
@@ -279,7 +267,9 @@ public class MainActivity extends AppCompatActivity
         refreshNavHeader();
         navSelect(0);
 
-        showFragment(new RequestsFragment(), false, new TransitionParams(getString(R.string.login_fragment_tag), getString(R.string.requests_fragment_tag)));
+        loggedIn = true;
+
+        handleInitialRouting();
     }
 
     public void showInfoDialog(String title, String message, final Callable<Void> callback) {
@@ -340,6 +330,30 @@ public class MainActivity extends AppCompatActivity
             }
         } catch (Exception e) {
             Log.i(TAG, e.getMessage());
+        }
+    }
+
+    private void handleInitialRouting(){
+        Intent intent = getIntent();
+
+        Fragment frag = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+
+        if(intent.hasExtra(getString(R.string.notification_type))){
+            String notificationType = intent.getStringExtra(getString(R.string.notification_type));
+
+            if(notificationType.equals("review")){
+                showFragment(ProfileFragment.newInstance(Api.getInstance().getId()), false, new TransitionParams("", getString(R.string.profile_fragment_tag)));
+            }
+            else if(notificationType.equals("request")){
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(RequestsFragment.LOGGED_IN_USER, true);
+                Fragment reqFrag = new RequestsFragment();
+                reqFrag.setArguments(bundle);
+                showFragment(reqFrag, false, new TransitionParams("", getString(R.string.requests_fragment_tag)));
+            }
+        }
+        else if(!(frag instanceof RequestFragment)){
+            showFragment(new RequestsFragment(), false, new TransitionParams(getString(R.string.login_fragment_tag), getString(R.string.requests_fragment_tag)));
         }
     }
 

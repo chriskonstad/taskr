@@ -11,84 +11,52 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
         <LinearLayout
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_width="match_parent"
             android:layout_height="@dimen/requester_bar_height"
-            android:weightSum="100">
+            android:orientation="horizontal">
 
-            <LinearLayout
+            <ImageView
+                android:layout_width="@dimen/requester_bar_height"
+                android:layout_height="@dimen/requester_bar_height"
+                android:layout_marginRight="@dimen/requester_bar_text_margin"
+                android:layout_gravity="center"
+                android:tint="@color/iconGrey"
+                app:srcCompat="@drawable/account">
+            </ImageView>
+            <TextView
+                android:id="@+id/request_user_name"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_weight="@integer/requester_bar_weight_large"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/requester_bar_font_large"
+                />
 
-                <ImageView
-                    android:layout_width="@dimen/requester_bar_height"
-                    android:layout_height="@dimen/requester_bar_height"
-                    android:layout_marginLeft="@dimen/requester_bar_text_margin"
-                    android:layout_marginRight="@dimen/requester_bar_text_margin"
-                    android:layout_gravity="center"
-                    android:tint="@color/iconGrey"
-                    app:srcCompat="@drawable/account">
-                </ImageView>
-                <TextView
-                    android:id="@+id/request_user_name"
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    />
-            </LinearLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                />
 
-            <LinearLayout
+            <ImageView
+                android:layout_width="@dimen/requester_small_icon_size"
+                android:layout_height="@dimen/requester_small_icon_size"
+                android:layout_marginLeft="@dimen/requester_bar_text_margin"
+                android:layout_marginRight="@dimen/requester_bar_text_margin"
+                android:layout_gravity="center"
+                android:tint="@color/iconGrey"
+                app:srcCompat="@drawable/star">
+            </ImageView>
+            <TextView
+                android:id="@+id/request_rating"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_weight="@integer/requester_bar_weight_small"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/requester_small_icon_size"
-                    android:layout_height="@dimen/requester_small_icon_size"
-                    android:layout_marginLeft="@dimen/requester_bar_text_margin"
-                    android:layout_marginRight="@dimen/requester_bar_text_margin"
-                    android:layout_gravity="center"
-                    android:tint="@color/iconGrey"
-                    app:srcCompat="@drawable/star">
-                </ImageView>
-                <TextView
-                    android:id="@+id/request_rating"
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:textSize="@dimen/requester_bar_font_small"></TextView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_weight="@integer/requester_bar_weight_small"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/requester_small_icon_size"
-                    android:layout_height="@dimen/requester_small_icon_size"
-                    android:layout_marginLeft="@dimen/requester_bar_text_margin"
-                    android:layout_marginRight="@dimen/requester_bar_text_margin"
-                    android:layout_gravity="center"
-                    android:tint="@color/iconGrey"
-                    app:srcCompat="@drawable/account">
-                </ImageView>
-                <TextView
-                    android:id="@+id/requester_wallet"
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="TOKENS"
-                    android:textSize="@dimen/requester_bar_font_small"></TextView>
-            </LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_marginRight="8dp"
+                android:gravity="center_vertical|right"
+                android:textSize="@dimen/requester_bar_font_small" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
