@@ -310,11 +310,4 @@ public class RequestOverviewFragment extends Fragment {
         ratingFragment.setArguments(bundle);
         ratingFragment.show(getActivity().getSupportFragmentManager(), "Rating Fragment");
     }
-
-    Button.OnClickListener ratingTest = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            rateFulfiller();
-        }
-    };
 }

@@ -186,7 +186,9 @@ public class RequestFragment extends Fragment {
         return rootView;
     }
 
-    // Either create request or update it if it already exists
+    /**
+     * Either create request or update it if it already exists
+     */
     private void saveRequest() {
         request.title = title.getText().toString();
         request.amount = Double.parseDouble(amount.getText().toString());
@@ -249,6 +251,9 @@ public class RequestFragment extends Fragment {
         }
     }
 
+    /**
+     * Load a request into the UI
+     */
     private void loadRequest() {
         title.setText(request.title);
         amount.setText(String.format("%.2f", request.amount));
@@ -276,6 +281,12 @@ public class RequestFragment extends Fragment {
         location.setText(text);
     }
 
+    /**
+     * Handle return results from spawned activities.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
@@ -286,6 +297,9 @@ public class RequestFragment extends Fragment {
         }
     }
 
+    /**
+     * Modify the UI based on if the request is in a valid state
+     */
     @OnTextChanged({R.id.title, R.id.amount, R.id.due, R.id.description, R.id.location})
     public void checkIfDone() {
         if(ready()) {
@@ -297,6 +311,10 @@ public class RequestFragment extends Fragment {
         }
     }
 
+    /**
+     * Check if the request is in a valid state (everything is there, etc)
+     * @return status (ready or not ready)
+     */
     private boolean ready() {
         return !title.getText().toString().isEmpty() &&
                 !amount.getText().toString().isEmpty() &&
@@ -305,6 +323,9 @@ public class RequestFragment extends Fragment {
                 !location.getText().toString().isEmpty();
     }
 
+    /**
+     * Prompt the user for a due date and time
+     */
     private void promptDue() {
         // Prompt user to select a date and then a time
         DatePickerDialog date = new DatePickerDialog(getContext(),
@@ -339,6 +360,9 @@ public class RequestFragment extends Fragment {
         date.show();
     }
 
+    /**
+     * Refresh the due date and time text view
+     */
     private void refreshDue() {
         Format formatter = new SimpleDateFormat(Request.DUE_FORMAT);
         due.setText(formatter.format(calendar.getTime()));

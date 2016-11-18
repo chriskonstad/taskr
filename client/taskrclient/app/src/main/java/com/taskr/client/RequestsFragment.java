@@ -54,8 +54,6 @@ public class RequestsFragment extends ListFragment {
     private ArrayList<Request> nearbyRequests;
     private final HashMap<Marker, Request> markerRequests = new HashMap<Marker, Request>();
 
-    private static final int DEFAULT_RADIUS = 100000;   // in miles
-
     private boolean specificUserFlag = false;
 
     @BindString(R.string.nearby_requests) String mTitleNearby;
@@ -91,6 +89,9 @@ public class RequestsFragment extends ListFragment {
         ((MainActivity)getActivity()).showFragment(overviewFrag, true, new TransitionParams(getString(R.string.requests_fragment_tag), getString(R.string.request_overview_fragment_tag)));
     }
 
+    /**
+     * Load all nearby requests from the Taskr server
+     */
     private void loadNearbyRequests() {
         Api.getInstance().refreshLocation((MainActivity)getActivity());
         Location lastLocation = Api.getInstance().getLocation();
@@ -123,6 +124,9 @@ public class RequestsFragment extends ListFragment {
                 });
     }
 
+    /**
+     * Load all requests for a user
+     */
     private void loadUserRequests(){
         Api.getInstance().refreshLocation((MainActivity)getActivity());
         
@@ -210,6 +214,9 @@ public class RequestsFragment extends ListFragment {
         return rootView;
     }
 
+    /**
+     * Refresh the data to be displayed
+     */
     private void refresh() {
         if(specificUserFlag) {
             loadUserRequests();
@@ -219,6 +226,12 @@ public class RequestsFragment extends ListFragment {
         }
     }
 
+    /**
+     * Callback for when done refreshing.
+     * <p>
+     * This handles displaying all loaded data.
+     * </p>
+     */
     private void onDoneRefreshing() {
         swipeRefreshLayout.setRefreshing(false);
 

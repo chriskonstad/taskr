@@ -118,6 +118,9 @@ public class MainActivity extends AppCompatActivity
         this.setIntent(intent);
     }
 
+    /**
+     * Refresh the navigation drawer header with any new data
+     */
     public void refreshNavHeader() {
         String name = Api.getInstance().getName();
         String email = Api.getInstance().getEmail();
@@ -165,6 +168,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Show a fragment
+     * @param fragment fragment to show
+     * @param addToBackstack if the fragment should be added to the backstack
+     * @param transitionParams transition parameters, animations, etc.
+     */
     public void showFragment(Fragment fragment, boolean addToBackstack, TransitionParams transitionParams) {
         if(null != fragment) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -244,7 +253,11 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void navSelect(int pos) {
+    /**
+     * Select the navigation item at pos
+     * @param pos
+     */
+    private void navSelect(int pos) {
         for(int i=0; i<navigationView.getMenu().size(); i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
         }
@@ -252,12 +265,18 @@ public class MainActivity extends AppCompatActivity
         navigationView.getMenu().getItem(pos).setChecked(true);
     }
 
+    /**
+     * Show the login screen
+     */
     private void showLogin() {
         navSelect(0);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         showFragment(new LoginFragment(), false, new TransitionParams("", getString(R.string.login_fragment_tag)));
     }
 
+    /**
+     * Setup the app after the user logs in
+     */
     public void onLogin() {
         notificationHandler = new NotificationHandler(getApplicationContext(), Api.getInstance().getId());
         notificationHandler.startNotificationCheck();
@@ -271,6 +290,12 @@ public class MainActivity extends AppCompatActivity
         handleInitialRouting();
     }
 
+    /**
+     * Show an informative dialog
+     * @param title
+     * @param message
+     * @param callback something to run when done with dialog
+     */
     public void showInfoDialog(String title, String message, final Callable<Void> callback) {
         new AlertDialog.Builder(this)
                 .setTitle(title)
@@ -293,6 +318,11 @@ public class MainActivity extends AppCompatActivity
                 .show();
     }
 
+    /**
+     * Show an error dialog
+     * @param title
+     * @param message
+     */
     public void showErrorDialog(String title, String message) {
         new AlertDialog.Builder(this)
                 .setTitle(title)
@@ -308,6 +338,11 @@ public class MainActivity extends AppCompatActivity
                 .show();
     }
 
+    /**
+     * Create an indeterminate progress dialog (spinner) with a message
+     * @param message
+     * @return created dialog
+     */
     public ProgressDialog showProgressDialog(String message) {
         ProgressDialog dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -317,6 +352,9 @@ public class MainActivity extends AppCompatActivity
         return dialog;
     }
 
+    /**
+     * Generate the hash of the signing key, required for FB auth
+     */
     private void logKeyHash() {
         try {
             PackageInfo info = getPackageManager().getPackageInfo(

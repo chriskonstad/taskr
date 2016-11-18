@@ -114,6 +114,12 @@ public class LoginFragment extends Fragment {
         };
     }
 
+    /**
+     * Handle return results from started activities
+     * @param requestCode code of the request that started the activity
+     * @param resultCode the result code from the started activity
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -137,6 +143,9 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    /**
+     * Call this when we know we're authenticated with FB.  This logs the user in with Taksr.
+     */
     private void onAuthenticatedWithFb() {
         GraphRequest request = GraphRequest.newMeRequest(mAccessToken,
                 new GraphRequest.GraphJSONObjectCallback() {
@@ -202,8 +211,10 @@ public class LoginFragment extends Fragment {
         request.executeAsync();
     }
 
-    // Only call this when fully authenticated with the Taskr server, which happens after
-    // authenticating with FB
+    /**
+     * Only call this when fully authenticated with the Taskr server, which happens after
+     * authenticating with FB
+     */
     private void onLoggedIn() {
         // Launch the rest of the app
         if(null != getActivity()) {
@@ -213,6 +224,11 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    /**
+     * Read a JSONObject into a bundle
+     * @param object data from fb auth
+     * @return bundle with FB auth data
+     */
     private Bundle readFbData(JSONObject object) {
         String[] fields = {NAME, EMAIL, ID};
 

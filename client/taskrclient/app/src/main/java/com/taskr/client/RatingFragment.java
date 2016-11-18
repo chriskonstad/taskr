@@ -42,7 +42,7 @@ public class RatingFragment extends DialogFragment{
         return rootView;
     }
 
-    public void addButtonListener() {
+    private void addButtonListener() {
         btnSubmit.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
