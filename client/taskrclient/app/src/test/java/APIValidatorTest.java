@@ -33,43 +33,32 @@ public class ApiValidatorTest {
     Context mMockContext;
 
     @Test
-    public void ApiSingletonTest(){
-        Api testInstance1 = Api.getInstance();
-        assertNotNull(testInstance1);
-
-        Api testInstance2 = Api.getInstance();
-        assertNotNull(testInstance2);
-
-        assertEquals(testInstance1, testInstance2);
-    }
-
-    @Test
     public void CheckReadyTest(){
+        Api api = new Api(mMockContext);
         try{
-            Api.getInstance().getId();
+            api.getId();
             Assert.fail("Expected thrown exception when no user logged in");
         }catch(Exception e){}
 
         try{
-            Api.getInstance().getName();
+            api.getName();
             Assert.fail("Expected thrown exception when no user logged in");
         }catch(Exception e){}
 
         try{
-            Api.getInstance().getEmail();
+            api.getEmail();
             Assert.fail("Expected thrown exception when no user logged in");
         }catch(Exception e){}
 
         try{
-            Api.getInstance().getFbid();
+            api.getFbid();
             Assert.fail("Expected thrown exception when no user logged in");
         }catch(Exception e){}
     }
 
     @Test
     public void UserCreationTest(){
-        final Api testInstance = Api.getInstance();
-        testInstance.init(mMockContext);
+        final Api testInstance = new Api(mMockContext);
 
         //Test creation of random user
         testInstance.login(name, email, fbid, new Api.ApiCallback<com.taskr.api.LoginResult>() {
@@ -99,8 +88,7 @@ public class ApiValidatorTest {
 
     @Test
     public void GetProfileTest(){
-        final Api testInstance = Api.getInstance();
-        testInstance.init(mMockContext);
+        final Api testInstance = new Api(mMockContext);
 
         testInstance.login(name, email, fbid, new Api.ApiCallback<com.taskr.api.LoginResult>() {
             @Override
@@ -123,8 +111,7 @@ public class ApiValidatorTest {
 
     @Test
     public void CreateRequestTest(){
-        final Api testInstance = Api.getInstance();
-        testInstance.init(mMockContext);
+        final Api testInstance = new Api(mMockContext);
 
         testInstance.login(name, email, fbid, new Api.ApiCallback<com.taskr.api.LoginResult>() {
             @Override
@@ -150,8 +137,7 @@ public class ApiValidatorTest {
 
     @Test
     public void EditRequestTest(){
-        final Api testInstance = Api.getInstance();
-        testInstance.init(mMockContext);
+        final Api testInstance = new Api(mMockContext);
 
         testInstance.login(name, email, fbid, new Api.ApiCallback<com.taskr.api.LoginResult>() {
             @Override
@@ -184,8 +170,7 @@ public class ApiValidatorTest {
 
     @Test
     public void NearbyRequestsTest(){
-        final Api testInstance = Api.getInstance();
-        testInstance.init(mMockContext);
+        final Api testInstance = new Api(mMockContext);
 
         testInstance.login(name, email, fbid, new Api.ApiCallback<com.taskr.api.LoginResult>() {
             @Override
@@ -223,8 +208,7 @@ public class ApiValidatorTest {
 
     @Test
     public void UserRequestsTest(){
-        final Api testInstance = Api.getInstance();
-        testInstance.init(mMockContext);
+        final Api testInstance = new Api(mMockContext);
 
         testInstance.login(name, email, fbid, new Api.ApiCallback<com.taskr.api.LoginResult>() {
             @Override

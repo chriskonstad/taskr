@@ -42,6 +42,7 @@ import butterknife.ButterKnife;
 public class RequestOverviewFragment extends Fragment {
     private String TAG;
     private Request req;
+    private Api mApi;
 
     @BindView(R.id.request_title) TextView requestTitle;
     @BindView(R.id.request_description) TextView requestDescription;
@@ -60,7 +61,7 @@ public class RequestOverviewFragment extends Fragment {
     Button.OnClickListener listenerAccept = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Api.getInstance().acceptRequest(req.id, new Api.ApiCallback<Boolean>() {
+            mApi.acceptRequest(req.id, new Api.ApiCallback<Boolean>() {
                 @Override
                 public void onSuccess(Boolean result) {
                     ((MainActivity)getActivity())
@@ -88,7 +89,7 @@ public class RequestOverviewFragment extends Fragment {
     Button.OnClickListener listenerPay = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Api.getInstance().payRequest(req.id, new Api.ApiCallback<Boolean>() {
+            mApi.payRequest(req.id, new Api.ApiCallback<Boolean>() {
                 @Override
                 public void onSuccess(Boolean result) {
                     ((MainActivity)getActivity())
@@ -128,7 +129,7 @@ public class RequestOverviewFragment extends Fragment {
     Button.OnClickListener listenerComplete = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Api.getInstance().completeRequest(req.id, new Api.ApiCallback<Boolean>() {
+            mApi.completeRequest(req.id, new Api.ApiCallback<Boolean>() {
                 @Override
                 public void onSuccess(Boolean result) {
                     ((MainActivity)getActivity())
@@ -163,6 +164,7 @@ public class RequestOverviewFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         TAG = getString(R.string.request_overview_fragment_tag);
+        mApi = ((MainActivity)getActivity()).api();
 
         req = (Request)getArguments().getSerializable("request");
 
@@ -176,7 +178,7 @@ public class RequestOverviewFragment extends Fragment {
                 throw new RuntimeException("No onClick listener set for the action button!");
             }
         };
-        if(Api.getInstance().getId() == req.user_id) {
+        if(mApi.getId() == req.user_id) {
             switch(req.status) {
                 case Request.Status.ACCEPTED:
                     enabled = false;
@@ -240,12 +242,12 @@ public class RequestOverviewFragment extends Fragment {
         requestDescription.setText("Description: " + req.description);
 
         // Show the distance from the user's current location to the request
-        float distance = req.getDistance(Api.getInstance().getLocation());
+        float distance = req.getDistance(mApi.getLocation());
         requestDistance.setText(String.format("%.1fmi", distance));
         requestDue.setText(req.getDue());
         requestAmount.setText(String.format("$%.2f", req.amount));
 
-        Api.getInstance().getUserProfile(req.user_id, new Api.ApiCallback<Profile>() {
+        mApi.getUserProfile(req.user_id, new Api.ApiCallback<Profile>() {
             @Override
             public void onSuccess(Profile returnValue) {
                 requestUserName.setText(returnValue.name);

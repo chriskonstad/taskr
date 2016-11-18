@@ -31,6 +31,7 @@ package com.taskr.client;
 public class RatingFragment extends DialogFragment{
     @BindView (R.id.rating_bar) RatingBar ratingBar;
     @BindView (R.id.btn_submit) Button btnSubmit;
+    Api mApi;
 
     public RatingFragment(){;}
 
@@ -38,6 +39,7 @@ public class RatingFragment extends DialogFragment{
         View rootView = inflater.inflate(R.layout.fragment_rating, container, false);
         ButterKnife.bind(this, rootView);
         getDialog().setTitle("Rate Your Completed Task");
+        mApi = ((MainActivity)getActivity()).api();
         addButtonListener();
         return rootView;
     }
@@ -51,7 +53,7 @@ public class RatingFragment extends DialogFragment{
                     requestID = getArguments().getInt("requestID");
                 }
                 int rating = (int)ratingBar.getRating();
-                Api.getInstance().rateCompletedRequest(requestID, rating,
+                mApi.rateCompletedRequest(requestID, rating,
                         new Api.ApiCallback<Boolean>() {
                             @Override
                             public void onSuccess(Boolean b) {

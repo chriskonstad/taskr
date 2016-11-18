@@ -51,7 +51,7 @@ public class ProfileFragment extends Fragment {
 
         TAG = getString(R.string.profile_fragment_tag);
 
-        Api api = Api.getInstance();
+        Api api = ((MainActivity)getActivity()).api();
 
         getActivity().setTitle(R.string.profile_loading);
         int uid = getArguments().getInt(UID);

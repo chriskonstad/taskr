@@ -51,6 +51,7 @@ public class RequestFragment extends Fragment {
     private String TAG;
     private static final int PLACE_PICKER_REQUEST = 1;
     public static final String REQUEST = "request";
+    private Api mApi;
 
     @BindString(R.string.create_request) String createRequest;
     @BindString(R.string.edit_request) String editRequest;
@@ -77,6 +78,8 @@ public class RequestFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         TAG = getString(R.string.request_fragment_tag);
+
+        mApi = ((MainActivity)getActivity()).api();
 
         String action = createRequest;
         // Load the existing request if editing
@@ -145,7 +148,7 @@ public class RequestFragment extends Fragment {
                         .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Api.getInstance().cancelRequest(request.id,
+                                mApi.cancelRequest(request.id,
                                         new Api.ApiCallback<Boolean>() {
                                     @Override
                                     public void onSuccess(Boolean returnValue) {
@@ -192,7 +195,7 @@ public class RequestFragment extends Fragment {
     private void saveRequest() {
         request.title = title.getText().toString();
         request.amount = Double.parseDouble(amount.getText().toString());
-        request.user_id = Api.getInstance().getId();
+        request.user_id = mApi.getId();
         if(null != place) {
             request.lat = place.getLatLng().latitude;
             request.longitude = place.getLatLng().longitude;
@@ -202,7 +205,7 @@ public class RequestFragment extends Fragment {
         // DO NOT MANUALLY UPDATE ID, CREATED_AT, UPDATED_AT, STATUS, or ACTOR_ID
 
         if(editing) {
-            Api.getInstance().editRequest(request, new Api.ApiCallback<Void>() {
+            mApi.editRequest(request, new Api.ApiCallback<Void>() {
                 @Override
                 public void onSuccess(Void v) {
                     ((MainActivity)getActivity())
@@ -225,7 +228,7 @@ public class RequestFragment extends Fragment {
                 }
             });
         } else {
-            Api.getInstance().createRequest(request, new Api.ApiCallback<RequestResult>() {
+            mApi.createRequest(request, new Api.ApiCallback<RequestResult>() {
                 @Override
                 public void onSuccess(RequestResult returnValue) {
                     Log.i(TAG, "Created request with id: " + returnValue.id);

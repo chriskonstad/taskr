@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity
     private String TAG;
     private NotificationHandler notificationHandler;
     private boolean loggedIn = false;
+    private Api mApi = null;
 
     @BindView(R.id.nav_view) NavigationView navigationView;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity
         TAG = getString(R.string.main_activity_tag);
 
         // Init the API
-        Api.getInstance().init(getApplicationContext());
+        mApi = new Api(this);
 
         if(!LocationProvider.hasPermissions(this)) {
             LocationProvider.checkPermissions(this);
@@ -101,6 +102,10 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    public Api api() {
+        return mApi;
+    }
+
     @Override
     protected void onResume(){
         super.onResume();
@@ -122,8 +127,8 @@ public class MainActivity extends AppCompatActivity
      * Refresh the navigation drawer header with any new data
      */
     public void refreshNavHeader() {
-        String name = Api.getInstance().getName();
-        String email = Api.getInstance().getEmail();
+        String name = mApi.getName();
+        String email = mApi.getEmail();
 
         View header = navigationView.getHeaderView(0);
         TextView headerName = (TextView)header.findViewById(R.id.header_name);
@@ -134,7 +139,7 @@ public class MainActivity extends AppCompatActivity
         headerEmail.setText(email);
         Ion.with(headerProfilePicture)
                 .placeholder(R.drawable.loadingpng)
-                .load(Profile.buildProfilePictureUrl(Api.getInstance().getFbid()));
+                .load(Profile.buildProfilePictureUrl(mApi.getFbid()));
     }
 
     @Override
@@ -241,7 +246,7 @@ public class MainActivity extends AppCompatActivity
             reqFrag.setArguments(bundle);
             showFragment(reqFrag, false, new TransitionParams("", getString(R.string.requests_fragment_tag)));
         } else if (id == R.id.nav_profile && !(frag instanceof ProfileFragment)) {
-            showFragment(ProfileFragment.newInstance(Api.getInstance().getId()), false, new TransitionParams("", getString(R.string.profile_fragment_tag)));
+            showFragment(ProfileFragment.newInstance(mApi.getId()), false, new TransitionParams("", getString(R.string.profile_fragment_tag)));
         } else if (id == R.id.nav_settings && !(frag instanceof SettingsFragment)) {
             showFragment(new SettingsFragment(), false, new TransitionParams("", getString(R.string.settings_fragment_tag)));
         } else if (id == R.id.nav_logout) {
@@ -278,7 +283,7 @@ public class MainActivity extends AppCompatActivity
      * Setup the app after the user logs in
      */
     public void onLogin() {
-        notificationHandler = new NotificationHandler(getApplicationContext(), Api.getInstance().getId());
+        notificationHandler = new NotificationHandler(getApplicationContext(), mApi.getId());
         notificationHandler.startNotificationCheck();
 
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -379,7 +384,7 @@ public class MainActivity extends AppCompatActivity
             String notificationType = intent.getStringExtra(getString(R.string.notification_type));
 
             if(notificationType.equals("review")){
-                showFragment(ProfileFragment.newInstance(Api.getInstance().getId()), false, new TransitionParams("", getString(R.string.profile_fragment_tag)));
+                showFragment(ProfileFragment.newInstance(mApi.getId()), false, new TransitionParams("", getString(R.string.profile_fragment_tag)));
             }
             else if(notificationType.equals("request")){
                 Bundle bundle = new Bundle();

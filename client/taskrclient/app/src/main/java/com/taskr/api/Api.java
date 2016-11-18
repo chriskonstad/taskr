@@ -29,7 +29,6 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class Api {
     private static final String TAG = "Api";
-    private static Api mApi;
     private static Context mContext;
     private static AsyncHttpClient mClient = new AsyncHttpClient();
     private static Gson mGson = new Gson();
@@ -78,16 +77,6 @@ public class Api {
         public static final Type REVIEW_LIST = new TypeToken<ArrayList<Review>>() {}.getType();
     }
 
-    private Api() {
-        mClient.setMaxRetriesAndTimeout(MAX_RETRIES, RETRY_DELAY_MS);
-    }
-
-    private void checkInitialized() {
-        if(null == mContext) {
-            throw new NotInitializesException("No application context assigned");
-        }
-    }
-
     private void checkAuthenticated() {
         if(null == mFbid || null == mName || null == mEmail) {
             throw new AuthenticationException("No FBID associated with session");
@@ -96,29 +85,12 @@ public class Api {
 
     // Make sure the API is ready to make authenticated requests
     private void checkReady() {
-        checkInitialized();
         checkAuthenticated();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // PUBLIC FACING API INFORMATION
     ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Get the API singleton
-     * @return the API instance
-     */
-    public static Api getInstance() {
-        if(null == mApi) {
-            synchronized (Api.class) {
-                if(null == mApi) {
-                    mApi = new Api();
-                }
-            }
-        }
-        return mApi;
-    }
-
     /**
      * Initialize the API with the given context
      * <p>
@@ -126,8 +98,10 @@ public class Api {
      * </p>
      * @param baseApplicationContext context to init the API with
      */
-    public void init(Context baseApplicationContext) {
+    public Api(Context baseApplicationContext) {
+        assert(null != baseApplicationContext);
         mContext = baseApplicationContext;
+        mClient.setMaxRetriesAndTimeout(MAX_RETRIES, RETRY_DELAY_MS);
     }
 
     /**
@@ -249,7 +223,6 @@ public class Api {
      */
     public void login(final String name, final String email, final String fbid,
                       final ApiCallback<LoginResult> callback) {
-        checkInitialized();
         final String url = Endpoints.get(Endpoints.LOGIN);
         RequestParams params = new RequestParams();
         params.add("name", name);

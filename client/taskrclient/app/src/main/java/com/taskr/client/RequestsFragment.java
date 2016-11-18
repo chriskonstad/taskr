@@ -53,6 +53,7 @@ public class RequestsFragment extends ListFragment {
     private ArrayAdapter<Request> adapter;
     private ArrayList<Request> nearbyRequests;
     private final HashMap<Marker, Request> markerRequests = new HashMap<Marker, Request>();
+    private Api mApi;
 
     private boolean specificUserFlag = false;
 
@@ -93,8 +94,8 @@ public class RequestsFragment extends ListFragment {
      * Load all nearby requests from the Taskr server
      */
     private void loadNearbyRequests() {
-        Api.getInstance().refreshLocation((MainActivity)getActivity());
-        Location lastLocation = Api.getInstance().getLocation();
+        mApi.refreshLocation((MainActivity)getActivity());
+        Location lastLocation = mApi.getLocation();
 
         double latitude = lastLocation.getLatitude();
         double longitude = lastLocation.getLongitude();
@@ -104,12 +105,12 @@ public class RequestsFragment extends ListFragment {
 
         Log.i(TAG, "the search radius is " + Double.toString(radius) + " miles");
 
-        Api.getInstance().getNearbyRequests(latitude, longitude, radius,
+        mApi.getNearbyRequests(latitude, longitude, radius,
                 new Api.ApiCallback<ArrayList<Request>>() {
                     @Override
                     public void onSuccess(ArrayList<Request> requests) {
                         nearbyRequests = requests;
-                        adapter = new RequestAdapter(getContext(), requests);
+                        adapter = new RequestAdapter(mApi,getContext(), requests);
                         setListAdapter(adapter);
                         onDoneRefreshing();
                     }
@@ -128,14 +129,14 @@ public class RequestsFragment extends ListFragment {
      * Load all requests for a user
      */
     private void loadUserRequests(){
-        Api.getInstance().refreshLocation((MainActivity)getActivity());
+        mApi.refreshLocation((MainActivity)getActivity());
         
-        Api.getInstance().getUserRequests(Api.getInstance().getId(),
+        mApi.getUserRequests(mApi.getId(),
                 new Api.ApiCallback<ArrayList<Request>>() {
                     @Override
                     public void onSuccess(ArrayList<Request> requests) {
                         nearbyRequests = requests;
-                        adapter = new RequestAdapter(getContext(), requests);
+                        adapter = new RequestAdapter(mApi, getContext(), requests);
                         setListAdapter(adapter);
                         markerRequests.clear();
                         onDoneRefreshing();
@@ -155,6 +156,7 @@ public class RequestsFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle){
         View rootView = inflater.inflate(R.layout.requests_list, container, false);
         ButterKnife.bind(this, rootView);
+        mApi = ((MainActivity)getActivity()).api();
 
         Bundle arguments = getArguments();
         if(arguments != null && arguments.containsKey(LOGGED_IN_USER)){
@@ -248,7 +250,7 @@ public class RequestsFragment extends ListFragment {
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                Location userLocation = Api.getInstance().getLocation();
+                Location userLocation = mApi.getLocation();
 
                 for(int i = 0 ; i < nearbyRequests.size(); i++) {
                     Request req = nearbyRequests.get(i);

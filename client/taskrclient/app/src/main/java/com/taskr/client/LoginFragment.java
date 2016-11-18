@@ -46,6 +46,7 @@ public class LoginFragment extends Fragment {
     CallbackManager mCallbackManager;
     AccessTokenTracker mAccessTokenTracker;
     AccessToken mAccessToken;
+    Api mApi;
 
     @BindString(R.string.app_name) String mTitle;
     @BindString(R.string.default_hostname) String DEFAULT_HOSTNAME;
@@ -97,6 +98,8 @@ public class LoginFragment extends Fragment {
         if(!hostname.equals(DEFAULT_HOSTNAME)) {
             hostnameView.setText(hostname);
         }
+
+        mApi = ((MainActivity)getActivity()).api();
 
         return rootView;
     }
@@ -171,7 +174,7 @@ public class LoginFragment extends Fragment {
                     dialog = null;
                 }
 
-                Api.getInstance().login(name, email, id,
+                mApi.login(name, email, id,
                         new Api.ApiCallback<com.taskr.api.LoginResult>() {
                     @Override
                     public void onSuccess(com.taskr.api.LoginResult returnValue) {
@@ -187,7 +190,7 @@ public class LoginFragment extends Fragment {
                         if(null != dialog) {
                             dialog.dismiss();
                         }
-                        Api.getInstance().logout();
+                        mApi.logout();
                         new AlertDialog.Builder(getContext())
                                 .setTitle(getString(R.string.login_error_title))
                                 .setMessage(message)

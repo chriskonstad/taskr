@@ -27,6 +27,7 @@ public class RequestAdapter extends ArrayAdapter<Request> {
     private static final String TAG = "RequestAdapter";
     private ArrayList<Request> mRequests;
     private Context mContext;
+    private Api mApi;
 
     @BindView(R.id.title) TextView title;
     @BindView(R.id.due) TextView due;
@@ -34,8 +35,9 @@ public class RequestAdapter extends ArrayAdapter<Request> {
     @BindView(R.id.amount) TextView amount;
     @BindView(R.id.status) TextView status;
 
-    public RequestAdapter(Context context, ArrayList<Request> requests) {
+    public RequestAdapter(Api api, Context context, ArrayList<Request> requests) {
         super(context, -1, requests);
+        mApi = api;
         this.mContext = context;
         this.mRequests = requests;
     }
@@ -53,7 +55,7 @@ public class RequestAdapter extends ArrayAdapter<Request> {
         due.setText(r.getDue());
 
         // Show the distance from the user's current location to the request
-        float d = r.getDistance(Api.getInstance().getLocation());
+        float d = r.getDistance(mApi.getLocation());
         distance.setText(String.format("%.1fmi", d));
 
         amount.setText(String.format("$%.2f", r.amount));
