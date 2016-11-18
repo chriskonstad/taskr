@@ -12,47 +12,15 @@
         android:layout_height="240dp"
         />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:paddingTop="@dimen/small_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:weightSum="100"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/star1"
-            android:layout_width="0dp"
-            android:layout_weight="12"
-            android:layout_height="wrap_content"
-            />
-        <ImageView
-            android:id="@+id/star2"
-            android:layout_width="0dp"
-            android:layout_weight="12"
-            android:layout_height="wrap_content"
-            />
-        <ImageView
-            android:id="@+id/star3"
-            android:layout_width="0dp"
-            android:layout_weight="12"
-            android:layout_height="wrap_content"
-            />
-        <ImageView
-            android:id="@+id/star4"
-            android:layout_width="0dp"
-            android:layout_weight="12"
-            android:layout_height="wrap_content"
-            />
-        <ImageView
-            android:id="@+id/star5"
-            android:layout_width="0dp"
-            android:layout_weight="12"
-            android:layout_height="wrap_content"
-            />
-    </LinearLayout>
+    <android.support.v7.widget.AppCompatRatingBar
+        style="@android:style/Widget.Material.RatingBar.Indicator"
+        android:id="@+id/overall_rating"
+        android:layout_gravity="center"
+        android:isIndicator="true"
+        android:numStars="@string/rating_num_stars"
+        android:stepSize="0.25"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <ListView
         android:id="@+id/ratings_list"
