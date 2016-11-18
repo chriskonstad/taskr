@@ -28,6 +28,11 @@ public class LocationProvider {
     private LocationProvider() {
     }
 
+    /**
+     * Checks if the user has granted Taskr location permissions already
+     * @param activity the activity calling the function
+     * @return whether or not location permissions have been granted to Taskr, in the form of a boolean
+     */
     public static Boolean hasPermissions(Activity activity) {
         return ActivityCompat.checkSelfPermission(activity,
                 Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
@@ -35,6 +40,11 @@ public class LocationProvider {
                         Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
+    /**
+     * Checks if the user has granted Taskr location permissions
+     * and prompts the user to grant them if they haven't been already
+     * @param activity the activity calling the function
+     */
     public static void checkPermissions(Activity activity) {
         if (!hasPermissions(activity)) {
             ActivityCompat.requestPermissions(activity,
@@ -44,6 +54,12 @@ public class LocationProvider {
         }
     }
 
+    /**
+     * Handles actions after a change has been made to Taskr's location permissions
+     * A listener on changes to the user's Location is instantiated so that
+     * a user's last location will be easily retrievable in the future
+     * @param activity the activity calling the function
+     */
     public static void onPermissionsChanged(Activity activity) {
         mLocationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         mLocationListener = new LocationListener() {
@@ -67,6 +83,10 @@ public class LocationProvider {
         }
     }
 
+    /**
+     * Returns a singleton for LocationProvider
+     * @return LocationProvider object singleton
+     */
     public static LocationProvider getInstance() {
         if(null == mInstance) {
             synchronized (LocationProvider.class) {
@@ -79,6 +99,10 @@ public class LocationProvider {
         return mInstance;
     }
 
+    /**
+     * Gets the user's last known location
+     * @return the user's last known location in the form of a Location object
+     */
     public Location getLastLocation() throws Exception {
         if(null == mLastLocation) {
             for(String provider : mLocationManager.getAllProviders()) {

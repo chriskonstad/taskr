@@ -15,9 +15,11 @@ public class TransitionFactory {
         mContext = context;
     }
 
-    //WIP
-    //inFragment is the fragment that is transitioned FROM
-    //outFragment is the fragment that is transitioned TO
+    /**
+     * Sets transitions based on the fragment being transitioned out of and the fragment being trainsitioned into
+     * @param transaction the transaction for which we want to set custom animations
+     * @param transitionParams object containing the fragments relevant to the transaction
+     */
     public void setCustomAnimations(FragmentTransaction transaction, TransitionParams transitionParams){
         int enter = 0;
         int exit = 0;
