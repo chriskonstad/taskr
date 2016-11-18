@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.koushikdutta.ion.Ion;
@@ -38,6 +39,7 @@ public class ProfileFragment extends Fragment {
     public static final String UID = "user_id";
     @BindView (R.id.profile_picture) ImageView profilePicture;
     @BindView (R.id.ratings_list) ListView ratingsList;
+    //@BindView (R.id.rating) RatingBar ratingBar;
     @BindViews({R.id.star1,
             R.id.star2,
             R.id.star3,
@@ -94,6 +96,7 @@ public class ProfileFragment extends Fragment {
                 getActivity().setTitle(profile.name);
                 Log.i(TAG, "Avg rating: " + Double.toString(profile.avgRating));
                 ButterKnife.apply(stars, SET_STARS, profile.avgRating);
+                //ratingBar.setRating((float)profile.avgRating);
                 Ion.with(profilePicture)
                         .placeholder(R.drawable.loadingpng)
                         .load(profile.getProfilePictureUrl());

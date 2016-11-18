@@ -9,64 +9,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_marginBottom="@dimen/small_vertical_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            >
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/rstar1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:tint="@color/iconGrey"
-                    />
-                <ImageView
-                    android:id="@+id/rstar2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:tint="@color/iconGrey"
-                    />
-                    />
-                <ImageView
-                    android:id="@+id/rstar3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:tint="@color/iconGrey"
-                    />
-                    />
-                <ImageView
-                    android:id="@+id/rstar4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:tint="@color/iconGrey"
-                    />
-                    />
-                <ImageView
-                    android:id="@+id/rstar5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:tint="@color/iconGrey"
-                    />
-                    />
-            </LinearLayout>
-
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.75"
-            />
-    </LinearLayout>
+    <android.support.v7.widget.AppCompatRatingBar
+        style="@android:style/Widget.Material.RatingBar.Indicator"
+        android:id="@+id/rating"
+        android:isIndicator="true"
+        android:numStars="@string/rating_num_stars"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/title"
