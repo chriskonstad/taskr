@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.koushikdutta.ion.Ion;
 import com.taskr.api.Api;
 import com.taskr.api.Profile;
+import com.taskr.api.ServerApi;
 
 import java.security.MessageDigest;
 import java.util.concurrent.Callable;
@@ -60,7 +61,8 @@ public class MainActivity extends AppCompatActivity
         TAG = getString(R.string.main_activity_tag);
 
         // Init the API
-        mApi = new Api(this);
+        // TODO Figure out how to make this a mock api for unit tests
+        mApi = new ServerApi(this);
 
         if(!LocationProvider.hasPermissions(this)) {
             LocationProvider.checkPermissions(this);

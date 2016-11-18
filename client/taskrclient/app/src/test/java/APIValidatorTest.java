@@ -15,6 +15,7 @@ import com.taskr.api.Api;
 import com.taskr.api.LoginResult;
 import com.taskr.api.Request;
 import com.taskr.api.RequestResult;
+import com.taskr.api.ServerApi;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -34,7 +35,7 @@ public class ApiValidatorTest {
 
     @Test
     public void CheckReadyTest(){
-        Api api = new Api(mMockContext);
+        Api api = new ServerApi(mMockContext);
         try{
             api.getId();
             Assert.fail("Expected thrown exception when no user logged in");
@@ -58,17 +59,17 @@ public class ApiValidatorTest {
 
     @Test
     public void UserCreationTest(){
-        final Api testInstance = new Api(mMockContext);
+        final Api testInstance = new ServerApi(mMockContext);
 
         //Test creation of random user
-        testInstance.login(name, email, fbid, new Api.ApiCallback<com.taskr.api.LoginResult>() {
+        testInstance.login(name, email, fbid, new ServerApi.ApiCallback<com.taskr.api.LoginResult>() {
             @Override
             public void onSuccess(com.taskr.api.LoginResult returnValue) {
                 assertNotNull(returnValue.id);
                 final int uid = returnValue.id;
 
                 //Test login of newly created random user
-                testInstance.login(name, email, fbid, new Api.ApiCallback<com.taskr.api.LoginResult>() {
+                testInstance.login(name, email, fbid, new ServerApi.ApiCallback<com.taskr.api.LoginResult>() {
                     @Override
                     public void onSuccess(com.taskr.api.LoginResult returnValue) {
                         assertEquals(uid, returnValue.id);
@@ -88,12 +89,12 @@ public class ApiValidatorTest {
 
     @Test
     public void GetProfileTest(){
-        final Api testInstance = new Api(mMockContext);
+        final Api testInstance = new ServerApi(mMockContext);
 
-        testInstance.login(name, email, fbid, new Api.ApiCallback<com.taskr.api.LoginResult>() {
+        testInstance.login(name, email, fbid, new ServerApi.ApiCallback<com.taskr.api.LoginResult>() {
             @Override
             public void onSuccess(com.taskr.api.LoginResult returnValue) {
-                testInstance.getUserProfile(returnValue.id, new Api.ApiCallback<com.taskr.api.Profile>() {
+                testInstance.getUserProfile(returnValue.id, new ServerApi.ApiCallback<com.taskr.api.Profile>() {
                     @Override
                     public void onSuccess(com.taskr.api.Profile returnValue) {
                         assertNotNull(returnValue);
@@ -111,14 +112,14 @@ public class ApiValidatorTest {
 
     @Test
     public void CreateRequestTest(){
-        final Api testInstance = new Api(mMockContext);
+        final Api testInstance = new ServerApi(mMockContext);
 
-        testInstance.login(name, email, fbid, new Api.ApiCallback<com.taskr.api.LoginResult>() {
+        testInstance.login(name, email, fbid, new ServerApi.ApiCallback<com.taskr.api.LoginResult>() {
             @Override
             public void onSuccess(com.taskr.api.LoginResult returnValue) {
                 Request req = new Request();
 
-                testInstance.createRequest(req, new Api.ApiCallback<RequestResult>() {
+                testInstance.createRequest(req, new ServerApi.ApiCallback<RequestResult>() {
                     @Override
                     public void onSuccess(com.taskr.api.RequestResult returnValue) {
                         assertNotNull(returnValue);
@@ -137,20 +138,20 @@ public class ApiValidatorTest {
 
     @Test
     public void EditRequestTest(){
-        final Api testInstance = new Api(mMockContext);
+        final Api testInstance = new ServerApi(mMockContext);
 
-        testInstance.login(name, email, fbid, new Api.ApiCallback<com.taskr.api.LoginResult>() {
+        testInstance.login(name, email, fbid, new ServerApi.ApiCallback<com.taskr.api.LoginResult>() {
             @Override
             public void onSuccess(com.taskr.api.LoginResult returnValue) {
                 final Request req = new Request();
 
-                testInstance.createRequest(req, new Api.ApiCallback<RequestResult>() {
+                testInstance.createRequest(req, new ServerApi.ApiCallback<RequestResult>() {
                     @Override
                     public void onSuccess(com.taskr.api.RequestResult returnValue) {
                         assertNotNull(returnValue);
                         assertNotNull(returnValue.id);
 
-                        testInstance.editRequest(req, new Api.ApiCallback<Void>() {
+                        testInstance.editRequest(req, new ServerApi.ApiCallback<Void>() {
                             @Override public void onSuccess(Void returnValue) {}
                             @Override public void onFailure(String message){
                                 Assert.fail("Error editing request");
@@ -170,9 +171,9 @@ public class ApiValidatorTest {
 
     @Test
     public void NearbyRequestsTest(){
-        final Api testInstance = new Api(mMockContext);
+        final Api testInstance = new ServerApi(mMockContext);
 
-        testInstance.login(name, email, fbid, new Api.ApiCallback<com.taskr.api.LoginResult>() {
+        testInstance.login(name, email, fbid, new ServerApi.ApiCallback<com.taskr.api.LoginResult>() {
             @Override
             public void onSuccess(com.taskr.api.LoginResult returnValue) {
                 Request r = new Request();
@@ -180,13 +181,13 @@ public class ApiValidatorTest {
                 r.longitude = 1;
                 final Request req = r;
 
-                testInstance.createRequest(req, new Api.ApiCallback<RequestResult>() {
+                testInstance.createRequest(req, new ServerApi.ApiCallback<RequestResult>() {
                     @Override
                     public void onSuccess(com.taskr.api.RequestResult returnValue) {
                         assertNotNull(returnValue);
                         assertNotNull(returnValue.id);
 
-                        testInstance.getNearbyRequests(1, 1, 10, new Api.ApiCallback<ArrayList<Request>>() {
+                        testInstance.getNearbyRequests(1, 1, 10, new ServerApi.ApiCallback<ArrayList<Request>>() {
                             @Override public void onSuccess(ArrayList<Request> returnValue) {
                                 assertTrue(returnValue.size() >= 1);
                             }
@@ -208,9 +209,9 @@ public class ApiValidatorTest {
 
     @Test
     public void UserRequestsTest(){
-        final Api testInstance = new Api(mMockContext);
+        final Api testInstance = new ServerApi(mMockContext);
 
-        testInstance.login(name, email, fbid, new Api.ApiCallback<com.taskr.api.LoginResult>() {
+        testInstance.login(name, email, fbid, new ServerApi.ApiCallback<com.taskr.api.LoginResult>() {
             @Override
             public void onSuccess(com.taskr.api.LoginResult returnValue) {
                 final int uid = returnValue.id;
@@ -221,13 +222,13 @@ public class ApiValidatorTest {
                 r.longitude = 1;
                 final Request req = r;
 
-                testInstance.createRequest(req, new Api.ApiCallback<RequestResult>() {
+                testInstance.createRequest(req, new ServerApi.ApiCallback<RequestResult>() {
                     @Override
                     public void onSuccess(com.taskr.api.RequestResult returnValue) {
                         assertNotNull(returnValue);
                         assertNotNull(returnValue.id);
 
-                        testInstance.getUserRequests(uid, new Api.ApiCallback<ArrayList<Request>>() {
+                        testInstance.getUserRequests(uid, new ServerApi.ApiCallback<ArrayList<Request>>() {
                             @Override public void onSuccess(ArrayList<Request> returnValue) {
                                 assertTrue(returnValue.size() >= 1);
                             }
