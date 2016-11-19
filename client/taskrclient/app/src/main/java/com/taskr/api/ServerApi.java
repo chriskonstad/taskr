@@ -32,6 +32,7 @@ public class ServerApi extends Api {
     private final int NO_CONNECTION = 0; // "HTTP status code" for unable to reach server
     private String mBase = "NOT_INITIALIZED_YET";
     private Endpoints endpoints = new Endpoints();
+    public final static String PREFS_FILE = "preferences";
 
     private class Endpoints {
         /**
@@ -69,12 +70,10 @@ public class ServerApi extends Api {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // PUBLIC FACING API INFORMATION
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    public ServerApi(Context baseApplicationContext) {
+    public ServerApi(Context baseApplicationContext, String base) {
         super(baseApplicationContext);
         mClient.setMaxRetriesAndTimeout(MAX_RETRIES, RETRY_DELAY_MS);
-        mBase = PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getString(mContext.getString(R.string.key_hostname),
-                        mContext.getString(R.string.default_hostname));
+        mBase = base;
     }
 
     @Override

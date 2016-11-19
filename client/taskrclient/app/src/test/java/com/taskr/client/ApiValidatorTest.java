@@ -1,6 +1,9 @@
 package com.taskr.client;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,7 +15,11 @@ import static org.junit.Assert.assertTrue;
 import org.junit.runner.RunWith;
 import static org.mockito.Mockito.*;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.modules.junit4.PowerMockRunner;
+
 import com.taskr.api.Api;
 import com.taskr.api.LoginResult;
 import com.taskr.api.Request;
@@ -27,11 +34,12 @@ import java.util.Random;
  * Created by guillaumelam34 on 11/17/2016.
  */
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
 public class ApiValidatorTest {
     final String name = randomString(20);
     final String email = randomString(20) + "@test.com";
     final String fbid = randomString(20);
+    final String hostname = "taskr130.herokuapp.com";
 
     @Mock
     Context mMockContext;
@@ -97,7 +105,8 @@ public class ApiValidatorTest {
 
     @Test
     public void UserCreationTest(){
-        final Api testInstance = new ServerApi(mMockContext);
+        PowerMockito.mockStatic(Log.class);
+        final Api testInstance = new ServerApi(mMockContext, hostname);
 
         //Test creation of random user
         testInstance.login(name, email, fbid, new ServerApi.ApiCallback<com.taskr.api.LoginResult>() {
@@ -127,7 +136,7 @@ public class ApiValidatorTest {
 
     @Test
     public void GetProfileTest(){
-        final Api testInstance = new ServerApi(mMockContext);
+        final Api testInstance = new ServerApi(mMockContext, hostname);
 
         testInstance.login(name, email, fbid, new ServerApi.ApiCallback<com.taskr.api.LoginResult>() {
             @Override
@@ -150,7 +159,7 @@ public class ApiValidatorTest {
 
     @Test
     public void CreateRequestTest(){
-        final Api testInstance = new ServerApi(mMockContext);
+        final Api testInstance = new ServerApi(mMockContext, hostname);
 
         testInstance.login(name, email, fbid, new ServerApi.ApiCallback<com.taskr.api.LoginResult>() {
             @Override
@@ -176,7 +185,7 @@ public class ApiValidatorTest {
 
     @Test
     public void EditRequestTest(){
-        final Api testInstance = new ServerApi(mMockContext);
+        final Api testInstance = new ServerApi(mMockContext, hostname);
 
         testInstance.login(name, email, fbid, new ServerApi.ApiCallback<com.taskr.api.LoginResult>() {
             @Override
@@ -209,7 +218,7 @@ public class ApiValidatorTest {
 
     @Test
     public void NearbyRequestsTest(){
-        final Api testInstance = new ServerApi(mMockContext);
+        final Api testInstance = new ServerApi(mMockContext, hostname);
 
         testInstance.login(name, email, fbid, new ServerApi.ApiCallback<com.taskr.api.LoginResult>() {
             @Override
@@ -247,7 +256,7 @@ public class ApiValidatorTest {
 
     @Test
     public void UserRequestsTest(){
-        final Api testInstance = new ServerApi(mMockContext);
+        final Api testInstance = new ServerApi(mMockContext, hostname);
 
         testInstance.login(name, email, fbid, new ServerApi.ApiCallback<com.taskr.api.LoginResult>() {
             @Override

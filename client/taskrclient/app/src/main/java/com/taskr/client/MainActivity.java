@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -60,7 +61,10 @@ public class MainActivity extends AppCompatActivity
         TAG = getString(R.string.main_activity_tag);
 
         // Init the API
-        mApi = new ServerApi(this);
+        String serverHostname = PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getString(getString(R.string.key_hostname), getString(R.string.default_hostname));
+        mApi = new ServerApi(this, serverHostname);
         Intent intent = getIntent();
         if(null != intent) {
             // If this app is running in unit tests, UNDER_TEST will be set
