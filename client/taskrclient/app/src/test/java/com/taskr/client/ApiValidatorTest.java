@@ -1,3 +1,5 @@
+package com.taskr.client;
+
 import android.content.Context;
 
 import org.junit.Assert;
@@ -16,6 +18,7 @@ import com.taskr.api.LoginResult;
 import com.taskr.api.Request;
 import com.taskr.api.RequestResult;
 import com.taskr.api.ServerApi;
+import com.taskr.api.TestApi;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -34,8 +37,43 @@ public class ApiValidatorTest {
     Context mMockContext;
 
     @Test
+    public void CheckLoginLogoutTest() {
+        final TestApi api = new TestApi(mMockContext);
+
+        // Ensure logged out
+        try {
+            api.checkReady();
+            Assert.fail("Should have thrown an AuthError but didn't :(");
+        } catch (Exception e) {}
+
+        // Attempt to login
+        api.login(api.profile.name, api.email, api.profile.fbid,
+                new Api.ApiCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult returnValue) {
+                Assert.assertEquals(api.profile.id, returnValue.id);
+                Assert.assertEquals(api.profile.name, api.getName());
+                Assert.assertEquals(api.profile.fbid, api.getFbid());
+                Assert.assertEquals(api.email, api.getEmail());
+
+                // Ensure logout works
+                api.logout();
+                try {
+                    api.checkReady();
+                    Assert.fail("Should have thrown an AuthError but didn't :(");
+                } catch (Exception e) {}
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Assert.fail(message);
+            }
+        });
+    }
+
+    @Test
     public void CheckReadyTest(){
-        Api api = new ServerApi(mMockContext);
+        Api api = new TestApi(mMockContext);
         try{
             api.getId();
             Assert.fail("Expected thrown exception when no user logged in");

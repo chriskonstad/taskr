@@ -68,6 +68,7 @@ public class LoginFragment extends Fragment {
         setHasOptionsMenu(true);
 
         TAG = getString(R.string.login_fragment_tag);
+        mApi = ((MainActivity)getActivity()).api();
 
         loginButton.setReadPermissions(EMAIL);
         loginButton.setFragment(this);
@@ -98,8 +99,6 @@ public class LoginFragment extends Fragment {
         if(!hostname.equals(DEFAULT_HOSTNAME)) {
             hostnameView.setText(hostname);
         }
-
-        mApi = ((MainActivity)getActivity()).api();
 
         return rootView;
     }

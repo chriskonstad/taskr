@@ -1,8 +1,6 @@
 package com.taskr.client;
 
-import android.app.Notification;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -31,6 +29,7 @@ import com.koushikdutta.ion.Ion;
 import com.taskr.api.Api;
 import com.taskr.api.Profile;
 import com.taskr.api.ServerApi;
+import com.taskr.api.TestApi;
 
 import java.security.MessageDigest;
 import java.util.concurrent.Callable;
@@ -40,9 +39,9 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    public static final String UNDER_TEST = "under_test";
     private String TAG;
     private NotificationHandler notificationHandler;
-    private boolean loggedIn = false;
     private Api mApi = null;
 
     @BindView(R.id.nav_view) NavigationView navigationView;
@@ -61,8 +60,14 @@ public class MainActivity extends AppCompatActivity
         TAG = getString(R.string.main_activity_tag);
 
         // Init the API
-        // TODO Figure out how to make this a mock api for unit tests
         mApi = new ServerApi(this);
+        Intent intent = getIntent();
+        if(null != intent) {
+            // If this app is running in unit tests, UNDER_TEST will be set
+            if(intent.hasExtra(UNDER_TEST)) {
+                mApi = new TestApi(this);
+            }
+        }
 
         if(!LocationProvider.hasPermissions(this)) {
             LocationProvider.checkPermissions(this);
@@ -112,11 +117,12 @@ public class MainActivity extends AppCompatActivity
     protected void onResume(){
         super.onResume();
 
-        if(!loggedIn){
+        try {
+            if(mApi.checkReady()) {
+                handleInitialRouting();
+            }
+        } catch (Api.AuthenticationException e) {
             showLogin();
-        }
-        else{
-            handleInitialRouting();
         }
     }
 
@@ -252,6 +258,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings && !(frag instanceof SettingsFragment)) {
             showFragment(new SettingsFragment(), false, new TransitionParams("", getString(R.string.settings_fragment_tag)));
         } else if (id == R.id.nav_logout) {
+            mApi.logout();
             showLogin();
         }
 
@@ -285,14 +292,13 @@ public class MainActivity extends AppCompatActivity
      * Setup the app after the user logs in
      */
     public void onLogin() {
+        Log.i(TAG, "onLogin");
         notificationHandler = new NotificationHandler(getApplicationContext(), mApi.getId());
         notificationHandler.startNotificationCheck();
 
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         refreshNavHeader();
         navSelect(0);
-
-        loggedIn = true;
 
         handleInitialRouting();
     }
@@ -397,6 +403,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
         else if(!(frag instanceof RequestFragment)){
+            Log.i(TAG, "Showing requests fragment after login");
             showFragment(new RequestsFragment(), false, new TransitionParams(getString(R.string.login_fragment_tag), getString(R.string.requests_fragment_tag)));
         }
     }

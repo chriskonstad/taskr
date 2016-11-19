@@ -23,33 +23,26 @@ import java.util.ArrayList;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
-public class ServerApi implements Api {
+public class ServerApi extends Api {
     private static final String TAG = "ServerApi";
-    private static Context mContext;
-    private static AsyncHttpClient mClient = new AsyncHttpClient();
-    private static Gson mGson = new Gson();
-    private static int mId = -1;
-    private static String mName;
-    private static String mEmail;
-    private static String mFbid;
-    private static Location mLocation;
-    private static final int MAX_RETRIES = 0;   // YOLO, we can change this if needed later
-    private static final int RETRY_DELAY_MS = 0;
-    private static final int NO_CONNECTION = 0; // "HTTP status code" for unable to reach server
+    private AsyncHttpClient mClient = new AsyncHttpClient();
+    private Gson mGson = new Gson();
+    private final int MAX_RETRIES = 0;   // YOLO, we can change this if needed later
+    private final int RETRY_DELAY_MS = 0;
+    private final int NO_CONNECTION = 0; // "HTTP status code" for unable to reach server
+    private String mBase = "NOT_INITIALIZED_YET";
+    private Endpoints endpoints = new Endpoints();
 
-    private static class Endpoints {
+    private class Endpoints {
         /**
          * Generate the full URL of the given endpoint
          * @param endpoint endpoint to use for the URL
          * @return the full URL
          */
-        public static String get(String endpoint) {
+        public String get(String endpoint) {
             // Load stored hostname from settings
-            String base = PreferenceManager.getDefaultSharedPreferences(mContext)
-                    .getString(mContext.getString(R.string.key_hostname),
-                            mContext.getString(R.string.default_hostname));
 
-            String url = "http://" + base + endpoint;
+            String url = "http://" + mBase + endpoint;
             Log.i(TAG, "Generated endpoint: " + url);
             return url;
         }
@@ -73,64 +66,18 @@ public class ServerApi implements Api {
         public static final Type REVIEW_LIST = new TypeToken<ArrayList<Review>>() {}.getType();
     }
 
-    private void checkAuthenticated() {
-        if(null == mFbid || null == mName || null == mEmail) {
-            throw new AuthenticationException("No FBID associated with session");
-        }
-    }
-
-    // Make sure the API is ready to make authenticated requests
-    private void checkReady() {
-        checkAuthenticated();
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // PUBLIC FACING API INFORMATION
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Initialize the API with the given context
-     * <p>
-     * The context is stored for the life of the APi, or until init is called again
-     * </p>
-     * @param baseApplicationContext context to init the API with
-     */
     public ServerApi(Context baseApplicationContext) {
-        assert(null != baseApplicationContext);
-        mContext = baseApplicationContext;
+        super(baseApplicationContext);
         mClient.setMaxRetriesAndTimeout(MAX_RETRIES, RETRY_DELAY_MS);
+        mBase = PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getString(mContext.getString(R.string.key_hostname),
+                        mContext.getString(R.string.default_hostname));
     }
 
-    /**
-     * Exception for authentication errors.
-     * Mostly thrown when there is an API call requiring authentication but the API instance is not
-     * authenticated against Taskr's server
-     */
-    public class AuthenticationException extends RuntimeException {
-        public AuthenticationException(String message) {
-            super(message);
-        }
-    }
-
-    public int getId() {
-        checkReady();
-        return mId;
-    }
-
-    public String getName() {
-        checkReady();
-        return mName;
-    }
-
-    public String getEmail() {
-        checkReady();
-        return mEmail;
-    }
-
-    public String getFbid() {
-        checkReady();
-        return mFbid;
-    }
-
+    @Override
     public void refreshLocation(MainActivity activity) {
         try {
             mLocation = LocationProvider.getInstance().getLastLocation();
@@ -140,25 +87,20 @@ public class ServerApi implements Api {
         }
     }
 
-    public Location getLocation() {
-        return mLocation;
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // PUBLIC FACING API CALLS
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void logout() {
+    @Override
+    public void logoutOfThirdParty() {
         LoginManager.getInstance().logOut();
-        mId = -1;
-        mName = null;
-        mEmail = null;
-        mFbid = null;
+        Log.i(TAG, "Logged out of FB");
     }
 
-    public void login(final String name, final String email, final String fbid,
+    @Override
+    public void loginHandler(final String name, final String email, final String fbid,
                       final ApiCallback<LoginResult> callback) {
-        final String url = Endpoints.get(Endpoints.LOGIN);
+        final String url = endpoints.get(Endpoints.LOGIN);
         RequestParams params = new RequestParams();
         params.add("name", name);
         params.add("email", email);
@@ -170,12 +112,7 @@ public class ServerApi implements Api {
                 String json = new String(responseBody);
                 LoginResult result = mGson.fromJson(json, LoginResult.class);
 
-                mId = result.id;
-                mName = name;
-                mEmail = email;
-                mFbid = fbid;
-
-                Log.i(TAG, "Logged in as user with id: " + mId);
+                Log.i(TAG, "Logged in as user with id: " + result.id);
 
                 callback.onSuccess(result);
             }
@@ -197,9 +134,9 @@ public class ServerApi implements Api {
         mClient.post(url, params, handler);
     }
 
-    public void getUserProfile(final int uid, final ApiCallback<Profile> callback) {
-        checkReady();
-        final String url = Endpoints.get(Endpoints.PROFILE) + "/" + uid;
+    @Override
+    public void getUserProfileHandler(final int uid, final ApiCallback<Profile> callback) {
+        final String url = endpoints.get(Endpoints.PROFILE) + "/" + uid;
         RequestParams params = new RequestParams();
 
         AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
@@ -228,10 +165,10 @@ public class ServerApi implements Api {
         mClient.get(url, params, handler);
     }
 
-    public void getNearbyRequests(double latitude, double longitude, double radius,
+    @Override
+    public void getNearbyRequestsHandler(double latitude, double longitude, double radius,
                                   final ApiCallback<ArrayList<Request>> callback) {
-        checkReady();
-        final String url = Endpoints.get(Endpoints.NEARBY);
+        final String url = endpoints.get(Endpoints.NEARBY);
         RequestParams params = new RequestParams();
         params.add("lat", Double.toString(latitude));
         params.add("longitude", Double.toString(longitude));
@@ -259,10 +196,10 @@ public class ServerApi implements Api {
         mClient.get(url, params, handler);
     }
 
-    public void getUserRequests(int uid,
+    @Override
+    public void getUserRequestsHandler(int uid,
                                   final ApiCallback<ArrayList<Request>> callback) {
-        checkReady();
-        final String url = Endpoints.get(Endpoints.USER_REQUESTS);
+        final String url = endpoints.get(Endpoints.USER_REQUESTS);
         RequestParams params = new RequestParams();
         params.put("user_id", Integer.toString(uid));
 
@@ -300,14 +237,12 @@ public class ServerApi implements Api {
      */
     private void actOnRequest(final String url, final int requestId,
                               final ApiCallback<Boolean> callback) {
-        checkReady();
-
         JSONObject p = new JSONObject();
         JSONObject a = new JSONObject();
         JSONObject params = new JSONObject();
 
         try {
-            a.put("user_id", Integer.toString(mId));
+            a.put("user_id", Integer.toString(getId()));
             p.put("id", Integer.toString(requestId));
 
             params.put("params", p);
@@ -342,29 +277,33 @@ public class ServerApi implements Api {
         }
     }
 
-    public void acceptRequest(final int requestId, final ApiCallback<Boolean> callback) {
-        final String url = Endpoints.get(Endpoints.ACCEPT_REQUEST);
+    @Override
+    public void acceptRequestHandler(final int requestId, final ApiCallback<Boolean> callback) {
+        final String url = endpoints.get(Endpoints.ACCEPT_REQUEST);
         actOnRequest(url, requestId, callback);
     }
 
-    public void completeRequest(final int requestId, final ApiCallback<Boolean> callback) {
-        final String url = Endpoints.get(Endpoints.COMPLETE_REQUEST);
+    @Override
+    public void completeRequestHandler(final int requestId, final ApiCallback<Boolean> callback) {
+        final String url = endpoints.get(Endpoints.COMPLETE_REQUEST);
         actOnRequest(url, requestId, callback);
     }
 
-    public void cancelRequest(final int requestId, final ApiCallback<Boolean> callback) {
-        final String url = Endpoints.get(Endpoints.CANCEL_REQUEST);
+    @Override
+    public void cancelRequestHandler(final int requestId, final ApiCallback<Boolean> callback) {
+        final String url = endpoints.get(Endpoints.CANCEL_REQUEST);
         actOnRequest(url, requestId, callback);
     }
 
-    public void payRequest(final int requestId, final ApiCallback<Boolean> callback) {
-        final String url = Endpoints.get(Endpoints.PAY_REQUEST);
+    @Override
+    public void payRequestHandler(final int requestId, final ApiCallback<Boolean> callback) {
+        final String url = endpoints.get(Endpoints.PAY_REQUEST);
         actOnRequest(url, requestId, callback);
     }
 
-    public void getUserReviews(final int revieweeID, final ApiCallback<ArrayList<Review>> callback){
-        checkReady();
-        final String url = Endpoints.get(Endpoints.USER_REVIEWS);
+    @Override
+    public void getUserReviewsHandler(final int revieweeID, final ApiCallback<ArrayList<Review>> callback){
+        final String url = endpoints.get(Endpoints.USER_REVIEWS);
         RequestParams params = new RequestParams();
         params.put("id", Integer.toString(revieweeID));
 
@@ -391,11 +330,11 @@ public class ServerApi implements Api {
         mClient.get(url, params, handler);
     }
 
-    public void rateCompletedRequest(final int requestID, final int rating, final ApiCallback<Boolean> callback) {
-        checkReady();
-        final String url = Endpoints.get(Endpoints.RATE_REQUEST);
+    @Override
+    public void rateCompletedRequestHandler(final int requestID, final int rating, final ApiCallback<Boolean> callback) {
+        final String url = endpoints.get(Endpoints.RATE_REQUEST);
         RequestParams params = new RequestParams();
-        params.add("reviewer_id", Integer.toString(mId));
+        params.add("reviewer_id", Integer.toString(getId()));
         params.add("reviewee_id", Integer.toString(-1));
         params.add("request_id", Integer.toString(requestID));
         params.add("rating", Integer.toString(rating));
@@ -424,9 +363,9 @@ public class ServerApi implements Api {
         mClient.post(url, params, handler);
     }
 
-    public void createRequest(Request request, final ApiCallback<RequestResult> callback) {
-        checkReady();
-        final String url = Endpoints.get(Endpoints.CREATE_REQUEST);
+    @Override
+    public void createRequestHandler(Request request, final ApiCallback<RequestResult> callback) {
+        final String url = endpoints.get(Endpoints.CREATE_REQUEST);
 
         try {
             String json = mGson.toJson(request);
@@ -457,15 +396,15 @@ public class ServerApi implements Api {
         }
     }
 
-    public void editRequest(Request request, final ApiCallback<Void> callback) {
-        checkReady();
-        final String url = Endpoints.get(Endpoints.EDIT_REQUEST) + "/" + request.id;
+    @Override
+    public void editRequestHandler(Request request, final ApiCallback<Void> callback) {
+        final String url = endpoints.get(Endpoints.EDIT_REQUEST) + "/" + request.id;
 
         JSONObject a = new JSONObject();
         JSONObject params = new JSONObject();
 
         try {
-            a.put("user_id", Integer.toString(mId));
+            a.put("user_id", Integer.toString(getId()));
             params.put("auth", a);
             JSONObject json = new JSONObject(mGson.toJson(request, Request.class));
             params.put("request", json);
