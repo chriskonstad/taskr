@@ -114,20 +114,6 @@ public class MainActivity extends AppCompatActivity
         });
 
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    public Api api() {
-        return mApi;
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
 
         try {
             if(mApi.checkReady()) {
@@ -139,21 +125,25 @@ public class MainActivity extends AppCompatActivity
                 TestApi tApi = (TestApi) mApi;
                 mApi.login(tApi.profile.name, tApi.email, tApi.profile.fbid,
                         new Api.ApiCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult returnValue) {
-                        onLogin();
-                    }
+                            @Override
+                            public void onSuccess(LoginResult returnValue) {
+                                onLogin();
+                            }
 
-                    @Override
-                    public void onFailure(String message) {
-                        Log.wtf(TAG, message);
-                        assert false;
-                    }
-                });
+                            @Override
+                            public void onFailure(String message) {
+                                Log.wtf(TAG, message);
+                                assert false;
+                            }
+                        });
             } else {
                 showLogin();
             }
         }
+    }
+
+    public Api api() {
+        return mApi;
     }
 
     @Override
