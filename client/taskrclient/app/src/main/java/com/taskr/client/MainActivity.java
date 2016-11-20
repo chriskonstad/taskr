@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.koushikdutta.ion.Ion;
 import com.taskr.api.Api;
+import com.taskr.api.LoginResult;
 import com.taskr.api.Profile;
 import com.taskr.api.ServerApi;
 import com.taskr.api.TestApi;
@@ -133,7 +134,25 @@ public class MainActivity extends AppCompatActivity
                 handleInitialRouting();
             }
         } catch (Api.AuthenticationException e) {
-            showLogin();
+            if(mApi instanceof TestApi) {
+                // "Mock" login by ignoring login screen
+                TestApi tApi = (TestApi) mApi;
+                mApi.login(tApi.profile.name, tApi.email, tApi.profile.fbid,
+                        new Api.ApiCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult returnValue) {
+                        onLogin();
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        Log.wtf(TAG, message);
+                        assert false;
+                    }
+                });
+            } else {
+                showLogin();
+            }
         }
     }
 
