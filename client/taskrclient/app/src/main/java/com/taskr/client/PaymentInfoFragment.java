@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,22 +12,19 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.taskr.api.Api;
-
 import java.util.Calendar;
 import java.util.concurrent.Callable;
 
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
 
 /**
  * Created by guillaumelam34 on 11/19/2016.
  */
 
-public class PaymentFragment extends Fragment {
+public class PaymentInfoFragment extends Fragment {
     private String TAG;
     private SharedPreferences sharedPref;
 
@@ -42,13 +38,13 @@ public class PaymentFragment extends Fragment {
     @BindView(R.id.card_datepicker) DatePicker cardDatepicker;
     @BindView(R.id.button) Button button;
 
-    public PaymentFragment() {
+    public PaymentInfoFragment() {
         // Required for fragment subclass
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
-        View rootView = inflater.inflate(R.layout.fragment_payment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_payment_info, container, false);
         ButterKnife.bind(this, rootView);
 
         TAG = getString(R.string.payment_fragment_tag);
