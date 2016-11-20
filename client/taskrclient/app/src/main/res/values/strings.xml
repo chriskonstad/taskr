@@ -26,6 +26,7 @@
     <string name="nav_requests">Nearby Requests</string>
     <string name="nav_mine">My Requests</string>
     <string name="nav_profile">Profile</string>
+    <string name="nav_card">Payment Info</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_logout">Log Out</string>
 
@@ -112,7 +113,21 @@
     <string name="request_overview_fragment_tag">RequestOverviewFragment</string>
     <string name="requests_fragment_tag">RequestsFragment</string>
     <string name="settings_fragment_tag">SettingsFragment</string>
+    <string name="payment_fragment_tag">PaymentFragment</string>
 
     <!-- Notification Strings -->
     <string name="notification_type">notification_type</string>
+
+    <!-- Strings for very very safe way of storing credit card info -->
+    <string name="payment_preferences">Payment Preferences</string>
+    <string name="payment_info">Payment Info</string>
+    <string name="save_payment_info">Save</string>
+    <string name="card_number">Card Number</string>
+    <string name="card_cvv">Card CVV</string>
+    <string name="card_expiration_month">Card Expiration Month</string>
+    <string name="card_expiration_year">Card Expiration Year</string>
+    <string name="payment_update_success_title">Success!</string>
+    <string name="payment_update_success_body">Your payment info was successfully updated!</string>
+    <string name="payment_update_error_title">Error</string>
+    <string name="payment_update_error_body">Oops...something broke while we were trying to update your payment info :(. Please try again!</string>
 </resources>

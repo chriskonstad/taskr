@@ -259,6 +259,8 @@ public class MainActivity extends AppCompatActivity
             showFragment(reqFrag, false, new TransitionParams("", getString(R.string.requests_fragment_tag)));
         } else if (id == R.id.nav_profile && !(frag instanceof ProfileFragment)) {
             showFragment(ProfileFragment.newInstance(mApi.getId()), false, new TransitionParams("", getString(R.string.profile_fragment_tag)));
+        } else if (id == R.id.nav_card && !(frag instanceof PaymentFragment)) {
+            showFragment(new PaymentFragment(), true, new TransitionParams("", getString(R.string.payment_fragment_tag)));
         } else if (id == R.id.nav_settings && !(frag instanceof SettingsFragment)) {
             showFragment(new SettingsFragment(), false, new TransitionParams("", getString(R.string.settings_fragment_tag)));
         } else if (id == R.id.nav_logout) {
