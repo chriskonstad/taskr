@@ -32,8 +32,6 @@ public class PaymentInfoFragment extends DialogFragment {
     private String origNumber, origCVV, origName;
     private int origExpMonth, origExpYear;
 
-    public static final String SHOW_AS_DIALOG = "ShowAsDialog";
-
     @BindString(R.string.payment_info) String paymentInfo;
     @BindString(R.string.save_payment_info) String saveInfo;
     @BindView(R.id.card_name) EditText cardName;
@@ -96,7 +94,7 @@ public class PaymentInfoFragment extends DialogFragment {
 
         checkIfDone();
 
-        if(getArguments()!= null && getArguments().getBoolean(SHOW_AS_DIALOG)){
+        if(getArguments()!= null && getArguments().getBoolean(getString(R.string.show_as_dialog))){
             setShowsDialog(true);
         }
         else{

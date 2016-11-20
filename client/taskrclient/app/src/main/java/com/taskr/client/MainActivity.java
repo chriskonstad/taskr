@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity
             ft.addToBackStack(null);
 
             Bundle bundle = new Bundle();
-            bundle.putBoolean(PaymentInfoFragment.SHOW_AS_DIALOG, true);
+            bundle.putBoolean(getString(R.string.show_as_dialog), true);
             fragment.setArguments(bundle);
             fragment.show(ft, "dialog");
 

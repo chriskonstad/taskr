@@ -139,4 +139,7 @@
     <string name="payment_update_success_body">Your payment info was successfully updated!</string>
     <string name="payment_update_error_title">Error</string>
     <string name="payment_update_error_body">Oops...something broke while we were trying to update your payment info :(. Please try again!</string>
+
+    <!-- Dialog config Strings -->
+    <string name="show_as_dialog">showAsDialog</string>
 </resources>
