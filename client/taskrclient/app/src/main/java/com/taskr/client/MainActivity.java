@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity
                     //show hamburger
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                     toggle.syncState();
+                    unlockDrawer();
                     toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     // Show arrow
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true); // show back button
+                    lockDrawer();
                     toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -290,11 +292,11 @@ public class MainActivity extends AppCompatActivity
             reqFrag.setArguments(bundle);
             showFragment(reqFrag, false, new TransitionParams("", getString(R.string.requests_fragment_tag)));
         } else if (id == R.id.nav_profile && !(frag instanceof ProfileFragment)) {
-            showFragment(ProfileFragment.newInstance(mApi.getId()), false, new TransitionParams("", getString(R.string.profile_fragment_tag)));
+            showFragment(ProfileFragment.newInstance(mApi.getId()), true, new TransitionParams("", getString(R.string.profile_fragment_tag)));
         } else if (id == R.id.nav_card && !(frag instanceof PaymentInfoFragment)) {
             showFragment(new PaymentInfoFragment(), true, new TransitionParams("", getString(R.string.payment_fragment_tag)));
         } else if (id == R.id.nav_settings && !(frag instanceof SettingsFragment)) {
-            showFragment(new SettingsFragment(), false, new TransitionParams("", getString(R.string.settings_fragment_tag)));
+            showFragment(new SettingsFragment(), true, new TransitionParams("", getString(R.string.settings_fragment_tag)));
         } else if (id == R.id.nav_logout) {
             mApi.logout();
             showLogin();
@@ -322,7 +324,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void showLogin() {
         navSelect(0);
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        lockDrawer();
         showFragment(new LoginFragment(), false, new TransitionParams("", getString(R.string.login_fragment_tag)));
     }
 
@@ -334,11 +336,25 @@ public class MainActivity extends AppCompatActivity
         notificationHandler = new NotificationHandler(getApplicationContext(), mApi.getId());
         notificationHandler.startNotificationCheck();
 
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        unlockDrawer();
         refreshNavHeader();
         navSelect(0);
 
         handleInitialRouting();
+    }
+
+    /**
+     * Lock the nav drawer closed
+     */
+    private void lockDrawer() {
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    }
+
+    /**
+     * Unlock the nav drawer
+     */
+    private void unlockDrawer() {
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
     /**
