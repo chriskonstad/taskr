@@ -1,5 +1,6 @@
 package com.taskr.client;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -205,6 +207,22 @@ public class MainActivity extends AppCompatActivity
                 transaction.addToBackStack(null);
             }
             transaction.commit();
+            Log.i(TAG, "Loading fragment");
+        } else {
+            Log.wtf(TAG, "Trying to show a null fragment");
+        }
+    }
+
+    public void showFragmentAsDialog(DialogFragment fragment){
+        if(null != fragment) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(PaymentInfoFragment.SHOW_AS_DIALOG, true);
+            fragment.setArguments(bundle);
+            fragment.show(ft, "dialog");
+
             Log.i(TAG, "Loading fragment");
         } else {
             Log.wtf(TAG, "Trying to show a null fragment");

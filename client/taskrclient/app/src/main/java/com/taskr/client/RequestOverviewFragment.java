@@ -1,7 +1,10 @@
 package com.taskr.client;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -39,7 +42,7 @@ import butterknife.ButterKnife;
  * Created by guillaumelam34 on 10/29/2016.
  */
 
-public class RequestOverviewFragment extends Fragment {
+public class RequestOverviewFragment extends Fragment{
     private String TAG;
     private Request req;
     private Api mApi;
@@ -89,30 +92,18 @@ public class RequestOverviewFragment extends Fragment {
     Button.OnClickListener listenerPay = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            mApi.payRequest(req.id, new Api.ApiCallback<Boolean>() {
-                @Override
-                public void onSuccess(Boolean result) {
-                    ((MainActivity)getActivity())
-                            .showInfoDialog(getString(R.string.pay_request_success_title),
-                                    getString(R.string.pay_request_success_msg),
-                                    new Callable<Void>() {
-                                        @Override
-                                        public Void call() throws Exception {
-                                            ((MainActivity)getActivity()).onBackPressed();
-                                            return null;
-                                        }
-                                    });
-                    // display rating dialog
-                    rateFulfiller();
-                }
+            Context context = (MainActivity)getContext();
+            SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.payment_preferences) , Context.MODE_PRIVATE);
+            if(sharedPref.getString(getString(R.string.card_name), "") != "" ||
+                    sharedPref.getString(getString(R.string.card_number), "") == "" ||
+                    sharedPref.getString(getString(R.string.card_cvv), "") == "" ||
+                    sharedPref.getInt(getString(R.string.card_expiration_month), -1) == -1 ||
+                    sharedPref.getInt(getString(R.string.card_expiration_year), -1) == -1){
 
-                @Override
-                public void onFailure(String message) {
-                    ((MainActivity)getActivity())
-                            .showErrorDialog(getString(R.string.pay_request_error_title),
-                                    getString(R.string.pay_request_error_msg));
-                }
-            });
+                DialogFragment paymentFrag = new PaymentInfoFragment();
+                paymentFrag.setTargetFragment(RequestOverviewFragment.this, 1);
+                ((MainActivity)getActivity()).showFragmentAsDialog(paymentFrag);
+            }
         }
     };
 
@@ -321,5 +312,32 @@ public class RequestOverviewFragment extends Fragment {
             return;
         RatingFragment ratingFragment = RatingFragment.newInstance(req.id);
         ratingFragment.show(getActivity().getSupportFragmentManager(), "Rating Fragment");
+    }
+
+    public void completePayment(){
+        mApi.payRequest(req.id, new Api.ApiCallback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean result) {
+                ((MainActivity)getActivity())
+                        .showInfoDialog(getString(R.string.pay_request_success_title),
+                                getString(R.string.pay_request_success_msg),
+                                new Callable<Void>() {
+                                    @Override
+                                    public Void call() throws Exception {
+                                        ((MainActivity)getActivity()).onBackPressed();
+                                        return null;
+                                    }
+                                });
+                // display rating dialog
+                rateFulfiller();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                ((MainActivity)getActivity())
+                        .showErrorDialog(getString(R.string.pay_request_error_title),
+                                getString(R.string.pay_request_error_msg));
+            }
+        });
     }
 }

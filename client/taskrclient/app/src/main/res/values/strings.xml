@@ -130,6 +130,7 @@
     <string name="payment_preferences">Payment Preferences</string>
     <string name="payment_info">Payment Info</string>
     <string name="save_payment_info">Save</string>
+    <string name="card_name">Card Name</string>
     <string name="card_number">Card Number</string>
     <string name="card_cvv">Card CVV</string>
     <string name="card_expiration_month">Card Expiration Month</string>

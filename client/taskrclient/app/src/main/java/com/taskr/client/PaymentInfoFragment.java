@@ -3,6 +3,7 @@ package com.taskr.client;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,15 +25,18 @@ import butterknife.OnTextChanged;
  * Created by guillaumelam34 on 11/19/2016.
  */
 
-public class PaymentInfoFragment extends Fragment {
+public class PaymentInfoFragment extends DialogFragment {
     private String TAG;
     private SharedPreferences sharedPref;
 
-    private String origNumber, origCVV;
+    private String origNumber, origCVV, origName;
     private int origExpMonth, origExpYear;
+
+    public static final String SHOW_AS_DIALOG = "ShowAsDialog";
 
     @BindString(R.string.payment_info) String paymentInfo;
     @BindString(R.string.save_payment_info) String saveInfo;
+    @BindView(R.id.card_name) EditText cardName;
     @BindView(R.id.card_number) EditText cardNumber;
     @BindView(R.id.card_cvv) EditText cardCVV;
     @BindView(R.id.card_datepicker) DatePicker cardDatepicker;
@@ -57,11 +61,15 @@ public class PaymentInfoFragment extends Fragment {
 
         Context context = (MainActivity)getContext();
         sharedPref = context.getSharedPreferences(getString(R.string.payment_preferences) ,Context.MODE_PRIVATE);
+        String card_name = origName = sharedPref.getString(getString(R.string.card_name), "");
         String card_number = origNumber = sharedPref.getString(getString(R.string.card_number),"");
         String card_cvv = origCVV = sharedPref.getString(getString(R.string.card_cvv),"");
         int card_expiration_month = origExpMonth = sharedPref.getInt(getString(R.string.card_expiration_month),-1);
         int card_expiration_year = origExpYear = sharedPref.getInt(getString(R.string.card_expiration_year),-1);
 
+        if(card_name != ""){
+            cardName.setText(card_name);
+        }
         if(card_number != ""){
             cardNumber.setText(card_number);
         }
@@ -87,10 +95,18 @@ public class PaymentInfoFragment extends Fragment {
         });
 
         checkIfDone();
+
+        if(getArguments()!= null && getArguments().getBoolean(SHOW_AS_DIALOG)){
+            setShowsDialog(true);
+        }
+        else{
+            setShowsDialog(false);
+        }
+
         return rootView;
     }
 
-    @OnTextChanged({R.id.card_number, R.id.card_cvv})
+    @OnTextChanged({R.id.card_name, R.id.card_number, R.id.card_cvv})
     public void checkIfDone() {
         if(ready()) {
             button.setEnabled(true);
@@ -102,13 +118,14 @@ public class PaymentInfoFragment extends Fragment {
     }
 
     private boolean ready(){
-        return((!cardNumber.getText().toString().isEmpty() && !cardCVV.getText().toString().isEmpty()) &&
-                (!(cardNumber.getText().toString()).equals(origNumber) || !(cardCVV.getText().toString()).equals(origCVV) || cardDatepicker.getMonth() != origExpMonth || cardDatepicker.getYear() != origExpYear));
+        return((!cardName.getText().toString().isEmpty() && !cardNumber.getText().toString().isEmpty() && !cardCVV.getText().toString().isEmpty()) &&
+                (!(cardName.getText().toString()).equals(origName) || !(cardNumber.getText().toString()).equals(origNumber) || !(cardCVV.getText().toString()).equals(origCVV) || cardDatepicker.getMonth() != origExpMonth || cardDatepicker.getYear() != origExpYear));
     }
 
-    public void saveInfo(){
+    private void saveInfo(){
         try {
             SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(getString(R.string.card_name), cardName.getText().toString());
             editor.putString(getString(R.string.card_number), cardNumber.getText().toString());
             editor.putString(getString(R.string.card_cvv), cardCVV.getText().toString());
             editor.putInt(getString(R.string.card_expiration_month), cardDatepicker.getMonth());
@@ -121,8 +138,16 @@ public class PaymentInfoFragment extends Fragment {
                             new Callable<Void>() {
                                 @Override
                                 public Void call() throws Exception {
-                                    ((MainActivity)getActivity()).onBackPressed();
-                                    return null;
+                                    RequestOverviewFragment requestOverviewFragment = (RequestOverviewFragment)getTargetFragment();
+                                    if(requestOverviewFragment != null){
+                                        requestOverviewFragment.completePayment();
+                                        ((MainActivity) getActivity()).onBackPressed();
+                                        return null;
+                                    }
+                                    else {
+                                        ((MainActivity) getActivity()).onBackPressed();
+                                        return null;
+                                    }
                                 }
                             });
 
