@@ -13,6 +13,7 @@ public class Profile {
     public double wallet;
     public double avgRating;
     public String fbid;
+    public String email;
     public ArrayList<Rating> ratings;
 
     // TODO add more of the data fields

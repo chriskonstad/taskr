@@ -44,8 +44,10 @@ public class RatingAdapter extends ArrayAdapter<Rating> {
 
         Rating r = mRatings.get(position);
 
-        title.setText(r.title);
-        name.setText(r.name);
+        String taskName = "Completed task: " + r.title;
+        title.setText(taskName);
+        String requestedBy = "Requested by " + r.name;
+        name.setText(requestedBy);
         when.setText(r.getCreatedAt());
         ratingBar.setRating((float)r.rating);
 

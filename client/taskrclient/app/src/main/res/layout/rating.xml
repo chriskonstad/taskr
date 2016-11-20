@@ -9,14 +9,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.AppCompatRatingBar
-        style="@android:style/Widget.Material.RatingBar.Indicator"
-        android:id="@+id/rating"
-        android:isIndicator="true"
-        android:numStars="@string/rating_num_stars"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
     <TextView
         android:id="@+id/title"
         android:textAppearance="@android:style/TextAppearance.Material.Medium"
@@ -38,5 +30,17 @@
         android:layout_marginBottom="@dimen/small_vertical_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.AppCompatRatingBar
+        style="@android:style/Widget.Material.RatingBar.Indicator"
+        android:id="@+id/rating"
+        android:isIndicator="true"
+        android:numStars="@string/rating_num_stars"
+        android:transformPivotX="0dp"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 
 </LinearLayout>

@@ -87,6 +87,8 @@
 
     <!-- Profile strings -->
     <string name="profile_loading">Profile Loading...</string>
+    <string name="average_rating_descriptor">Average fulfiller rating:</string>
+    <string name="email_subject">Message from Taskr user </string>
 
     <!-- Preferences -->
     <string name="category_development">Development</string>
@@ -104,6 +106,12 @@
     <string name="role_requester">requester</string>
     <string name="role_fulfiller">fulfiller</string>
     <string name="role_any">any</string>
+
+    <!-- Rating Strings -->
+    <string name ="rate_task">Rate Your Completed Task</string>
+    <string name ="rating_success">Rating Success</string>
+    <string name ="rating_failure">Rating Failure</string>
+    <string name ="rating_submitted">Thank you! Your rating has been submitted.</string>
 
     <!-- Tag names -->
     <string name="main_activity_tag">MainActivity</string>

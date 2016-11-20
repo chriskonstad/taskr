@@ -118,6 +118,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
     protected void onResume(){
         super.onResume();
 
@@ -398,6 +403,7 @@ public class MainActivity extends AppCompatActivity
             String notificationType = intent.getStringExtra(getString(R.string.notification_type));
 
             if(notificationType.equals("review")){
+                //getSupportFragmentManager().popBackStack();
                 showFragment(ProfileFragment.newInstance(mApi.getId()), false, new TransitionParams("", getString(R.string.profile_fragment_tag)));
             }
             else if(notificationType.equals("request")){

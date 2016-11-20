@@ -102,6 +102,7 @@ public class RequestOverviewFragment extends Fragment {
                                             return null;
                                         }
                                     });
+                    // display rating dialog
                     rateFulfiller();
                 }
 
@@ -154,10 +155,20 @@ public class RequestOverviewFragment extends Fragment {
         }
     };
 
+    private void setProfileLinkListener(final int uid)
+    {
+        requestUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment profileFragment = ProfileFragment.newInstance(uid);
+                ((MainActivity)getActivity()).showFragment(profileFragment, true, new TransitionParams("", getString(R.string.profile_fragment_tag)));
+            }
+        });
+    }
+
     public RequestOverviewFragment() {
 
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle){
         View rootView = inflater.inflate(R.layout.request_overview, container, false);
@@ -252,6 +263,8 @@ public class RequestOverviewFragment extends Fragment {
             public void onSuccess(Profile returnValue) {
                 requestUserName.setText(returnValue.name);
                 requestRating.setText(String.format("%.1f", returnValue.avgRating));
+                setProfileLinkListener(returnValue.id);
+                //setProfileLinkListener(((MainActivity)getActivity()).api().getId());
                 Ion.with(profilePicture)
                         .placeholder(R.drawable.loadingpng)
                         .load(returnValue.getProfilePictureUrl());
@@ -306,10 +319,7 @@ public class RequestOverviewFragment extends Fragment {
     {
         if (req == null)
             return;
-        Bundle bundle = new Bundle();
-        bundle.putInt("requestID", req.id);
-        RatingFragment ratingFragment = new RatingFragment();
-        ratingFragment.setArguments(bundle);
+        RatingFragment ratingFragment = RatingFragment.newInstance(req.id);
         ratingFragment.show(getActivity().getSupportFragmentManager(), "Rating Fragment");
     }
 }
