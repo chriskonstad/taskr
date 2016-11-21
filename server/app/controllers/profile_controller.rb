@@ -1,6 +1,9 @@
 class ProfileController < ApplicationController
 
+
   skip_before_action :verify_authenticity_token
+
+  scope :android, -> {where(device_type: 'android')}
 
   # Get user profile information
   def show
@@ -44,4 +47,19 @@ class ProfileController < ApplicationController
     
     
   end
+
+
+  def notify(data, collapse_key = nil)
+
+    fcm = FCM.new("")
+    #registration_ids=["fill in the id here"] -> every device have different unique id
+    registration_ids = Device.android.map(&:registration_id) #an array of the client registration IDs
+    options = {
+      data: data,
+      collapse_key: collapse_key || 'my_app'
+    }
+    response = fcm.send(registration_ids, options)
+
+  end
+
 end
