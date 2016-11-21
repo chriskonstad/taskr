@@ -81,6 +81,7 @@
     <string name="sure_cancel">Are you sure you want to cancel your request?</string>
 
     <string name="rating_num_stars">5</string>
+    <string name="rating_comment">Comment</string>
 
     <!-- Places -->
     <string name="places_error_title">Unable to load Google Places</string>

@@ -310,7 +310,7 @@ public class RequestOverviewFragment extends Fragment{
     {
         if (req == null)
             return;
-        RatingFragment ratingFragment = RatingFragment.newInstance(req.id);
+        RatingFragment ratingFragment = RatingFragment.newInstance(req.id, req.actor_id);
         ratingFragment.show(getActivity().getSupportFragmentManager(), "Rating Fragment");
     }
 

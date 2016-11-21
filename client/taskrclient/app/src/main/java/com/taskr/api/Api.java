@@ -288,16 +288,15 @@ public abstract class Api {
 
     /**
      * Rate a request that has been completed
-     * @param requestID
-     * @param rating integer [1,5]
+     * @param review the review to send (rating [1,5])
      * @param callback
      */
-    public final void rateCompletedRequest(final int requestID, final int rating,
+    public final void rateCompletedRequest(final Review review,
                                      final ApiCallback<Boolean> callback) {
         checkReady();
-        rateCompletedRequestHandler(requestID, rating, callback);
+        rateCompletedRequestHandler(review, callback);
     }
-    abstract protected void rateCompletedRequestHandler(final int requestID, final int rating,
+    abstract protected void rateCompletedRequestHandler(final Review review,
                                      final ApiCallback<Boolean> callback);
 
     /**

@@ -11,6 +11,7 @@ public class Review {
     public int reviewee_id;
     public int request_id;
     public int rating;
+    public String comment;
     public Date created_at;
     // probably don't need Date modified field..?
 }

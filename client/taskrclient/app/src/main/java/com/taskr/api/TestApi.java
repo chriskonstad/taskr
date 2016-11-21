@@ -104,7 +104,7 @@ public class TestApi extends Api {
     }
 
     @Override
-    public void rateCompletedRequestHandler(final int requestID, final int rating, final ApiCallback<Boolean> callback) {
+    public void rateCompletedRequestHandler(final Review review, final ApiCallback<Boolean> callback) {
         // TODO MOCK OUT
     }
 

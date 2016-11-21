@@ -330,36 +330,36 @@ public class ServerApi extends Api {
     }
 
     @Override
-    public void rateCompletedRequestHandler(final int requestID, final int rating, final ApiCallback<Boolean> callback) {
+    public void rateCompletedRequestHandler(final Review review,
+                                            final ApiCallback<Boolean> callback) {
         final String url = endpoints.get(Endpoints.RATE_REQUEST);
-        RequestParams params = new RequestParams();
-        params.add("reviewer_id", Integer.toString(getId()));
-        params.add("reviewee_id", Integer.toString(-1));
-        params.add("request_id", Integer.toString(requestID));
-        params.add("rating", Integer.toString(rating));
 
-        AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody){
-                Log.i(TAG, "Successfully created review.");
-                callback.onSuccess(true);
-            }
+        try {
+            String json = mGson.toJson(review);
+            StringEntity entity = new StringEntity(json);
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
-                                  Throwable error) {
-                if(NO_CONNECTION == statusCode) {
-                    callback.onFailure(mContext.getString(R.string.unable_to_reach_server));
-                } else {
-                    callback.onFailure("Error (" +
-                            statusCode +
-                            "): Unable to rate request id: " +
-                            requestID + " and rating: " + rating);
+            AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Log.i(TAG, "Successfully created review.");
+                    callback.onSuccess(true);
                 }
-            }
-        };
 
-        mClient.post(url, params, handler);
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
+                                      Throwable error) {
+                    if(NO_CONNECTION == statusCode) {
+                        callback.onFailure(mContext.getString(R.string.unable_to_reach_server));
+                    } else {
+                        callback.onFailure("Error (" + statusCode + "): Unable to create review");
+                    }
+                }
+            };
+
+            mClient.post(mContext, url, entity, "application/json", handler);
+        }catch(Exception e){
+            Log.e(TAG, "Unable to create review: " + e.getMessage());
+        }
     }
 
     @Override
