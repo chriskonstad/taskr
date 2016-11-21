@@ -1,6 +1,5 @@
 package com.taskr.client;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,7 +21,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -170,14 +168,6 @@ public class MainActivity extends AppCompatActivity
         Ion.with(headerProfilePicture)
                 .placeholder(R.drawable.loadingpng)
                 .load(Profile.buildProfilePictureUrl(mApi.getFbid()));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Uncomment this code to reenable the overflow menu... Not sure if we need/want it
-        //MenuInflater inflater = getMenuInflater();
-        //inflater.inflate(R.menu.toolbar_menu, menu);
-        return true;
     }
 
     @Override
