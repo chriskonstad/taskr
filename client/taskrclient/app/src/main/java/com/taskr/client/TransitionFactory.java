@@ -22,59 +22,25 @@ public class TransitionFactory {
      */
     public void setCustomAnimations(FragmentTransaction transaction, TransitionParams transitionParams){
         int enter = 0;
-        int exit = 0;
-        int popEnter = 0;
-        int popExit = 0;
 
         String inFragment = transitionParams.inFragment;
-        String outFragment = transitionParams.outFragment;
 
         if(inFragment.equals(mContext.getString(R.string.login_fragment_tag))){
-            exit = R.anim.slide_out_right;
-            popEnter = R.anim.slide_in_left;
+            enter = android.R.anim.fade_in;
         }else if(inFragment.equals(mContext.getString(R.string.profile_fragment_tag))){
-            exit = R.anim.slide_out_bottom;
-            popEnter = R.anim.slide_in_bottom;
+            enter = android.R.anim.fade_in;
         }else if(inFragment.equals(mContext.getString(R.string.request_fragment_tag))){
-            exit = R.anim.slide_out_bottom;
-            popEnter = R.anim.slide_in_bottom;
+            enter = android.R.anim.fade_in;
         }else if(inFragment.equals(mContext.getString(R.string.request_overview_fragment_tag))){
-            exit = R.anim.slide_out_bottom;
-            popEnter = R.anim.slide_in_bottom;
+            enter = android.R.anim.fade_in;
         }else if(inFragment.equals(mContext.getString(R.string.requests_fragment_tag))){
-            exit = R.anim.slide_out_right;
-            popEnter = R.anim.slide_in_left;
+            enter = android.R.anim.fade_in;
         }else if(inFragment.equals(mContext.getString(R.string.settings_fragment_tag))){
-            exit = R.anim.slide_out_right;
-            popEnter = R.anim.slide_in_left;
+            enter = android.R.anim.fade_in;
         }else{
-            exit = R.anim.slide_out_right;
-            popEnter = R.anim.slide_in_left;
+            enter = android.R.anim.fade_in;
         }
 
-        if(outFragment.equals(mContext.getString(R.string.login_fragment_tag))){
-            enter = R.anim.slide_in_left;
-            popExit = R.anim.slide_out_right;
-        }else if(outFragment.equals(mContext.getString(R.string.profile_fragment_tag))){
-            enter = R.anim.slide_in_bottom;
-            popExit = R.anim.slide_out_bottom;
-        }else if(outFragment.equals(mContext.getString(R.string.request_fragment_tag))){
-            enter = R.anim.slide_in_bottom;
-            popExit = R.anim.slide_out_bottom;
-        }else if(outFragment.equals(mContext.getString(R.string.request_overview_fragment_tag))){
-            enter = R.anim.slide_in_bottom;
-            popExit = R.anim.slide_out_bottom;
-        }else if(outFragment.equals(mContext.getString(R.string.requests_fragment_tag))){
-            enter = R.anim.slide_in_left;
-            popExit = R.anim.slide_out_right;
-        }else if(outFragment.equals(mContext.getString(R.string.settings_fragment_tag))){
-            enter = R.anim.slide_in_left;
-            popExit = R.anim.slide_out_right;
-        }else{
-            enter = R.anim.slide_in_left;
-            popExit = R.anim.slide_out_right;
-        }
-
-        transaction.setCustomAnimations(enter, exit, popEnter, popExit);
+        transaction.setCustomAnimations(enter, 0, enter, 0);
     }
 }
