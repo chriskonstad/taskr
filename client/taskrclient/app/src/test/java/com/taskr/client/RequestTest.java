@@ -66,7 +66,14 @@ public class RequestTest {
 
     @Test
     public void check_due_format() throws Exception {
-        Format format = new SimpleDateFormat(Request.DUE_FORMAT);
+        final String DUE_FORMAT = "EEE, d MMM yyyy 'by' h:mma";
+
+        Format format = new SimpleDateFormat(DUE_FORMAT);
+
+        // Check that the formats are equal
+        assertEquals(DUE_FORMAT, Request.DUE_FORMAT);
+
+        // Check that nothing else weird happens
         assertEquals(format.format(now), req.getDue());
     }
 
