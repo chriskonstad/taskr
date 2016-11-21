@@ -58,8 +58,8 @@ public class ServerApi extends Api {
         public static final String EDIT_REQUEST = "/api/v1/requests";
         public static final String COMPLETE_REQUEST = "/api/v1/requests/complete";
         public static final String USER_REQUESTS = "/api/v1/requests/findByUid";
-        public static final String RATE_REQUEST = "/api/v1/review/create";
-        public static final String USER_REVIEWS = "/api/v1/review/show";
+        public static final String RATE_REQUEST = "/api/v1/reviews";
+        public static final String USER_REVIEWS = "/api/v1/reviews";
     }
 
     private static class Types {
