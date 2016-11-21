@@ -51,7 +51,7 @@ class ProfileController < ApplicationController
 
   def notify(data, collapse_key = nil)
 
-    fcm = FCM.new("")
+    fcm = FCM.new("AIzaSyDauw6GqLZU83uLoOiB9yqN9lRw4wiaurs")
     #registration_ids=["fill in the id here"] -> every device have different unique id
     registration_ids = Device.android.map(&:registration_id) #an array of the client registration IDs
     options = {
