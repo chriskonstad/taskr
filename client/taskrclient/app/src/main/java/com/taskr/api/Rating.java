@@ -15,6 +15,7 @@ public class Rating {
     public int id;
     public String name;
     public String title;
+    public String comment;
     public int rating;
     public Date created_at;
 

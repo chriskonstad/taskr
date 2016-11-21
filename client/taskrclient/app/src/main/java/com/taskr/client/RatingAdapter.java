@@ -27,6 +27,7 @@ public class RatingAdapter extends ArrayAdapter<Rating> {
     @BindView(R.id.title) TextView title;
     @BindView(R.id.name) TextView name;
     @BindView(R.id.when) TextView when;
+    @BindView(R.id.comment) TextView comment;
     @BindView(R.id.rating) AppCompatRatingBar ratingBar;
 
     public RatingAdapter(Context context, ArrayList<Rating> ratings) {
@@ -50,6 +51,10 @@ public class RatingAdapter extends ArrayAdapter<Rating> {
         name.setText(requestedBy);
         when.setText(r.getCreatedAt());
         ratingBar.setRating((float)r.rating);
+
+        if(null != r.comment) {
+            comment.setText(r.comment);
+        }
 
         return rowView;
     }
