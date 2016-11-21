@@ -31,6 +31,7 @@ class User < ActiveRecord::Base
         id: r.id,
         name: User.find_by(id: r.reviewer_id).name,
         title: Request.find_by(id: r.request_id).title,
+        comment: r.comment,
         created_at: r.created_at,
         rating: r.rating
       }

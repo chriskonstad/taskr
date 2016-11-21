@@ -6,7 +6,6 @@ class ReviewController < ApplicationController
     render :json => r.as_json
   end
 
-#TODO: make sure that review created date is set to current date
   def create
     rev = Review.create(review_creation_params)
     if rev.id
@@ -16,15 +15,13 @@ class ReviewController < ApplicationController
     end
   end
 
-
   private
 
   def review_creation_params
-  	params.require(:review).permit(:reviewer_id,
-  									:reviewee_id,
-  									:request_id,
-  									:rating)
+    params.require(:review).permit(:reviewer_id,
+                                   :comment,
+                                   :reviewee_id,
+                                   :request_id,
+                                   :rating)
   end
-
-
 end

@@ -50,7 +50,6 @@ class RequestController < ApplicationController
   def findByUid
     user_id = params[:user_id]
     role = params[:role]
-    
     requests = Request.find_by_uid(user_id, role)
     render :json => requests.as_json
   end
