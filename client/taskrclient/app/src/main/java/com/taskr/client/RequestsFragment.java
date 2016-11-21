@@ -340,65 +340,14 @@ public class RequestsFragment extends ListFragment {
     }
 
     /**
-     * Because fucking Java doesn't have a built-in filter for collections. Wtf Java.
-     * @param requests
-     * @param keywords
-     * @return
-     */
-    private ArrayList<Request> filter(List<Request> requests, List<String> keywords) {
-        ArrayList<Request> ret = new ArrayList<>();
-
-        for(Request r : requests) {
-            if(matchesKeywords(r, keywords)) {
-                ret.add(r);
-            }
-        }
-
-        return ret;
-    }
-
-    /**
      * Display the results of a query
      * @param query
      */
     private void displaySearchResults(String query) {
-        List<String> keywords = getKeywords(query);
-        ArrayList<Request> filteredResults = filter(nearbyRequests, keywords);
+        ArrayList<Request> filteredRequests = KeywordSearcher.filterQuery(nearbyRequests, query);
 
-        Log.i(TAG, "Displaying " + filteredResults.size() + " results for query: " + query);
+        Log.i(TAG, "Displaying " + filteredRequests.size() + " results for query: " + query);
 
-        displayRequests(filteredResults);
-    }
-
-    /**
-     * Turn a query into a list of keywords
-     * @param query
-     * @return
-     */
-    private List<String> getKeywords(String query) {
-        return Arrays.asList(query.split("\\s+"));
-    }
-
-    /**
-     * Check if a request matches the given list of keywords
-     * @param r
-     * @param keywords
-     * @return
-     */
-    private boolean matchesKeywords(Request r, List<String> keywords) {
-        boolean ret = false;
-        for(String s : keywords) {
-            if(null != r.title && r.title.toLowerCase().contains(s.toLowerCase())){
-                ret = true;
-                break;
-            }
-
-            if(null != r.description && r.description.toLowerCase().contains(s.toLowerCase())) {
-                ret = true;
-                break;
-            }
-        }
-
-        return ret;
+        displayRequests(filteredRequests);
     }
 }
