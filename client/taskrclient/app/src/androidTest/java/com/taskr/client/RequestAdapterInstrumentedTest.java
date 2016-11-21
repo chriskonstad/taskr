@@ -94,4 +94,10 @@ public class RequestAdapterInstrumentedTest {
         assertEquals(R.color.canceled, Request.Status.getColor(Request.Status.CANCELED));
         assertEquals(R.color.paid, Request.Status.getColor(Request.Status.PAID));
     }
+
+    // Test these here because we need the android context
+    @Test
+    public void testDistance() throws Exception {
+        assertEquals(8.964876174926758, req0.getDistance(mApi.getLocation()), 0.001);
+    }
 }
