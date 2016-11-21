@@ -110,14 +110,11 @@ public class RequestOverviewFragment extends Fragment{
     Button.OnClickListener listenerEdit = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            DialogFragment paymentFrag = new PaymentInfoFragment();
-            paymentFrag.setTargetFragment(RequestOverviewFragment.this, 1);
-            ((MainActivity)getActivity()).showFragmentAsDialog(paymentFrag);
-//            Fragment editFragment = new RequestFragment();
-//            Bundle args = new Bundle();
-//            args.putSerializable(RequestFragment.REQUEST, req);
-//            editFragment.setArguments(args);
-//            ((MainActivity)getActivity()).showFragment(editFragment, true, new TransitionParams(getString(R.string.request_overview_fragment_tag), getString(R.string.request_fragment_tag)));
+            Fragment editFragment = new RequestFragment();
+            Bundle args = new Bundle();
+            args.putSerializable(RequestFragment.REQUEST, req);
+            editFragment.setArguments(args);
+            ((MainActivity)getActivity()).showFragment(editFragment, true, new TransitionParams(getString(R.string.request_overview_fragment_tag), getString(R.string.request_fragment_tag)));
         }
     };
 
