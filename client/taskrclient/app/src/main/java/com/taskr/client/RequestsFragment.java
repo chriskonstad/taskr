@@ -6,19 +6,20 @@ import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,16 +29,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
 import com.taskr.api.Api;
 import com.taskr.api.Request;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -90,6 +88,15 @@ public class RequestsFragment extends ListFragment {
         ((MainActivity)getActivity()).showFragment(overviewFrag, true, new TransitionParams(getString(R.string.requests_fragment_tag), getString(R.string.request_overview_fragment_tag)));
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        for(int i=0; i<menu.size(); i++) {
+            if(menu.getItem(i).getItemId() == R.id.search) {
+                menu.getItem(i).setVisible(true);
+            }
+        }
+    }
+
     /**
      * Load all nearby requests from the Taskr server
      */
@@ -110,9 +117,7 @@ public class RequestsFragment extends ListFragment {
                     @Override
                     public void onSuccess(ArrayList<Request> requests) {
                         nearbyRequests = requests;
-                        adapter = new RequestAdapter(mApi,getContext(), requests);
-                        setListAdapter(adapter);
-                        onDoneRefreshing();
+                        displayRequests(nearbyRequests);
                     }
 
                     @Override
@@ -120,7 +125,7 @@ public class RequestsFragment extends ListFragment {
                         ((MainActivity)getActivity())
                                 .showErrorDialog(getString(R.string.connection_error),
                                         "Unable to load nearby requests");
-                        onDoneRefreshing();
+                        onDoneRefreshing(new ArrayList<Request>());
                     }
                 });
     }
@@ -136,10 +141,7 @@ public class RequestsFragment extends ListFragment {
                     @Override
                     public void onSuccess(ArrayList<Request> requests) {
                         nearbyRequests = requests;
-                        adapter = new RequestAdapter(mApi, getContext(), requests);
-                        setListAdapter(adapter);
-                        markerRequests.clear();
-                        onDoneRefreshing();
+                        displayRequests(nearbyRequests);
                     }
 
                     @Override
@@ -147,9 +149,20 @@ public class RequestsFragment extends ListFragment {
                         ((MainActivity)getActivity())
                                 .showErrorDialog(getString(R.string.connection_error),
                                         "Unable to load user requests");
-                        onDoneRefreshing();
+                        onDoneRefreshing(new ArrayList<Request>());
                     }
                 });
+    }
+
+    /**
+     * Display the given requests
+     * @param requests
+     */
+    private void displayRequests(ArrayList<Request> requests) {
+        adapter = new RequestAdapter(mApi, getContext(), requests);
+        setListAdapter(adapter);
+        markerRequests.clear();
+        onDoneRefreshing(requests);
     }
 
     @Override
@@ -157,6 +170,7 @@ public class RequestsFragment extends ListFragment {
         View rootView = inflater.inflate(R.layout.requests_list, container, false);
         ButterKnife.bind(this, rootView);
         mApi = ((MainActivity)getActivity()).api();
+        setHasOptionsMenu(true);
 
         Bundle arguments = getArguments();
         if(arguments != null && arguments.containsKey(LOGGED_IN_USER)){
@@ -169,7 +183,6 @@ public class RequestsFragment extends ListFragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Show create request fragment
                 ((MainActivity)getActivity()).showFragment(new RequestFragment(), true, new TransitionParams(getString(R.string.requests_fragment_tag), getString(R.string.request_fragment_tag)));
             }
         });
@@ -233,8 +246,9 @@ public class RequestsFragment extends ListFragment {
      * <p>
      * This handles displaying all loaded data.
      * </p>
+     * @param requests the requests to display
      */
-    private void onDoneRefreshing() {
+    private void onDoneRefreshing(final ArrayList<Request> requests) {
         swipeRefreshLayout.setRefreshing(false);
 
         FragmentManager manager = getChildFragmentManager();
@@ -252,8 +266,10 @@ public class RequestsFragment extends ListFragment {
             public void onMapReady(GoogleMap googleMap) {
                 Location userLocation = mApi.getLocation();
 
-                for(int i = 0 ; i < nearbyRequests.size(); i++) {
-                    Request req = nearbyRequests.get(i);
+                markerRequests.clear();
+                googleMap.clear();
+                for(int i = 0 ; i < requests.size(); i++) {
+                    Request req = requests.get(i);
 
                     MarkerOptions marker = new MarkerOptions();
                     marker.position(new LatLng(req.lat, req.longitude))
@@ -301,5 +317,88 @@ public class RequestsFragment extends ListFragment {
     public void onStart() {
         super.onStart();
         refresh();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.toolbar_menu, menu);
+        Log.i(TAG, "Inflated menu");
+        SearchView mSearchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                displaySearchResults(newText);
+                return false;
+            }
+        });
+    }
+
+    /**
+     * Because fucking Java doesn't have a built-in filter for collections. Wtf Java.
+     * @param requests
+     * @param keywords
+     * @return
+     */
+    private ArrayList<Request> filter(List<Request> requests, List<String> keywords) {
+        ArrayList<Request> ret = new ArrayList<>();
+
+        for(Request r : requests) {
+            if(matchesKeywords(r, keywords)) {
+                ret.add(r);
+            }
+        }
+
+        return ret;
+    }
+
+    /**
+     * Display the results of a query
+     * @param query
+     */
+    private void displaySearchResults(String query) {
+        List<String> keywords = getKeywords(query);
+        ArrayList<Request> filteredResults = filter(nearbyRequests, keywords);
+
+        Log.i(TAG, "Displaying " + filteredResults.size() + " results for query: " + query);
+
+        displayRequests(filteredResults);
+    }
+
+    /**
+     * Turn a query into a list of keywords
+     * @param query
+     * @return
+     */
+    private List<String> getKeywords(String query) {
+        return Arrays.asList(query.split("\\s+"));
+    }
+
+    /**
+     * Check if a request matches the given list of keywords
+     * @param r
+     * @param keywords
+     * @return
+     */
+    private boolean matchesKeywords(Request r, List<String> keywords) {
+        boolean ret = false;
+        for(String s : keywords) {
+            if(null != r.title && r.title.toLowerCase().contains(s.toLowerCase())){
+                ret = true;
+                break;
+            }
+
+            if(null != r.description && r.description.toLowerCase().contains(s.toLowerCase())) {
+                ret = true;
+                break;
+            }
+        }
+
+        return ret;
     }
 }
