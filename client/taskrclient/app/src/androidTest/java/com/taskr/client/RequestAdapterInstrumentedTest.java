@@ -1,5 +1,6 @@
 package com.taskr.client;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -27,14 +28,14 @@ import static org.junit.Assert.assertNotNull;
  */
 @RunWith(AndroidJUnit4.class)
 public class RequestAdapterInstrumentedTest {
+    private Context appContext;
     private RequestAdapter mAdapter;
     private TestApi mApi;
-
     private Request req0;
 
     @Before
     public void setUp() throws Exception {
-        Context appContext = InstrumentationRegistry.getTargetContext();
+        appContext = InstrumentationRegistry.getTargetContext();
         ArrayList<Request> data = new ArrayList<>();
         mApi = new TestApi(appContext);
         Date time = Calendar.getInstance().getTime();
@@ -55,6 +56,7 @@ public class RequestAdapterInstrumentedTest {
 
 
     @Test
+    @TargetApi(23)
     public void testGetView() throws Exception {
         View view = mAdapter.getView(0, null, null);
 
@@ -75,8 +77,21 @@ public class RequestAdapterInstrumentedTest {
         // Ensure contents are what they should be
         assertEquals(req0.title, title.getText());
         assertEquals(req0.status, status.getText());
+        assertEquals(appContext.getColor(Request.Status.getColor(Request.Status.OPEN)),
+                status.getCurrentTextColor());
         assertEquals(req0.getDue(), due.getText());
         assertEquals(String.format("$%.2f", req0.amount), amount.getText());
-        assertEquals(String.format("%.1fmi", req0.getDistance(mApi.getLocation())), distance.getText());
+        assertEquals(String.format("%.1fmi", req0.getDistance(mApi.getLocation())),
+                distance.getText());
+    }
+
+    // Test these here because we need the android context
+    @Test
+    public void testColors() throws Exception {
+        assertEquals(R.color.open, Request.Status.getColor(Request.Status.OPEN));
+        assertEquals(R.color.accepted, Request.Status.getColor(Request.Status.ACCEPTED));
+        assertEquals(R.color.completed, Request.Status.getColor(Request.Status.COMPLETED));
+        assertEquals(R.color.canceled, Request.Status.getColor(Request.Status.CANCELED));
+        assertEquals(R.color.paid, Request.Status.getColor(Request.Status.PAID));
     }
 }
