@@ -11,34 +11,40 @@
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.DialogEditText">
         <EditText
             android:id="@+id/card_name"
             android:hint="@string/card_name"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
             />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.DialogEditText">
         <EditText
             android:id="@+id/card_number"
             android:hint="@string/card_number"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
             />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.DialogEditText">
         <EditText
             android:id="@+id/card_cvv"
             android:hint="@string/card_cvv"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
             />
     </android.support.design.widget.TextInputLayout>
 

@@ -50,7 +50,6 @@ public class PaymentInfoFragment extends DialogFragment {
         ButterKnife.bind(this, rootView);
 
         TAG = getString(R.string.payment_fragment_tag);
-        getActivity().setTitle(paymentInfo);
         button.setText(saveInfo);
 
         LinearLayout ll = (LinearLayout)cardDatepicker.getChildAt(0);
@@ -98,6 +97,7 @@ public class PaymentInfoFragment extends DialogFragment {
             setShowsDialog(true);
         }
         else{
+            getActivity().setTitle(paymentInfo);
             setShowsDialog(false);
         }
 
