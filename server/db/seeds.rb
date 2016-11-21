@@ -25,7 +25,7 @@ req1 = Request.create(title: "bringing out the trash",
                       due: DateTime.new(2017,9,1,19))
 
 req2 = Request.create(title: "Cleaning the house",
-                      user_id: chris.id,
+                      user_id: pramono.id,
                       amount: 50.0,
                       lat: 34.0690,
                       longitude: -118.4455,
@@ -59,7 +59,7 @@ Review.create(reviewer_id: pramono.id,
 Review.create(reviewer_id: pramono.id,
               reviewee_id: chris.id,
               request_id: req2.id,
-              rating: 5)
+              rating: 4)
 
 # Transaction.create(payer_id: 1, payee_id: 2, amount: 100, request_id: 1)
 
