@@ -116,8 +116,7 @@ public class PaymentInfoFragment extends DialogFragment {
     }
 
     private boolean ready(){
-        return((!cardName.getText().toString().isEmpty() && !cardNumber.getText().toString().isEmpty() && !cardCVV.getText().toString().isEmpty()) &&
-                (!(cardName.getText().toString()).equals(origName) || !(cardNumber.getText().toString()).equals(origNumber) || !(cardCVV.getText().toString()).equals(origCVV) || cardDatepicker.getMonth() != origExpMonth || cardDatepicker.getYear() != origExpYear));
+        return !cardName.getText().toString().isEmpty() && !cardNumber.getText().toString().isEmpty() && !cardCVV.getText().toString().isEmpty();
     }
 
     private void saveInfo(){
