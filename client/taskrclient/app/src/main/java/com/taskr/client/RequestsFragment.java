@@ -34,6 +34,8 @@ import com.taskr.api.Request;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -140,6 +142,15 @@ public class RequestsFragment extends ListFragment {
                 new Api.ApiCallback<ArrayList<Request>>() {
                     @Override
                     public void onSuccess(ArrayList<Request> requests) {
+                        // Sort by time last updated
+                        Collections.sort(requests, new Comparator<Request>() {
+                            @Override
+                            public int compare(Request request, Request t1) {
+                                return request.updated_at.compareTo(t1.updated_at);
+                            }
+                        });
+                        Collections.reverse(requests);
+
                         nearbyRequests = requests;
                         displayRequests(nearbyRequests);
                     }
