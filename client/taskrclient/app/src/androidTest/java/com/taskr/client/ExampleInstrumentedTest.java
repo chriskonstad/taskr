@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.taskr.myfirstapp", appContext.getPackageName());
+        assertEquals("com.taskr.client", appContext.getPackageName());
     }
 }

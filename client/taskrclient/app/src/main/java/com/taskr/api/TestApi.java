@@ -1,6 +1,7 @@
 package com.taskr.api;
 
 import android.content.Context;
+import android.location.Location;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -35,11 +36,17 @@ public class TestApi extends Api {
         profile.wallet = 0.0;
         profile.avgRating = 4.5;
         profile.fbid = "867392256730734";   // Chris's FBID
+
+        refreshLocation(null);
     }
 
     @Override
     public void refreshLocation(MainActivity activity) {
-        // TODO Mock out
+        // Use UCLA's location
+        Location location = new Location("");
+        location.setLatitude(34.069);
+        location.setLongitude(-118.4455);
+        mLocation = location;
     }
 
     @Override
