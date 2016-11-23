@@ -10,12 +10,14 @@
 chris = User.create(name: 'Chris Konstad',
                     email: 'chriskon149@gmail.com',
                     fbid: '867392256730734',
-                    wallet: 100.0)
+                    wallet: 100.0,
+                    device_id: nil)
 
 pramono = User.create(name: 'Pramono Wang',
                       email: 'wang@gmail.com',
                       fbid: '1372155267',
-                      wallet: 200.0)
+                      wallet: 200.0,
+                      device_id: nil)
 
 req1 = Request.create(title: "bringing out the trash",
                       user_id: pramono.id,

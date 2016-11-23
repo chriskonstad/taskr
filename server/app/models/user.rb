@@ -45,7 +45,8 @@ class User < ActiveRecord::Base
       user = User.create(name: name,
                          email: email,
                          fbid: fbid,
-                         wallet: 0.0)
+                         wallet: 0.0,
+                         device_id: nil)
       puts "Created user with email: '#{email}'"
     else
       puts "Found user with email '#{email}'"
