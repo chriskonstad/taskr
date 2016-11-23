@@ -143,4 +143,11 @@
 
     <!-- Dialog config Strings -->
     <string name="show_as_dialog">showAsDialog</string>
+
+    <!-- GCM Strings -->
+    <string name="registration_intent_service_tag">Registration Intent Service</string>
+    <string name="token_sent_to_server">token_sent_to_server</string>
+    <string name="gcm_registration_complete">gcm_registration_complete</string>
+    <string name="gcm_registration_success_toast">Registered device with GCM.</string>
+    <string name="gcm_registration_error_toast">ERROR: Failed to register device with GCM</string>
 </resources>

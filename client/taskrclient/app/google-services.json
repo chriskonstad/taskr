@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "710015512897",
+    "firebase_url": "https://taskr-42f63.firebaseio.com",
+    "project_id": "taskr-42f63",
+    "storage_bucket": "taskr-42f63.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:710015512897:android:a5f6e7dc7f2c5908",
+        "android_client_info": {
+          "package_name": "com.taskr.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "710015512897-58g06q5l9d6jnrv5eath2cnpc15jo6qe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDhBgLtHI5vlTf8wLUB-_JIVarJ9U9Kfk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

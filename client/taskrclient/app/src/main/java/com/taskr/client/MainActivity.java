@@ -1,8 +1,12 @@
 package com.taskr.client;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -12,6 +16,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,13 +30,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.koushikdutta.ion.Ion;
 import com.taskr.api.Api;
 import com.taskr.api.LoginResult;
 import com.taskr.api.Profile;
 import com.taskr.api.ServerApi;
 import com.taskr.api.TestApi;
+import com.taskr.gcm.RegistrationIntentService;
 
 import java.security.MessageDigest;
 import java.util.concurrent.Callable;
@@ -45,6 +54,8 @@ public class MainActivity extends AppCompatActivity
     private String TAG;
     private NotificationHandler notificationHandler;
     private Api mApi = null;
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private boolean isReceiverRegistered;
 
     @BindView(R.id.nav_view) NavigationView navigationView;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -214,6 +225,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Show a DialogFragment as a dialog
+     * @param fragment fragment to show
+     */
     public void showFragmentAsDialog(DialogFragment fragment){
         if(null != fragment) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -428,8 +443,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void handleInitialRouting(){
-        Intent intent = getIntent();
+        startGCM();
 
+        Intent intent = getIntent();
         Fragment frag = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
         if(intent.hasExtra(getString(R.string.notification_type))){
@@ -458,6 +474,45 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
         if(notificationHandler != null) {
             notificationHandler.stopNotificationCheck();
+        }
+    }
+
+    /*
+        Configs GCM messaging in 3 steps:
+        1) Creates a Broadcast receiver that will display a Toast based on whether or not the device successfully registers with GCM
+        2) Registers Broadcast receiver with specific Broadcast string
+        3) Starts RegistrationIntentService to attempt to register the device with GCM
+     */
+    private void startGCM(){
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                SharedPreferences sharedPreferences =
+                        PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sharedPreferences
+                        .getBoolean(getString(R.string.token_sent_to_server), false);
+
+                if(sentToken){
+                    Toast gcmRegistrationToast = Toast.makeText(context, getString(R.string.gcm_registration_success_toast), Toast.LENGTH_SHORT);
+                    gcmRegistrationToast.show();
+                }else{
+                    Toast gcmRegistrationToast = Toast.makeText(context, getString(R.string.gcm_registration_error_toast), Toast.LENGTH_SHORT);
+                    gcmRegistrationToast.show();
+                }
+            }
+        };
+
+        if(!isReceiverRegistered) {
+            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                    new IntentFilter(getString(R.string.gcm_registration_complete)));
+            isReceiverRegistered = true;
+        }
+
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode == ConnectionResult.SUCCESS) {
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
         }
     }
 }
