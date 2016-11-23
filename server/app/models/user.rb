@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   validates :email, uniqueness: true
   validates :fbid, uniqueness: true
   validates :wallet, :numericality => { :greater_than_or_equal_to => 0 }
+  validates :device_id, uniqueness: true
 
   has_many :request
   has_many :actions, :class_name => 'Request', :foreign_key => 'actor_id'
