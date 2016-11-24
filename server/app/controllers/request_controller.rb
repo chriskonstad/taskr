@@ -57,7 +57,7 @@ class RequestController < ApplicationController
   # Let user accept a request
   def accept
     handle_action('accept')
-    notify('accept',nil)
+    notify({"status": "accept"},nil)
   end
 
   # Let user reject a request
@@ -68,7 +68,7 @@ class RequestController < ApplicationController
   # Let user complete a request
   def complete
     handle_action('complete')
-    notify('complete',nil)
+    notify({"status": "complete"},nil)
   end
 
   # Let user pay a requests
