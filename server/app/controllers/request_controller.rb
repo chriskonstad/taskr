@@ -57,6 +57,7 @@ class RequestController < ApplicationController
   # Let user accept a request
   def accept
     handle_action('accept')
+    notify('accept',nil)
   end
 
   # Let user reject a request
@@ -67,6 +68,7 @@ class RequestController < ApplicationController
   # Let user complete a request
   def complete
     handle_action('complete')
+    notify('complete',nil)
   end
 
   # Let user pay a requests
@@ -91,6 +93,18 @@ class RequestController < ApplicationController
       render nothing: true, status: 400
     end
   end
+
+  def notify(data, collapse_key = nil)
+    fcm = FCM.new("AIzaSyAfgwTlcsudSPq5xh2BVCFcQ8I4z9j3nq8")
+    @dev = Device.search(params[:user_id])
+    options = {
+      data: data,
+      collapse_key: collapse_key || 'my_app'
+    }
+    response = fcm.send(@dev.registration_id, options)
+
+  end
+
 
   def creation_params
     params.require(:request).permit(:title,
