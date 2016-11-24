@@ -22,16 +22,14 @@ Rails.application.routes.draw do
       post '/login' => 'profile#login'
       scope '/profile' do
         get '/:id' => 'profile#show'
-<<<<<<< HEAD
+
         post '/' => 'profile#notify'
       end
       scope '/gcm' do
         get '/:user_id' =>'device#show'
         post '/' => 'device#create' 
-=======
         post '/:id/:device_id' => 'profile#notify'
         # post '/device' => 'profile#register_device'
->>>>>>> fa19a324f5020e9f1833d3415d4bd3339ab9fad1
       end
       scope '/requests' do
         get '/nearby' => 'request#nearby' # params: longitude, lat, radius (miles)
