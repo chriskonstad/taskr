@@ -23,7 +23,7 @@ Rails.application.routes.draw do
       scope '/profile' do
         get '/:id' => 'profile#show'
 
-        post '/' => 'profile#notify'
+        #post '/' => 'profile#notify'
       end
       scope '/gcm' do
         get '/:user_id' =>'device#show'
@@ -55,7 +55,8 @@ Rails.application.routes.draw do
         get '/:id' => 'transaction#show'
         post '/:id' => 'transaction#create'
       end
-      scope '/transactions' do
+      scope '/transactions' 
+        get '/:id' => 'transaction#show'
         post '/:id' => 'transaction#create'
       end
     end
