@@ -8,12 +8,22 @@ class DeviceController < ApplicationController
 
 
   def create
-    dev = Device.create(device_creation_params)
-    if dev.id
-      render :json => { dev: dev}.to_json
+    existing_dev = Device.find_by(user_id: params[:device][:user_id])
+    puts params[:device][:user_id]
+    if existing_dev
+      existing_dev.registration_id = params[:device][:registration_id]
+      existing_dev.save      
+      render :json => { dev: existing_dev}.to_json
     else
-      render nothing: true, status: 500
+      dev = Device.create(device_creation_params)
+      if dev.id
+        render :json => { dev: dev}.to_json
+      else
+        render nothing: true, status: 500
+      end
     end
+
+    
   end
 
   def notify(data, collapse_key = nil)
