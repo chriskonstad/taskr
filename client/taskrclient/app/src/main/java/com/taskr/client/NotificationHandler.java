@@ -71,7 +71,7 @@ public class NotificationHandler {
         NotificationManager notificationManager =
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0, mBuilder.build());
+        notificationManager.notify(2, mBuilder.build());
     }
 
     //Notification redirects to user's profile currently

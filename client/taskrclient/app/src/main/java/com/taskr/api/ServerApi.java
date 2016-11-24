@@ -60,6 +60,7 @@ public class ServerApi extends Api {
         public static final String USER_REQUESTS = "/api/v1/requests/findByUid";
         public static final String RATE_REQUEST = "/api/v1/reviews";
         public static final String USER_REVIEWS = "/api/v1/reviews";
+        public static final String GCM = "/api/v1/gcm";
     }
 
     private static class Types {
@@ -428,6 +429,45 @@ public class ServerApi extends Api {
 
             mClient.post(mContext, url, entity, "application/json", handler);
         } catch (Exception e) {
+            Log.e(TAG, "Unable to accept request: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void updateDeviceHandler(final String deviceID, final ApiCallback<Void> callback){
+        final String url = endpoints.get(Endpoints.GCM);
+
+        JSONObject a = new JSONObject();
+        JSONObject params = new JSONObject();
+
+        try{
+            a.put("user_id", getId());
+            a.put("registration_id", deviceID);
+            a.put("device_type", mContext.getString(R.string.gcm_device_type));
+
+            params.put("device", a);
+
+            StringEntity entity = new StringEntity(params.toString());
+
+            AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    callback.onSuccess(null);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
+                                      Throwable error) {
+                    if (NO_CONNECTION == statusCode) {
+                        callback.onFailure(mContext.getString(R.string.unable_to_reach_server));
+                    } else {
+                        callback.onFailure("Error (" + statusCode + "): Unable to update user's device ID on the server ");
+                    }
+                }
+            };
+
+            mClient.post(mContext, url, entity, "application/json", handler);
+        }catch(Exception e){
             Log.e(TAG, "Unable to accept request: " + e.getMessage());
         }
     }

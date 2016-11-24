@@ -124,4 +124,9 @@ public class TestApi extends Api {
     public void editRequestHandler(Request request, final ApiCallback<Void> callback) {
         // TODO MOCK OUT
     }
+
+    @Override
+    public void updateDeviceHandler(final String deviceID, final ApiCallback<Void> callback) {
+        // TODO MOCK OUT
+    }
 }

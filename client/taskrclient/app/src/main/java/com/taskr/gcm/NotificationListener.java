@@ -23,26 +23,32 @@ public class NotificationListener extends GcmListenerService {
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("message");
         //TODO: process message
-
+        
         sendNotification(message);
     }
 
     private void sendNotification(String message) {
         //TODO: implement send notification method
-//        Intent intent = new Intent(this, MainActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-//                PendingIntent.FLAG_ONE_SHOT);
-//
-//        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-//                .setContentTitle("GCM Message")
-//                .setContentText(message)
-//                .setAutoCancel(true)
-//                .setContentIntent(pendingIntent);
-//
-//        NotificationManager notificationManager =
-//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        Log.i(TAG, message);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setAction("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.LAUNCHER");
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(this.getString(R.string.notification_type), "request");
+
+        PendingIntent pIntent = PendingIntent.getActivity(this, (int)System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder mBuilder  = new NotificationCompat.Builder(this)
+                .setContentTitle("GCM Notification")
+                .setContentText(message)
+                .setSmallIcon(R.drawable.star)
+                .setContentIntent(pIntent)
+                .setAutoCancel(true);
+
+
+        NotificationManager notificationManager =
+                (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(0, mBuilder.build());
     }
 }

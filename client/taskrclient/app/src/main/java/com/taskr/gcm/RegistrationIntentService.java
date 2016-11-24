@@ -25,26 +25,21 @@ public class RegistrationIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Intent registrationComplete = new Intent(getString(R.string.gcm_registration_complete));
 
         try {
             InstanceID instanceID = InstanceID.getInstance(this);
             String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
 
-            sendRegistrationToServer(token);
+            registrationComplete.putExtra(getString(R.string.gcm_device_token), token);
 
             sharedPreferences.edit().putBoolean(getString(R.string.token_sent_to_server), true).apply();
+            LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
         }catch(Exception e){
             Log.i(TAG, "Failed to complete token refresh");
             sharedPreferences.edit().putBoolean(getString(R.string.token_sent_to_server), false).apply();
+            LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
         }
-
-        Intent registrationComplete = new Intent(getString(R.string.gcm_registration_complete));
-        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
-
-    private void sendRegistrationToServer(String token) {
-        // TODO: send token to backend to update user-to-token mapping
-    }
-
 }
