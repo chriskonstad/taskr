@@ -57,7 +57,7 @@ class RequestController < ApplicationController
   # Let user accept a request
   def accept
     handle_action('accept')
-    notify({status: "accept"},nil)
+    notify("accept",nil)
   end
 
   # Let user reject a request
@@ -68,7 +68,7 @@ class RequestController < ApplicationController
   # Let user complete a request
   def complete
     handle_action('complete')
-    notify({status: "complete"},nil)
+    notify("complete",nil)
   end
 
   # Let user pay a requests
@@ -94,10 +94,16 @@ class RequestController < ApplicationController
     end
   end
 
-  def notify(data, collapse_key = nil)
+  def notify(status, collapse_key = nil)
     fcm = FCM.new("AIzaSyAfgwTlcsudSPq5xh2BVCFcQ8I4z9j3nq8")
     user_id = (Request.find_by(id: params[:params][:id])).user_id
     @dev = Device.find_by(user_id: user_id)
+
+    data = {
+      status: status,
+      request_id: params[:params][:id]
+    }
+
     options = {
       data: data,
       collapse_key: collapse_key || 'my_app'
