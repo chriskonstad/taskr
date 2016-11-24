@@ -101,7 +101,7 @@ class RequestController < ApplicationController
       data: data,
       collapse_key: collapse_key || 'my_app'
     }
-    response = fcm.send(@dev.registration_id, options)
+    response = fcm.send(Array(@dev.registration_id), options)
 
   end
 
