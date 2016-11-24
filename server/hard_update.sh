@@ -24,4 +24,3 @@ else
   echo "Aborting..."
   exit 0
 fi
-

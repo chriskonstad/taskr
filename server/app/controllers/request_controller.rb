@@ -97,11 +97,12 @@ class RequestController < ApplicationController
   def notify(data, collapse_key = nil)
     fcm = FCM.new("AIzaSyAfgwTlcsudSPq5xh2BVCFcQ8I4z9j3nq8")
     @dev = Device.search(params[:user_id])
+    registration_id = [@dev.registration_id]
     options = {
       data: data,
       collapse_key: collapse_key || 'my_app'
     }
-    response = fcm.send(Array(@dev.registration_id), options)
+    response = fcm.send(registration_id, options)
 
   end
 
