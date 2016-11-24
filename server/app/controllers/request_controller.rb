@@ -102,7 +102,7 @@ class RequestController < ApplicationController
       data: data,
       collapse_key: collapse_key || 'my_app'
     }
-    response = fcm.send(["fFld1_njCz0:APA91bFrOPJpj8BJOlR9nX4TsA8_ll19FMH9FzAECbWWGNwXjUgS8Iz9z9gae7XZFFKdYbKjp1JsR_VfrmMcMBo2m-z1rLxHHRa2KvdIDwJMW2cCzhqowJl1KFy-z2XbXmHiUeT3wwBE"], options)
+    response = fcm.send([@dev.registration_id], options)
 
   end
 
