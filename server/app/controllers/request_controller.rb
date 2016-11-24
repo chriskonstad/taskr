@@ -96,7 +96,7 @@ class RequestController < ApplicationController
 
   def notify(data, collapse_key = nil)
     fcm = FCM.new("AIzaSyAfgwTlcsudSPq5xh2BVCFcQ8I4z9j3nq8")
-    user_id = params[:user_id]
+    user_id = (Request.find_by(id: params[:params][:id])).user_id
     @dev = Device.find_by(user_id: user_id)
     options = {
       data: data,
