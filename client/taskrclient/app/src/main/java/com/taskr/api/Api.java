@@ -320,4 +320,15 @@ public abstract class Api {
         editRequestHandler(request, callback);
     }
     abstract protected void editRequestHandler(Request request, final ApiCallback<Void> callback);
+
+    /**
+     * Update a user's device id mapping on the server
+     * @param deviceID  value GCM associates the user's device with currently
+     * @param callback
+     */
+    public final void updateDevice(final String deviceID, final ApiCallback<Void> callback) {
+        checkReady();
+        updateDeviceHandler(deviceID, callback);
+    }
+    abstract protected void updateDeviceHandler(final String deviceID, final ApiCallback<Void> callback);
 }

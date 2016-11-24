@@ -492,9 +492,26 @@ public class MainActivity extends AppCompatActivity
                 boolean sentToken = sharedPreferences
                         .getBoolean(getString(R.string.token_sent_to_server), false);
 
+                final Context mContext = context;
+
                 if(sentToken){
                     Toast gcmRegistrationToast = Toast.makeText(context, getString(R.string.gcm_registration_success_toast), Toast.LENGTH_SHORT);
                     gcmRegistrationToast.show();
+
+                    mApi.updateDevice(intent.getStringExtra(getString(R.string.gcm_device_token)), new Api.ApiCallback<Void>() {
+                        @Override
+                        public void onSuccess(Void returnValue) {
+                            Toast serverUpdateToast = Toast.makeText(mContext, getString(R.string.gcm_update_success_toast), Toast.LENGTH_SHORT);
+                            serverUpdateToast.show();
+                        }
+
+                        @Override
+                        public void onFailure(String message) {
+                            Toast serverUpdateToast = Toast.makeText(mContext, getString(R.string.gcm_update_error_toast), Toast.LENGTH_SHORT);
+                            serverUpdateToast.show();
+                        }
+                    });
+
                 }else{
                     Toast gcmRegistrationToast = Toast.makeText(context, getString(R.string.gcm_registration_error_toast), Toast.LENGTH_SHORT);
                     gcmRegistrationToast.show();

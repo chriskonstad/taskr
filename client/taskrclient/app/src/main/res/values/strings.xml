@@ -150,4 +150,8 @@
     <string name="gcm_registration_complete">gcm_registration_complete</string>
     <string name="gcm_registration_success_toast">Registered device with GCM.</string>
     <string name="gcm_registration_error_toast">ERROR: Failed to register device with GCM</string>
+    <string name="gcm_device_token">gcm_device_token</string>
+    <string name="gcm_update_success_toast">Updated device ID on server</string>
+    <string name="gcm_update_error_toast">ERROR: Failed to update server with new device ID</string>
+    <string name="gcm_device_type">android</string>
 </resources>
