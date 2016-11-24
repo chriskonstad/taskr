@@ -101,16 +101,14 @@ class RequestController < ApplicationController
 
     data = {
       status: status,
-      request_id: params[:params][:id],
-      test: dev.registration_id,
-      user_id: params[:user_id]
+      request_id: params[:params][:id]
     }
 
     options = {
       data: data,
       collapse_key: collapse_key || 'my_app'
     }
-    response = fcm.send(["fPrOHrfOf1Q:APA91bGJOdBp9_r0vIWSyOk3_-gl9r_9QYEiH519nDZBMgb1KGKxRBXtp0i_MU0l4JJS-a6uH0g2c2zjRCDDxN_09GDLOrpSYx-WmOI25tSY9UkpCmwg8M8a5pC0SXkFg6AGNLMt9cDe"], options)
+    response = fcm.send([dev.registration_id], options)
 
   end
 
