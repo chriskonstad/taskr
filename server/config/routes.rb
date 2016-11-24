@@ -23,7 +23,11 @@ Rails.application.routes.draw do
       scope '/profile' do
         # Get user profile information by id lookup
         get '/:id' => 'profile#show'
-        post '/:id/:device_id' => 'profile#notify'
+        post '/' => 'profile#notify'
+      end
+      scope '/gcm' do
+        get '/:user_id' =>'device#show'
+        post '/' => 'device#create' 
       end
       scope '/requests' do
         get '/nearby' => 'request#nearby' # params: longitude, lat, radius (miles)

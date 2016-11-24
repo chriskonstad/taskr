@@ -47,6 +47,10 @@ req4 = Request.create(title: "Sample Completed Task",
                      due: DateTime.new(2016,12,21,19),
                      description: 'This is a sample task that is completed')
 
+device = Device.create(registration_id: '1', 
+                       device_type: 'android',
+                       user_id: 1)
+
 Request.handle_action("accept", req4.id, 2)
 Request.handle_action("complete", req4.id, 2)
 
