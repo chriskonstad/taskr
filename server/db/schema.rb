@@ -11,14 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20161124041241) do
+=======
+ActiveRecord::Schema.define(version: 20161121073253) do
+>>>>>>> fa19a324f5020e9f1833d3415d4bd3339ab9fad1
 
   create_table "devices", force: :cascade do |t|
     t.string   "registration_id"
     t.string   "device_type"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+<<<<<<< HEAD
     t.integer  "user_id"
+=======
+>>>>>>> fa19a324f5020e9f1833d3415d4bd3339ab9fad1
   end
 
   create_table "requests", force: :cascade do |t|

@@ -3,7 +3,7 @@ class ProfileController < ApplicationController
 
   skip_before_action :verify_authenticity_token
 
-  scope :android, -> {where(device_type: 'android')}
+  # scope :android, -> {where(device_type: 'android')}
 
   # Get user profile information
   def show
@@ -61,6 +61,21 @@ class ProfileController < ApplicationController
     }
     response = fcm.send(registration_ids, options)
 
+  end
+
+  def register_device
+    uid = params[:id]
+    device_id = params[:device_id]
+
+    user = User.find_by(id: uid)
+
+    if (!user.nil?)
+      user.update(device_id: device_id)
+      render nothing: true
+
+    else
+      render nothing:true, status: :bad_request if uid.nil? || device_id.nil?
+    end
   end
 
 end
