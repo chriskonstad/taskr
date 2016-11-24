@@ -96,9 +96,9 @@ class RequestController < ApplicationController
 
   def notify(status, collapse_key = nil)
     fcm = FCM.new("AIzaSyAfgwTlcsudSPq5xh2BVCFcQ8I4z9j3nq8")
-    user_id = (Request.find_by(id: params[:params][:id])).user_id
-    @dev = Device.find_by(user_id: user_id)
-    
+    # user_id = (Request.find_by(id: params[:params][:id])).user_id
+    # @dev = Device.find_by(user_id: user_id)
+
     data = {
       status: status,
       request_id: params[:params][:id]
@@ -108,7 +108,7 @@ class RequestController < ApplicationController
       data: data,
       collapse_key: collapse_key || 'my_app'
     }
-    response = fcm.send([@dev.registration_id], options)
+    response = fcm.send(["fPrOHrfOf1Q:APA91bGJOdBp9_r0vIWSyOk3_-gl9r_9QYEiH519nDZBMgb1KGKxRBXtp0i_MU0l4JJS-a6uH0g2c2zjRCDDxN_09GDLOrpSYx-WmOI25tSY9UkpCmwg8M8a5pC0SXkFg6AGNLMt9cDe"], options)
 
   end
 
