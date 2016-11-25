@@ -74,6 +74,7 @@ class RequestController < ApplicationController
   # Let user pay a requests
   def pay
     handle_action('pay')
+    notify("paid",nil)
   end
 
   # Let user cancel a request
@@ -96,7 +97,13 @@ class RequestController < ApplicationController
 
   def notify(status, collapse_key = nil)
     fcm = FCM.new("AIzaSyAfgwTlcsudSPq5xh2BVCFcQ8I4z9j3nq8")
-    user_id = (Request.find_by(id: params[:params][:id])).user_id
+
+    if status == "paid"
+      user_id = (Request.find_by(id: params[:params][:id])).actor_id
+    else
+      user_id = (Request.find_by(id: params[:params][:id])).user_id
+    end
+    
     request_title = (Request.find_by(id: params[:params][:id])).title
     dev = Device.find_by(user_id: user_id)
 
