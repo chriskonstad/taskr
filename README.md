@@ -94,9 +94,22 @@ JSON for the request object
 Each request object contains
 Endpoint: 
 Request body:
-.
-.
-.
+```
+{
+	"id": 1,
+	"title": "bringing out the trash",
+	"user_id": 2,
+	"amount": 100,
+	"lat": 34.0688,
+	"longitude": -118.4453,
+	"due": "2017-09-01T12:00:00.000-07:00",
+	"description": null,
+	"created_at": "2016-11-24T15:26:39.819-08:00",
+	"updated_at": "2016-11-24T15:26:39.819-08:00",
+	"status": "open",
+	"actor_id": null
+}
+```
 
 create function in request_controller.rb
 Create a new request
