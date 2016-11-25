@@ -38,11 +38,13 @@ import com.koushikdutta.ion.Ion;
 import com.taskr.api.Api;
 import com.taskr.api.LoginResult;
 import com.taskr.api.Profile;
+import com.taskr.api.Request;
 import com.taskr.api.ServerApi;
 import com.taskr.api.TestApi;
 import com.taskr.gcm.RegistrationIntentService;
 
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 import butterknife.BindView;
@@ -52,7 +54,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String UNDER_TEST = "under_test";
     private String TAG;
-    private NotificationHandler notificationHandler;
     private Api mApi = null;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private boolean isReceiverRegistered;
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         logKeyHash();
-
+        Log.i(TAG, "HELLOWORDL");
         TAG = getString(R.string.main_activity_tag);
 
         // Init the API
@@ -338,8 +339,6 @@ public class MainActivity extends AppCompatActivity
      */
     public void onLogin() {
         Log.i(TAG, "onLogin");
-        notificationHandler = new NotificationHandler(getApplicationContext(), mApi.getId());
-        notificationHandler.startNotificationCheck();
 
         unlockDrawer();
         refreshNavHeader();
@@ -444,7 +443,6 @@ public class MainActivity extends AppCompatActivity
 
     private void handleInitialRouting(){
         startGCM();
-
         Intent intent = getIntent();
         Fragment frag = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
@@ -456,11 +454,31 @@ public class MainActivity extends AppCompatActivity
                 showFragment(ProfileFragment.newInstance(mApi.getId()), false, new TransitionParams("", getString(R.string.profile_fragment_tag)));
             }
             else if(notificationType.equals("request")){
-                Bundle bundle = new Bundle();
-                bundle.putBoolean(RequestsFragment.LOGGED_IN_USER, true);
-                Fragment reqFrag = new RequestsFragment();
-                reqFrag.setArguments(bundle);
-                showFragment(reqFrag, false, new TransitionParams("", getString(R.string.requests_fragment_tag)));
+                final String requestID = intent.getStringExtra(getString(R.string.request_id));
+                mApi.refreshLocation(this);
+
+                mApi.getUserRequests(mApi.getId(), new Api.ApiCallback<ArrayList<Request>>() {
+                    @Override
+                    public void onSuccess(ArrayList<Request> returnValue) {
+                        Bundle bundle = new Bundle();
+                        for(int i = 0; i < returnValue.size(); i++){
+                            Request req = returnValue.get(i);
+                            if(req.id == Integer.parseInt(requestID)){
+                                bundle.putSerializable("request", req);
+                                break;
+                            }
+                        }
+
+                        Fragment reqFrag = new RequestOverviewFragment();
+                        reqFrag.setArguments(bundle);
+                        showFragment(reqFrag, false, new TransitionParams("", getString(R.string.request_overview_fragment_tag)));
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        Log.i(TAG, "HELLO");
+                    }
+                });
             }
         }
         else if(!(frag instanceof RequestFragment)){
@@ -472,9 +490,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        if(notificationHandler != null) {
-            notificationHandler.stopNotificationCheck();
-        }
     }
 
     /*

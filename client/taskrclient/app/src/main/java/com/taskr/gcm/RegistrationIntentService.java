@@ -31,7 +31,7 @@ public class RegistrationIntentService extends IntentService {
             InstanceID instanceID = InstanceID.getInstance(this);
             String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-
+            Log.i(TAG, token);
             registrationComplete.putExtra(getString(R.string.gcm_device_token), token);
 
             sharedPreferences.edit().putBoolean(getString(R.string.token_sent_to_server), true).apply();

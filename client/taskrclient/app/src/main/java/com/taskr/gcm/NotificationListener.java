@@ -21,34 +21,43 @@ public class NotificationListener extends GcmListenerService {
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString("message");
-        //TODO: process message
-        
-        sendNotification(message);
+        String status = data.getString("status");
+        String requestID = data.getString("request_id");
+        String requestTitle = data.getString("request_title");
+        sendNotification(status, requestID, requestTitle);
     }
 
-    private void sendNotification(String message) {
-        //TODO: implement send notification method
-        Log.i(TAG, message);
+    private void sendNotification(String status, String requestID, String requestTitle) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setAction("android.intent.action.MAIN");
         intent.addCategory("android.intent.category.LAUNCHER");
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra(this.getString(R.string.notification_type), "request");
+        intent.putExtra(this.getString(R.string.request_id), requestID);
 
         PendingIntent pIntent = PendingIntent.getActivity(this, (int)System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder mBuilder  = new NotificationCompat.Builder(this)
-                .setContentTitle("GCM Notification")
-                .setContentText(message)
                 .setSmallIcon(R.drawable.star)
                 .setContentIntent(pIntent)
                 .setAutoCancel(true);
 
+        if(status.equals("accept")){
+            mBuilder.setContentTitle(this.getString(R.string.request_accepted));
+            mBuilder.setContentText(String.format(this.getString(R.string.request_accepted_body), requestTitle));
+        }
+        else if(status.equals("complete")){
+            mBuilder.setContentTitle(this.getString(R.string.request_completed));
+            mBuilder.setContentText(String.format(this.getString(R.string.request_completed_body), requestTitle));
+        }
+        else if(status.equals("paid")){
+            mBuilder.setContentTitle(this.getString(R.string.request_paid));
+            mBuilder.setContentText(String.format(this.getString(R.string.request_paid_body), requestTitle));
+        }
 
         NotificationManager notificationManager =
                 (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0, mBuilder.build());
+        notificationManager.notify(Integer.parseInt(requestID), mBuilder.build());
     }
 }

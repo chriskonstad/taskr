@@ -126,6 +126,7 @@
 
     <!-- Notification Strings -->
     <string name="notification_type">notification_type</string>
+    <string name="request_id">request_id</string>
 
     <!-- Strings for very very safe way of storing credit card info -->
     <string name="payment_preferences">Payment Preferences</string>
@@ -154,4 +155,10 @@
     <string name="gcm_update_success_toast">Updated device ID on server</string>
     <string name="gcm_update_error_toast">ERROR: Failed to update server with new device ID</string>
     <string name="gcm_device_type">android</string>
+    <string name="request_completed">Request Completed</string>
+    <string name="request_completed_body">Your request, %1$s, has been completed!</string>
+    <string name="request_accepted">Request Accepted</string>
+    <string name="request_accepted_body">Your request, %1$s, has been accepted!</string>
+    <string name="request_paid">Request Paid For</string>
+    <string name="request_paid_body">You have been paid for completing the request, %1$s!</string>
 </resources>
