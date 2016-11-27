@@ -30,27 +30,6 @@ class RequestControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  # test "should get edit sample open" do 
-  # 	get :edit, id: @sampleopen
-  #   assert_response :success
-  # end
-
-
-  # test "should get edit sample past due" do 
-  # 	get :edit, id: @samplepastdue
-  #   assert_response :success
-  # end
-
-  # test "should get edit sample accepted" do 
-  # 	get :edit, id: @sampleaccepted
-  #   assert_response :success
-  # end 
-
-  # test "should get edit sample completed" do 
-  # 	get :edit, id: @samplecompleted
-  #   assert_response :success
-  # end
-
   test "should create requests" do
   	post :create, request: {title: @samplecompleted.title, user_id: @samplecompleted.user_id, amount: @samplecompleted.amount, lat: @samplecompleted.lat, longitude: @samplecompleted.longitude, due: @samplecompleted.due, description: @samplecompleted.description}
   	assert_response :success
@@ -81,10 +60,73 @@ class RequestControllerTest < ActionController::TestCase
   	assert_response 500
   end
 
-  test "amount should be greater than 0" do 
+  test "should not create when amount should be greater than 0" do 
   	post :create, request: {title: @samplecompleted.title, user_id: @samplecompleted.user_id, amount: -1, lat: @samplecompleted.lat, longitude: @samplecompleted.longitude, description: @samplecompleted.description}
   	assert_response 500
   end
+
+#   test "nearby" do
+#     get :nearby, {lat: @sampleopen.lat, longitude: @sampleopen.longitude, radius: 50}
+#   #   post :cancel
+#     assert_response 500
+
+#   end
+
+  test "nearby" do 
+  	get :nearby, {lat: @sampleopen.lat, longitude: @sampleopen.longitude, radius: 50}
+  	assert_response 200
+  end
+
+  test "can not run nearby without lat" do
+  	get :nearby, {longitude: @sampleopen.longitude, radius: 40}
+  	assert_response 400
+  end
+
+  test "can not run nearby without longitude" do
+  	get :nearby, {lat: @sampleopen.lat, radius: 40}
+  	assert_response 400
+  end
+
+  test "can not run nearby without radius" do 
+  	get :nearby, {lat: @sampleopen.lat, longitude: @sampleopen.longitude}
+  	assert_response 400
+  end
+
+  test "accept" do 
+  	post :accept, {id: @sampleaccepted.id, user_id: @sampleaccepted.user_id}
+  	assert_response 200
+  end
+
+  test "reject" do 
+  	post :reject, {id: @sampleaccepted.id, user_id: @sampleaccepted.user_id}
+  	assert_response 200
+  end
+
+  test "pay" do 
+  	post :pay, {id: @samplecompleted.id, user_id: @samplecompleted.user_id}
+  	assert_response 200
+  end
+
+  test "findByUid for requester" do
+  	get :findByUid, {user_id: @sampleopen.user_id, role: 'requester'}
+  	assert_response 200
+  end
+
+
+#   def format_something
+#     "abc"
+#   end
+#   helper_method :format_something
+# end
+# test/functional/posts_controller_test.rb:
+
+# require 'test_helper'
+
+# class PostsControllerTest < ActionController::TestCase
+#   test "the format_something helper returns 'abc'" do
+#     assert_equal 'abc', @controller.send(:format_something)
+#   end
+# end
 
 
 
