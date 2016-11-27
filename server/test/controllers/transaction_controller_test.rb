@@ -10,10 +10,10 @@ class TransactionControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should create transaction" do
-  	 post :create, transaction: {payer_id: @trans.payer_id, payee_id: @trans.payee_id, amount: @trans.amount, request_id: @trans.request_id}
-  	 assert_response :success
-  end
+  # test "should create transaction" do
+  # 	 post :create, transaction: {payer_id: @trans.payer_id, payee_id: @trans.payee_id, amount: @trans.amount, request_id: @trans.request_id}
+  # 	 assert_response :success
+  # end
 
   test "should not get show" do 
   	assert_raises(ActionController::UrlGenerationError) do

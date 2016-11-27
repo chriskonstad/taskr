@@ -1,6 +1,9 @@
 class RequestController < ApplicationController
 
+
   skip_before_action :verify_authenticity_token
+
+
 
   # Show request as JSON given an ID
   def show
