@@ -77,4 +77,7 @@ class UserTest < ActiveSupport::TestCase
     # Ensure the new user got saved
     assert_equal User.find_by(id: user.id), user
   end
+
+
+  
 end

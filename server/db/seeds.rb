@@ -54,16 +54,16 @@ device = Device.create(registration_id: '1',
 Request.handle_action("accept", req4.id, 2)
 Request.handle_action("complete", req4.id, 2)
 
-Review.create(reviewer_id: pramono.id,
-              reviewee_id: chris.id,
-              request_id: req1.id,
-              comment: 'Test comment',
-              rating: 5)
+# Review.create(reviewer_id: pramono.id,
+#               reviewee_id: chris.id,
+#               request_id: req1.id,
+#               comment: 'Test comment',
+#               rating: 5)
 
-Review.create(reviewer_id: pramono.id,
-              reviewee_id: chris.id,
-              request_id: req2.id,
-              rating: 4)
+# Review.create(reviewer_id: pramono.id,
+#               reviewee_id: chris.id,
+#               request_id: req2.id,
+#               rating: 4)
 
 # Transaction.create(payer_id: 1, payee_id: 2, amount: 100, request_id: 1)
 

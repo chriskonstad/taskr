@@ -42,7 +42,7 @@ class TransactionController < ApplicationController
       customers = Stripe::Customer.list(:limit => 1)
 
       customer = customers.select do |c|
-        c.email == [params[:id]]
+        c.email == trans.payer_id
       end
 
       #amount = trans.amount

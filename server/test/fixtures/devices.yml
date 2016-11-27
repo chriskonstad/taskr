@@ -1,8 +1,8 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  registration_id: MyString
-  device_type: MyString
+  registration_id: "980190962"
+  device_type: Android
 
 two:
   registration_id: MyString

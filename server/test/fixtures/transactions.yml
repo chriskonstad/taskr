@@ -4,5 +4,5 @@ sampletrans:
   id: 1
   payer_id: 1
   payee_id: 2
-  amount: 1.5
+  amount: 100
   request_id: 1

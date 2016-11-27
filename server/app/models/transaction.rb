@@ -3,7 +3,10 @@ class Transaction < ActiveRecord::Base
   belongs_to :payee, :class_name => 'User'
   belongs_to :request
 
-  validates :request, uniqueness: true
+  validates :payer, presence: true
+  validates :payee, presence: true
+  validates :amount, presence: true
+  validates :request, presence: true
 
   # def self.login(name, email, fbid)
   #   user = User.find_by(email: email)
