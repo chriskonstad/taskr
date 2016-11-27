@@ -30,10 +30,10 @@ class RequestControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get edit sample open" do 
-  	get :edit, id: @sampleopen
-    assert_response :success
-  end
+  # test "should get edit sample open" do 
+  # 	get :edit, id: @sampleopen
+  #   assert_response :success
+  # end
 
 
   # test "should get edit sample past due" do 
