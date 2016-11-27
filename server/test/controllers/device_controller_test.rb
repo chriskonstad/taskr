@@ -20,7 +20,12 @@ class DeviceControllerTest < ActionController::TestCase
   test "should get show" do
     get :show, user_id: @device
     assert_response :success
-    #assert_not_nil assigns(:devices)
+  end
+
+   test "should not get show" do 
+  	assert_raises(ActionController::UrlGenerationError) do
+    	get '/api/v1/gcm/show'
+  	end
   end
 
   test "should create device" do

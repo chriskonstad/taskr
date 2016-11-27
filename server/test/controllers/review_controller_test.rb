@@ -15,6 +15,12 @@ class ReviewControllerTest < ActionController::TestCase
     #assert_not_nil assigns(:reviews)
   end
 
+  test "should not get show" do 
+  	assert_raises(ActionController::UrlGenerationError) do
+    	get '/api/v1/review/show'
+  	end
+  end
+
 
 
   ##############################################################################################################################
@@ -29,7 +35,7 @@ class ReviewControllerTest < ActionController::TestCase
   end
   ##############################################################################################################################
 
-  
+
   test "should failed create device without reviewee id" do
   	post :create, review: {reviewer_id: @review.reviewer_id, request_id: @review.request_id, rating: @review.rating, comment: @review.comment }
   	assert_response 500

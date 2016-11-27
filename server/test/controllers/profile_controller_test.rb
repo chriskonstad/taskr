@@ -11,5 +11,10 @@ class ProfileControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+   test "should not get show" do 
+  	assert_raises(ActionController::UrlGenerationError) do
+    	get '/api/v1/profile/show'
+  	end
+  end
 
 end

@@ -15,6 +15,12 @@ class TransactionControllerTest < ActionController::TestCase
   	 assert_response :success
   end
 
+  test "should not get show" do 
+  	assert_raises(ActionController::UrlGenerationError) do
+    	get '/api/v1/transaction/show'
+  	end
+  end
+
   test "should not create transaction without amount" do 
   	post :create, transaction: {payer_id: @trans.payer_id, payee_id: @trans.payee_id, request_id: @trans.request_id}
   	assert_response 500
