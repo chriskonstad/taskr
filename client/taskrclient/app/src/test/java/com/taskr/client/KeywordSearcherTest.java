@@ -19,13 +19,19 @@ import static org.junit.Assert.assertTrue;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class KeywordSearcherTest {
+    Request reqEmpty;
     Request reqComp;
     Request reqHelp;
     Request reqNoMatch;
+
     ArrayList<Request> requests;
 
     @Before
     public void setup() {
+
+        reqEmpty = new Request();
+        reqEmpty.title = "";
+
         reqComp = new Request();
         reqComp.title = "Computer broken";
 
@@ -37,6 +43,7 @@ public class KeywordSearcherTest {
         reqNoMatch.description = "Neither does the description";
 
         requests = new ArrayList<>();
+        requests.add(reqEmpty);
         requests.add(reqComp);
         requests.add(reqHelp);
         requests.add(reqNoMatch);
@@ -48,6 +55,7 @@ public class KeywordSearcherTest {
 
         ArrayList<Request> filtered = KeywordSearcher.filterQuery(requests, query);
         assertTrue(filtered.contains(reqComp));
+        assertFalse(filtered.contains(reqEmpty));
         assertFalse(filtered.contains(reqHelp));
         assertFalse(filtered.contains(reqNoMatch));
     }
