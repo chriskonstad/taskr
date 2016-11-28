@@ -39,7 +39,7 @@ public abstract class Api {
     /**
      * Initialize the API with the given context
      * <p>
-     * The context is stored for the life of the APi, or until init is called again
+     * The context is stored for the life of the API, or until init is called again
      * </p>
      * @param baseApplicationContext context to init the API with
      */

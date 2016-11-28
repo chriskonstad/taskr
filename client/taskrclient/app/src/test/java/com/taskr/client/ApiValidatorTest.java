@@ -48,7 +48,7 @@ public class ApiValidatorTest {
     public void CheckLoginLogoutTest() {
         final TestApi api = new TestApi(mMockContext);
 
-        // Ensure logged out
+        // Ensure user logged out
         try {
             api.checkReady();
             Assert.fail("Should have thrown an AuthError but didn't :(");
