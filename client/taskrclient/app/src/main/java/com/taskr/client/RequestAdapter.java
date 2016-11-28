@@ -43,4 +43,26 @@ public class RequestAdapter extends ArrayAdapter<Request> {
     }
 
 
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        LayoutInflater inflater = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View rowView = inflater.inflate(R.layout.request, parent, false);
+        ButterKnife.bind(this, rowView);
+
+        Request r = mRequests.get(position);
+
+        title.setText(r.title);
+        due.setText(r.getDue());
+
+        // Show the distance from the user's current location to the request
+        float d = r.getDistance(mApi.getLocation());
+        distance.setText(String.format("%.1fmi", d));
+
+        amount.setText(String.format("$%.2f", r.amount));
+        status.setText(r.status);
+        status.setTextColor(ContextCompat.getColor(getContext(), Request.Status.getColor(r.status)));
+
+        return rowView;
+    }
 }

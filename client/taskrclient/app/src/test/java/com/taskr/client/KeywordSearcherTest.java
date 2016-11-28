@@ -12,6 +12,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
+ * Patched by alejandro on 11/26/16.
+ */
+
+/**
  * Unit test for the KeywordSearcher utility class.
  *
  * This should thoroughly test the base of the searching/filtering feature of the client.
